@@ -8,41 +8,51 @@ type counterProps = {
   onIncreaseBy: (diff: number) => void;
 };
 
-const happyHacking = (props: counterProps) => {
+const HappyHacking = (props: counterProps) => {
   return (
-    <View
-      style={{ width: "75%", justifyContent: "center", alignItems: "center" }}
-    >
-      <Text style={{ marginBottom: 20 }}>
-        Team 207.{"\n"}이 App은 Ducks design for Redux and Redux-saga와 Atomic
-        design pattern을 바탕으로 씌어진 스켈레톤 코드입니다.{"\n"}
-        {"\n"}
-        check the "src/store/modules/" for redux elements {"\n"}
-        {"&"}
-        {"\n"}
-        check "src/components/" for atomic design pattern{"\n"}
-      </Text>
-      <Text style={{ fontWeight: "bold" }}>Happy hacking;</Text>
-      <Text style={{ marginBottom: 20 }}>redux state value: {props.value}</Text>
-      <View style={styles.buttonContainer}>
-        <Pressable onPress={props.onIncrease} style={styles.increaseButton}>
-          <Text>+1</Text>
-        </Pressable>
-        <Pressable onPress={props.onDecrease} style={styles.increaseButton}>
-          <Text>-1</Text>
-        </Pressable>
-        <Pressable
-          onPress={() => props.onIncreaseBy(5)}
-          style={styles.increaseButton}
-        >
-          <Text>+5</Text>
-        </Pressable>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={{ flex: 1 }} />
+      <View
+        style={{
+          flex: 1,
+          width: "75%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text style={{ marginBottom: 20 }}>
+          Team 207.{"\n"}이 App은 Ducks design for Redux and Redux-saga와 Atomic
+          design pattern을 바탕으로 씌어진 스켈레톤 코드입니다.{"\n"}
+          {"\n"}
+          check the "src/store/modules/" for redux elements {"\n"}
+          {"&"}
+          {"\n"}
+          check "src/components/" for atomic design pattern{"\n"}
+        </Text>
+        <Text style={{ fontWeight: "bold" }}>Happy hacking;</Text>
+        <Text style={{ marginBottom: 20 }}>
+          redux state value: {props.value}
+        </Text>
+        <View style={styles.buttonContainer}>
+          <Pressable onPress={props.onIncrease} style={styles.increaseButton}>
+            <Text>+1</Text>
+          </Pressable>
+          <Pressable onPress={props.onDecrease} style={styles.increaseButton}>
+            <Text>-1</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => props.onIncreaseBy(5)}
+            style={styles.increaseButton}
+          >
+            <Text>+5</Text>
+          </Pressable>
+        </View>
       </View>
     </View>
   );
 };
 
-export default happyHacking;
+export default HappyHacking;
 
 const styles = StyleSheet.create({
   increaseButton: {
