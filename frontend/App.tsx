@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import rootReducer from "./src/store/modules";
-import MainContainer from "./src/components/Pages/mainContainer";
+import HappyHackingContainer from "./src/components/Pages/happyHackingContainer";
 import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
 import { rootSaga } from "./src/store/modules";
@@ -21,7 +21,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <View style={styles.container}>
-        <MainContainer />
+        <HappyHackingContainer />
         <StatusBar style="auto" />
       </View>
     </Provider>

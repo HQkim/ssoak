@@ -8,7 +8,7 @@ type counterProps = {
   onIncreaseBy: (diff: number) => void;
 };
 
-const main = (props: counterProps) => {
+const happyHacking = (props: counterProps) => {
   return (
     <View
       style={{ width: "75%", justifyContent: "center", alignItems: "center" }}
@@ -42,7 +42,7 @@ const main = (props: counterProps) => {
   );
 };
 
-export default main;
+export default happyHacking;
 
 const styles = StyleSheet.create({
   increaseButton: {
