@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import { useDispatch } from "react-redux";
 
-const happyHackingContainer = () => {
+const HappyHackingContainer = () => {
   const value = useSelector((state: RootState) => state.counter.value);
   const dispatch = useDispatch();
 
@@ -34,6 +34,6 @@ const happyHackingContainer = () => {
   );
 };
 
-export default happyHackingContainer;
+export default HappyHackingContainer;
 
 const styles = StyleSheet.create({});
