@@ -7,7 +7,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
 import { rootSaga } from "./src/store/modules";
 import { NavigationContainer } from "@react-navigation/native";
-import BottomTabs from "./src/components/Organisms/navigation";
+import BottomTabs from "./src/components/Organisms/Navigation";
 
 const sagaMiddleware = createSagaMiddleware();
 
