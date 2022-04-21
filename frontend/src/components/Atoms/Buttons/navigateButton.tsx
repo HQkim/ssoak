@@ -10,7 +10,6 @@ type Props = {
 
 const NavigateButton = (props: Props) => {
   let iconName;
-  let navigateIcon;
   switch (props.name) {
     case "Home":
       iconName = props.name === props.route ? "md-home" : "md-home-outline";
