@@ -26,7 +26,7 @@ export const increaseByAsync = (diff: number) => ({
 
 //middleware
 function* increaseSaga(action: any) {
-  console.log(action);
+  // console.log(action);
   yield delay(1000);
   yield put(increase());
 }

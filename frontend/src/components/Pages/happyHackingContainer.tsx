@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import HappyHacking from "./happyHacking";
+import HappyHacking from "../Templates/happyHacking";
 import {
   increase,
   decreaseAsync,

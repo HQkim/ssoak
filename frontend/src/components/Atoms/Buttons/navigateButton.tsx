@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 type Props = {
   [name: string]: string | number;
@@ -10,7 +10,6 @@ type Props = {
 
 const NavigateButton = (props: Props) => {
   let iconName;
-  let navigateIcon;
   switch (props.name) {
     case "Home":
       iconName = props.name === props.route ? "md-home" : "md-home-outline";

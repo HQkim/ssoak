@@ -1,9 +1,8 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { ReactNode } from "react";
-import HappyHackingContainer from "../../Pages/happyHackingContainer";
+import MainContainer from "../../Pages/mainContainer";
 import FavoriteContainer from "../../Pages/favoriteContainer";
 import ProfileContainer from "../../Pages/profileContainer";
-import { AntDesign } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 import { StyleSheet, GestureResponderEvent } from "react-native";
 import CustomTabBarButton from "../../Atoms/Buttons/customTabBarButton";
@@ -12,7 +11,7 @@ import NavigateButton from "../../Atoms/Buttons/navigateButton";
 type Props = {};
 
 type ButtonProps = {
-  [key: string]: string | Function | object;
+  [key: string]: string | Function | object | ReactNode;
   onPress: (event: GestureResponderEvent) => void;
 };
 
@@ -36,7 +35,7 @@ const index = (_props: Props) => {
         ...navigateOptions,
       })}
     >
-      <Tab.Screen name="Home" component={HappyHackingContainer} />
+      <Tab.Screen name="Home" component={MainContainer} />
       <Tab.Screen name="Favorite" component={FavoriteContainer} />
       <Tab.Screen
         name="+"

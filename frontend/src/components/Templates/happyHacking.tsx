@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View, SafeAreaView } from "react-native";
 import React from "react";
 
 type counterProps = {
@@ -10,7 +10,9 @@ type counterProps = {
 
 const HappyHacking = (props: counterProps) => {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <SafeAreaView
+      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+    >
       <View style={{ flex: 1 }} />
       <View
         style={{
@@ -48,7 +50,7 @@ const HappyHacking = (props: counterProps) => {
           </Pressable>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
