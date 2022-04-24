@@ -32,7 +32,7 @@ public class Bidding {
     @Column(nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime biddingDate;
 
-    @Column(nullable = false, columnDefinition = "BOOLEAN")
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isHammered;
 
     @ManyToOne(fetch = LAZY, cascade = ALL)
