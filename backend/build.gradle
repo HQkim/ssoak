@@ -46,8 +46,15 @@ dependencies {
 	// devtools
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
+	// Test에서 Slf4j 사용(compileOnly)
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+
+
+	// Gradle 7+는 compile, runtime configuration 지원X -> implementation, compileOnly, runtimeOnly 사용
+	compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 
 	// mysql connector
 	runtimeOnly 'mysql:mysql-connector-java'
@@ -65,6 +72,8 @@ dependencies {
 	// guava 추가
 	implementation("com.google.guava:guava:29.0-jre")
 	annotationProcessor("com.google.guava:guava:29.0-jre")
+
+
 }
 
 tasks.named('test') {

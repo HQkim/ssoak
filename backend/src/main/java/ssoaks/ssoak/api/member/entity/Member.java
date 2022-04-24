@@ -63,5 +63,4 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = ALL)
     private List<Item> sellingItems = new ArrayList<>();
 
-
 }

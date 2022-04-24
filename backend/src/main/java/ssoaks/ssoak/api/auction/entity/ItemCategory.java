@@ -1,14 +1,12 @@
 package ssoaks.ssoak.api.auction.entity;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import ssoaks.ssoak.api.member.entity.Member;
+import static lombok.AccessLevel.*;
 
 import javax.persistence.*;
-
 import static javax.persistence.FetchType.LAZY;
-import static lombok.AccessLevel.*;
+
 
 @Getter
 @NoArgsConstructor(access = PROTECTED)
