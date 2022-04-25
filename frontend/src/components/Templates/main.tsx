@@ -5,20 +5,23 @@ import {
   ScrollView,
   RefreshControl,
   View,
-  Pressable,
+  ImageBackground,
   Dimensions,
   TouchableOpacity,
 } from "react-native";
+
 import React, { ReactNode, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import ItemSlider from "../Organisms/ItemSlider";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
+import SearchButton from "../Atoms/Buttons/searchButton";
+import BellIcon from "../Atoms/Buttons/bellIcon";
 
 type Props = {
-  onRefresh: (state: boolean) => any;
+  onRefresh: () => any | undefined;
 };
-const ScreenHeight = Dimensions.get("window").height;
+const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
 const Main = (props: Props) => {
   const isLoading = useSelector(
@@ -26,20 +29,50 @@ const Main = (props: Props) => {
   );
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          height: ScreenHeight / 20,
-        }}
-      >
-        <Text style={{ fontSize: 30, fontWeight: "bold" }}>쏙</Text>
-      </View>
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={props.onRefresh} />
         }
       >
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            height: (ScreenWidth * 9) / 16,
+            backgroundColor: "#719DD7",
+            marginBottom: 20,
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              // alignItems: "center",
+              marginTop: 20,
+            }}
+          >
+            <View style={{ flex: 1 }} />
+            <View style={{ flex: 1, alignItems: "center" }}>
+              <Text style={{ fontSize: 30, fontWeight: "bold" }}>쏙</Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                marginEnd: 10,
+              }}
+            >
+              <View style={{ marginRight: 10 }}>
+                <SearchButton onPress={() => {}} size={24} />
+              </View>
+
+              <View>
+                <BellIcon onPress={() => {}} size={24} />
+              </View>
+            </View>
+          </View>
+        </View>
         <ItemSlider>
           <TouchableOpacity onPress={() => {}}>
             <View
@@ -49,6 +82,7 @@ const Main = (props: Props) => {
                 // justifyContent: "space-between",
                 alignItems: "flex-end",
                 margin: 10,
+                marginLeft: 20,
               }}
             >
               <Text style={{ fontSize: 18 }}>마감임박 경매</Text>
@@ -65,6 +99,7 @@ const Main = (props: Props) => {
                 // justifyContent: "space-between",
                 alignItems: "flex-end",
                 margin: 10,
+                marginLeft: 20,
               }}
             >
               <Text style={{ fontSize: 18 }}>예정중인 경매</Text>
@@ -81,6 +116,7 @@ const Main = (props: Props) => {
                 // justifyContent: "space-between",
                 alignItems: "flex-end",
                 margin: 10,
+                marginLeft: 20,
               }}
             >
               <Text style={{ fontSize: 18 }}>진행중인 경매</Text>

@@ -23,7 +23,7 @@ const MainContainer = () => {
     onStartLoading(false);
   }, []);
 
-  return <Main onRefresh={() => onStartLoading(false)} />;
+  return <Main onRefresh={() => onStartLoading(true)} />;
 };
 
 export default MainContainer;

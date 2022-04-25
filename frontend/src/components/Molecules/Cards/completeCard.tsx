@@ -30,8 +30,8 @@ const CompleteCard = (props: Props) => {
           </View>
           <View style={styles.divider} />
           <View style={styles.auctionDescription}>
-            <Text>경매 시작가 : 10,000원</Text>
-            <Text>최고 입찰가 : 16,000원</Text>
+            <Text numberOfLines={1}>경매 시작가 : 10,000원</Text>
+            <Text numberOfLines={1}>최고 입찰가 : 16,000원</Text>
           </View>
         </View>
       </MainItemCard>
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     width: ScreenHeight / 6,
     height: ScreenHeight / 6,
     backgroundColor: "white",
-    borderRadius: ScreenHeight / 100,
+    borderRadius: ScreenHeight / 50,
     marginRight: ScreenHeight / 100,
     marginLeft: ScreenHeight / 100,
   },
