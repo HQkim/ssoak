@@ -1,7 +1,5 @@
 package ssoaks.ssoak.api.auction.entity;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
