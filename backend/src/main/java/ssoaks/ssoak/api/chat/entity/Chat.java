@@ -1,6 +1,7 @@
-package ssoaks.ssoak.common.entity.chat;
+package ssoaks.ssoak.api.chat.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ssoaks.ssoak.api.auction.entity.Item;
@@ -36,4 +37,12 @@ public class Chat extends BaseCreatedEntity {
     @JoinColumn(name = "buyer_seq", nullable = false)
     @ManyToOne(fetch = LAZY)
     private Member buyer;
+
+    @Builder
+    public Chat(Item item, String content, Member seller, Member buyer) {
+        this.item = item;
+        this.content = content;
+        this.seller = seller;
+        this.buyer = buyer;
+    }
 }
