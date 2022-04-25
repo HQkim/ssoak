@@ -7,9 +7,12 @@ import { useDispatch } from "react-redux";
 import { showLoaderAsync } from "../../store/modules/mainLoader";
 import { withNavigation } from "react-navigation";
 
-// type Props = {};
+type Props = {
+  navigation: any;
+  route: object;
+};
 
-const MainContainer = () => {
+const MainContainer = ({ navigation, route }: Props) => {
   const isLoading = useSelector(
     (state: RootState) => state.mainLoader.isLoading,
   );
@@ -20,8 +23,10 @@ const MainContainer = () => {
     dispatch(showLoaderAsync(state));
   };
   useEffect(() => {
-    onStartLoading(false);
-  }, []);
+    navigation.addListener("focus", () => {
+      onStartLoading(false);
+    });
+  }, [navigation]);
 
   return <Main onRefresh={() => onStartLoading(true)} />;
 };

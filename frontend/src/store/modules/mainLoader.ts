@@ -21,7 +21,7 @@ export const showLoaderAsync = (status: boolean) => ({
 function* showLoaderSaga(action: any) {
   // console.log(action);
   yield put(showLoader(true));
-  yield delay(4000);
+  yield delay(1000);
   yield put(showLoader(false));
 }
 

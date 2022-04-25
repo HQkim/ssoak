@@ -3,6 +3,7 @@ import React from "react";
 import CardBox from "../../Atoms/Boxes/cardBox";
 import MainItemCard from "../../Atoms/Cards/mainItemCard";
 import ItemImageBox from "../../Atoms/Boxes/itemImageBox";
+import { useNavigation } from "@react-navigation/native";
 
 const { height: ScreenHeight } = Dimensions.get("window");
 type Props = {
@@ -11,8 +12,15 @@ type Props = {
 };
 
 const CompleteCard = (props: Props) => {
+  const navigation = useNavigation();
+  const handleCardClick = () => {
+    navigation.navigate("detail", {
+      id: props.item.id,
+    });
+  };
+  // console.log(props.item.id);
   return (
-    <CardBox style={styles.cardBox}>
+    <CardBox style={styles.cardBox} onPress={handleCardClick}>
       <MainItemCard item={props.item} style={styles.mainItemCard}>
         {/* src 다시 해야함 */}
         <View style={styles.cardInnerContainer}>

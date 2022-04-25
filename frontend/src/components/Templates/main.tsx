@@ -10,14 +10,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import ItemSlider from "../Organisms/ItemSlider";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import SearchButton from "../Atoms/Buttons/searchButton";
 import BellIcon from "../Atoms/Buttons/bellIcon";
-
+import * as Font from "expo-font";
 type Props = {
   onRefresh: () => any | undefined;
 };
@@ -53,7 +53,14 @@ const Main = (props: Props) => {
           >
             <View style={{ flex: 1 }} />
             <View style={{ flex: 1, alignItems: "center" }}>
-              <Text style={{ fontSize: 30, fontWeight: "bold" }}>쏙</Text>
+              <Text
+                style={{
+                  fontSize: 30,
+                  fontWeight: "bold",
+                }}
+              >
+                쏙
+              </Text>
             </View>
             <View
               style={{
