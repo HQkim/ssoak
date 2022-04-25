@@ -6,14 +6,13 @@ import rootReducer from "./src/store/modules";
 import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
 import { rootSaga } from "./src/store/modules";
-import { NavigationContainer } from "@react-navigation/native";
-import BottomTabs from "./src/components/Organisms/Navigation";
+import LoadingContainer from "./src/components/Pages/loadingContainer";
 
 const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(
   rootReducer,
-  composeWithDevTools(applyMiddleware(sagaMiddleware)),
+  composeWithDevTools(applyMiddleware(sagaMiddleware))
 );
 
 sagaMiddleware.run(rootSaga);
@@ -21,10 +20,7 @@ sagaMiddleware.run(rootSaga);
 export default function App() {
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <BottomTabs />
-      </NavigationContainer>
-
+      <LoadingContainer />
       <StatusBar style="auto" />
     </Provider>
   );
