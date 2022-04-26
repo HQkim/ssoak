@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import SearchButton from "../Atoms/Buttons/searchButton";
 import BellIcon from "../Atoms/Buttons/bellIcon";
-import * as Font from "expo-font";
+
 type Props = {
   onRefresh: () => any | undefined;
 };

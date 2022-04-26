@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
-// import DetailContainer from "../../Pages/detailContainer";
+import DetailContainer from "../../Pages/detailContainer";
 import MainContainer from "../../Pages/mainContainer";
 import NavigatorTitle from "../../Atoms/Typographies/navigatorTitle";
 
@@ -17,12 +17,12 @@ const MainStackNavigator = (props: Props) => {
           backgroundColor: "#719DD7",
         },
 
-        // headerBackTitleVisible: false,
-        // headerBackTitleStyle: {
-        //   color: "black",
-        //   fontSize: 15,
-        // },
-        // headerTintColor: "black",
+        headerBackTitleVisible: false,
+        headerBackTitleStyle: {
+          color: "black",
+          fontSize: 15,
+        },
+        headerTintColor: "black",
       }}
     >
       <Stack.Screen
@@ -32,7 +32,7 @@ const MainStackNavigator = (props: Props) => {
       />
       <Stack.Screen
         name="detail"
-        component={MainContainer}
+        component={DetailContainer}
         options={{
           headerTitle: (props) => (
             <NavigatorTitle
