@@ -29,10 +29,10 @@ public class JwtAuthenticationProvider implements InitializingBean {
 
     private Key key;
     public JwtAuthenticationProvider(
-            @Value("ssoak207ssafyssoak207ssafyssoak207ssafyssoak207ssafy") String secret, // "${jwt.secret}"
-            @Value("1296000000") long tokenValidityInMilliseconds) { // "${jwt.token-validity-in-seconds}" - 15일
+            @Value("VGhpcyBpcyBXZWJSVEMgcHJvamVjdCBmb3Igc3R1ZHkgaW4gU1NBRlkuIFByb2plY3QgU1dpdGggbWVhbnMgc3R1ZHkgd2l0aCBzb21lb25lIHNwZWNpYWwu") String secret, // "${jwt.secret}"
+            @Value("86400") long tokenValidityInSeconds) { // "${jwt.token-validity-in-seconds}" - 15일
         this.secret = secret;
-        this.tokenValidityInMilliseconds = tokenValidityInMilliseconds * 1000;
+        this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
     }
 
     @Override
