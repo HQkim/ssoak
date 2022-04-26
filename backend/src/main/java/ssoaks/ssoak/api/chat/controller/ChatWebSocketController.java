@@ -13,18 +13,18 @@ import ssoaks.ssoak.api.chat.service.ChatService;
 @RequiredArgsConstructor
 public class ChatWebSocketController {
 
-    @Autowired
-    private ChatService chatService;
-
-    private final SimpMessagingTemplate template;
-
-    // 초기화된 websocket에는 /api/ws
-    // 메시지 보내는 경로: /pub/messages
-    @MessageMapping("/messages")
-    public void SocketHandler(ReqChatDto reqChatDto) {
-
-        ResChatDto resChatDto = chatService.insertChat(reqChatDto);
-        template.convertAndSend("/queue/" + reqChatDto.getItemSeq()
-                + "_" + reqChatDto.getSellerSeq() + "_" + reqChatDto.getBuyerSeq(), resChatDto);
-    }
+//    @Autowired
+//    private ChatService chatService;
+//
+//    private final SimpMessagingTemplate template;
+//
+//    // 초기화된 websocket에는 /api/ws
+//    // 메시지 보내는 경로: /pub/messages
+//    @MessageMapping("/messages")
+//    public void SocketHandler(ReqChatDto reqChatDto) {
+//
+//        ResChatDto resChatDto = chatService.insertChat(reqChatDto);
+//        template.convertAndSend("/queue/" + reqChatDto.getItemSeq()
+//                + "_" + reqChatDto.getSellerSeq() + "_" + reqChatDto.getBuyerSeq(), resChatDto);
+//    }
 }

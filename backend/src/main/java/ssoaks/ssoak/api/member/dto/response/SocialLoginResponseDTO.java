@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class AccessTokenResDTO {
-    private char path;
+public class SocialLoginResponseDTO {
+//    private char path;
     private String accessToken;
 }
