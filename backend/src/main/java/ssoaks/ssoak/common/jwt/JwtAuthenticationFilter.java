@@ -32,12 +32,15 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String jwt = resolveToken(httpServletRequest);
         String requestURI = httpServletRequest.getRequestURI();
 
+        System.out.println("doFilter -jwt: "+ jwt);
+        System.out.println("doFilter -requestURI: "+ requestURI);
+
         if (StringUtils.hasText(jwt) && jwtAuthenticationProvider.validateToken(jwt)) {
             Authentication authentication = jwtAuthenticationProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.debug("doFilder - Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
+            log.debug("doFilter - Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
         } else {
-            log.debug("doFilder - 유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
+            log.debug("doFilter - 유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
         }
 
         filterChain.doFilter(servletRequest, servletResponse);

@@ -1,8 +1,10 @@
 package ssoaks.ssoak.config;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
+import ssoaks.ssoak.common.jwt.JwtAccessDeniedHandler;
+import ssoaks.ssoak.common.jwt.JwtAuthenticationEntryPoint;
+import ssoaks.ssoak.common.jwt.JwtAuthenticationProvider;
+import ssoaks.ssoak.common.jwt.JwtSecurityConfig;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,14 +16,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import ssoaks.ssoak.common.jwt.JwtAccessDeniedHandler;
-import ssoaks.ssoak.common.jwt.JwtAuthenticationEntryPoint;
-import ssoaks.ssoak.common.jwt.JwtAuthenticationProvider;
-import ssoaks.ssoak.common.jwt.JwtSecurityConfig;
 
-@Configuration
+
+
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)  // method security 설정
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
@@ -62,9 +61,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeHttpRequests()    // HttpServletRequest에 따라 접근을 제한
 //                .antMatchers("").hasRole("")  role에 따라 해당 url 접근을 허용
 //                .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Preflight Request 허용
-                .antMatchers("/api/members", "/api/members/login",
-                        "/api/members/auth/email", "/api/members/auth/email/check", "/api/members/auth/email/password",
-                        "/api/members/login/kakao", "/api/members/login/google", "/api/ws/**").permitAll()  // 해당 url 접근을 모두 허용
+//                .antMatchers("/api/v1/**").permitAll()  // >>>> 모든 url 접근을 허용
+                .antMatchers("/api/v1/members", "/api/v1/members/login",
+                        "/api/v1/members/auth/email", "/api/v1/members/auth/email/check", "/api/v1/members/auth/email/password",
+                        "/api/v1/members/login/kakao", "/api/v1/members/login/google", "/api/v1/ws/**").permitAll()  // 해당 url 접근을 모두 허용
                 .anyRequest().authenticated()
 
                 .and()
@@ -94,7 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowCredentials(true); // 서버 응답 시 json을 자바스크립트에서 처리하 수 있게 한다.
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("api/**", configuration);
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 

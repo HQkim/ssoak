@@ -1,11 +1,16 @@
 package ssoaks.ssoak.api.member.entity;
 
-import lombok.AccessLevel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import ssoaks.ssoak.api.auction.entity.Item;
 import ssoaks.ssoak.api.auction.entity.Like;
-import ssoaks.ssoak.api.auction.enums.TradeType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,7 +20,9 @@ import java.util.List;
 import static javax.persistence.CascadeType.*;
 import static lombok.AccessLevel.*;
 
-@Getter
+
+@Entity
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = PROTECTED)
 @Table(
         name = "tb_member",
@@ -23,7 +30,7 @@ import static lombok.AccessLevel.*;
                 @UniqueConstraint(columnNames = "email")
         }
 )
-@Entity
+@Getter
 public class Member {
 
     @Id
@@ -49,11 +56,18 @@ public class Member {
     @Column(nullable = false)
     private Double grade;
 
-    @Column(nullable = false)
+    @CreatedDate
     private LocalDateTime signupTime;
 
-    @Column(nullable = false)
+    @LastModifiedDate
     private LocalDateTime loginTime;
+
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean isDeleted;
+
+    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
 
     // 내가 like한 물품들
     @OneToMany(mappedBy = "member", cascade = ALL)
@@ -63,4 +77,17 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = ALL)
     private List<Item> sellingItems = new ArrayList<>();
 
+    @Builder
+    public Member(String kakaoId, String googleId, String email, String nickname, String profileImageUrl,
+                  Double grade, Boolean isDeleted, String password
+                  ) {
+        this.kakaoId = kakaoId;
+        this.googleId = googleId;
+        this.email = email;
+        this.nickname = nickname;
+        this.profileImageUrl = profileImageUrl;
+        this.grade = grade;
+        this.isDeleted = isDeleted;
+        this.password = password;
+    }
 }
