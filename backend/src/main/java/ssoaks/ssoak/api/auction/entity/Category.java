@@ -11,7 +11,6 @@ import static lombok.AccessLevel.*;
 
 @Getter
 @ToString
-@Builder
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor
 @Table(name = "tb_category")
