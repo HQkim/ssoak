@@ -7,7 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class SocialLoginResponseDTO {
-//    private char path;
-    private String accessToken;
+public class ResMemberProfileDTO {
+
+    private Long seq;
+    private String email;
+    private String nickname;
+    private String profileImageUrl;
+
 }
