@@ -1,11 +1,10 @@
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import Loading from "../Templates/loading";
 import { NavigationContainer } from "@react-navigation/native";
 import BottomTabs from "../Organisms/Navigation";
-import { StyleSheet } from "react-native";
 
-const loadingContainer = () => {
+const LoadingContainer = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   // main 페이지의 api 연결되면 수정 예정
@@ -35,4 +34,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default loadingContainer;
+export default LoadingContainer;

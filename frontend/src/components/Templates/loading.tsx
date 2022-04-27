@@ -1,11 +1,12 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Swing } from "react-native-animated-spinkit";
 import * as Font from "expo-font";
 
 const LogoImage = require("../../../assets/loading/loadingImg.jpg");
+const { height: ScreenHeight } = Dimensions.get("window");
 
-const loading = () => {
+const Loading = () => {
   const [font, setFont] = useState(false);
 
   useEffect(() => {
@@ -35,22 +36,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logoImg: {
-    width: 250,
-    height: 250,
-    borderRadius: 300,
-    marginTop: 150,
-    marginBottom: 30,
+    width: ScreenHeight / 3,
+    height: ScreenHeight / 3,
+    borderRadius: ScreenHeight / 1,
+    marginTop: ScreenHeight / 7,
+    marginBottom: ScreenHeight / 20,
   },
   title: {
-    fontSize: 30,
+    fontSize: ScreenHeight / 30,
     color: "#ffff",
     fontFamily: "DoHyeonRegular",
   },
   mainTitle: {
-    fontSize: 50,
+    fontSize: ScreenHeight / 15,
     color: "#ffff",
-    marginTop: 10,
-    marginBottom: 70,
+    marginTop: ScreenHeight / 100,
+    marginBottom: ScreenHeight / 20,
     fontFamily: "DoHyeonRegular",
   },
   swing: {
@@ -58,4 +59,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default loading;
+export default Loading;
