@@ -19,15 +19,11 @@ import static lombok.AccessLevel.*;
 public class Category {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_seq", columnDefinition = "BIGINT UNSIGNED")
     private Long seq;
 
     @Column(nullable = false)
     private String categoryName;
-
-    // 카테고리의 물품들
-    @OneToMany(mappedBy = "category", cascade = ALL)
-    private List<ItemCategory> itemCategories = new ArrayList<>();
 
 }

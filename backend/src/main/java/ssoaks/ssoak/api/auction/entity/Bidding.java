@@ -20,7 +20,7 @@ import static lombok.AccessLevel.*;
 public class Bidding {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bidding_seq", columnDefinition = "BIGINT UNSIGNED")
     private Long seq;
 
