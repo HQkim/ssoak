@@ -1,15 +1,43 @@
-import { View, StyleSheet } from "react-native";
+import { StyleSheet, Dimensions, View } from "react-native";
 import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
 import ItemCreation from "../Templates/itemCreation";
+import NavigatorTitle from "../Atoms/Typographies/navigatorTitle";
 
-const ItemCreationContainer = () => {
+type Props = {};
+const { height: ScreenHeight } = Dimensions.get("window");
+
+const Stack = createStackNavigator();
+const CreateNavigator = (props: Props) => {
   return (
-    <View>
-      <ItemCreation />
-    </View>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#719DD7",
+        },
+      }}
+    >
+      <Stack.Screen
+        name="ItemCreation"
+        component={ItemCreation}
+        options={{
+          headerTitle: (props) => (
+            <NavigatorTitle
+              title={"경매물품 등록하기"}
+              style={styles.navigatorTitle}
+            />
+          ),
+        }}
+      />
+    </Stack.Navigator>
   );
 };
 
-const styles = StyleSheet.create({});
+export default CreateNavigator;
 
-export default ItemCreationContainer;
+const styles = StyleSheet.create({
+  navigatorTitle: {
+    fontSize: ScreenHeight / 40,
+    fontWeight: "200",
+  },
+});

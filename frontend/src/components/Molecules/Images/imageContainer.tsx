@@ -72,10 +72,11 @@ const ImageContainer = () => {
 const styles = StyleSheet.create({
   container: {
     padding: ScreenHeight / 100,
+    marginTop: ScreenHeight / 40,
   },
   imgContainer: {
-    width: ScreenHeight / 7,
-    height: ScreenHeight / 7,
+    width: ScreenHeight / 8,
+    height: ScreenHeight / 8,
     marginRight: ScreenHeight / 100,
     borderWidth: 1,
     borderColor: "#2b2a2a",
