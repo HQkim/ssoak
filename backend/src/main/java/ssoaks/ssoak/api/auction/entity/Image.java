@@ -11,9 +11,7 @@ import static lombok.AccessLevel.*;
 
 @Getter
 @ToString
-@Builder
 @NoArgsConstructor(access = PROTECTED) // 이거 같이 쓰는 이유.알아봐야함..
-@AllArgsConstructor
 @Table(name = "tb_image")
 @Entity
 public class Image extends BaseModifiedEntity {

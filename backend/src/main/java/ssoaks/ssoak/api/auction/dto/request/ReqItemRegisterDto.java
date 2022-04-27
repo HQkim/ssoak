@@ -2,7 +2,6 @@ package ssoaks.ssoak.api.auction.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 import ssoaks.ssoak.api.auction.enums.AuctionType;
 
@@ -11,7 +10,7 @@ import java.util.List;
 
 @NoArgsConstructor
 @Getter
-public class ItemRegisterRequestDto {
+public class ReqItemRegisterDto {
 
     private String title;
     private String content;
