@@ -1,7 +1,7 @@
 import { StyleSheet, View, TouchableOpacity, Dimensions } from "react-native";
 import React, { useState } from "react";
-import RadioButton from "../../Atoms/Buttons/radioButton";
-import Typography from "../../Atoms/Text/typography";
+import SubRadioButton from "../../Atoms/Buttons/radioButton";
+import Typography from "../../Atoms/Typographies/typography";
 
 const { height: ScreenHeight } = Dimensions.get("window");
 
@@ -9,7 +9,7 @@ type Props = {
   getSelectInformation: Function;
 };
 
-const radioButton = (props: Props) => {
+const RadioButton = (props: Props) => {
   const [select, setSelect] = useState(true);
   const onSelect = () => {
     setSelect(!select);
@@ -29,7 +29,7 @@ const radioButton = (props: Props) => {
         style={{ flexDirection: "row", alignItems: "center" }}
       >
         <View style={styles.radioButton}>
-          {select ? <RadioButton /> : null}
+          {select ? <SubRadioButton /> : null}
         </View>
         <Typography title="실시간 경매" style={styles.fontStyle} />
       </TouchableOpacity>
@@ -38,7 +38,7 @@ const radioButton = (props: Props) => {
         style={{ flexDirection: "row", alignItems: "center" }}
       >
         <View style={styles.radioButton}>
-          {select ? null : <RadioButton />}
+          {select ? null : <SubRadioButton />}
         </View>
         <Typography title="일반 경매" style={styles.fontStyle} />
       </TouchableOpacity>
@@ -46,7 +46,7 @@ const radioButton = (props: Props) => {
   );
 };
 
-export default radioButton;
+export default RadioButton;
 
 const styles = StyleSheet.create({
   radioButton: {
