@@ -1,6 +1,6 @@
 import { View, StyleSheet, Dimensions, TextInput, Text } from "react-native";
 import React, { useState } from "react";
-import Border from "../../Atoms/Text/border";
+import Border from "../../Atoms/Borders/border";
 import RadioButton from "../../Molecules/Buttons/radioButton";
 import DropDown from "../../Molecules/Buttons/dropDown";
 import ImageContainer from "../../Molecules/Images/imageContainer";
@@ -12,7 +12,7 @@ type Props = {
   inputForm: Function;
 };
 
-const itemCreationInput = (props: Props) => {
+const ItemCreationInput = (props: Props) => {
   interface Form {
     title: string;
     startPrice: number;
@@ -128,4 +128,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default itemCreationInput;
+export default ItemCreationInput;

@@ -13,7 +13,7 @@ import * as ImagePicker from "expo-image-picker";
 
 const { height: ScreenHeight } = Dimensions.get("window");
 
-const imageContainer = () => {
+const ImageContainer = () => {
   interface Item {
     imgSource: string;
   }
@@ -84,4 +84,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default imageContainer;
+export default ImageContainer;

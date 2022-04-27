@@ -11,7 +11,7 @@ import {
   Dimensions,
 } from "react-native";
 import React, { useState } from "react";
-import Typography from "../Atoms/Text/typography";
+import Typography from "../Atoms/Typographies/typography";
 import ItemCreationInput from "../Organisms/Input/itemCreationInput";
 
 const { height: ScreenHeight } = Dimensions.get("window");
