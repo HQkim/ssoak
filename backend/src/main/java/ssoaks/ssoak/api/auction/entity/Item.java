@@ -1,10 +1,7 @@
 package ssoaks.ssoak.api.auction.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import ssoaks.ssoak.api.auction.enums.AuctionType;
-import ssoaks.ssoak.api.auction.enums.TradeType;
 import ssoaks.ssoak.api.member.entity.Member;
 import ssoaks.ssoak.common.entity.base.BaseModifiedEntity;
 
@@ -19,6 +16,7 @@ import static lombok.AccessLevel.*;
 
 @Getter
 @ToString
+@AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "tb_item")
 @Entity
@@ -51,10 +49,6 @@ public class Item extends BaseModifiedEntity {
     @Enumerated(EnumType.STRING)
     private AuctionType auctionType;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    @Enumerated(EnumType.STRING)
-    private TradeType tradeType;
-
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isSold;
 
@@ -78,4 +72,24 @@ public class Item extends BaseModifiedEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_seq", columnDefinition = "BIGINT UNSIGNED")
     private Member member;
+
+
+
+    @Builder
+    public Item(String title, String content, Integer startPrice, Integer biddingUnit,
+                LocalDateTime startTime, LocalDateTime endTime, AuctionType auctionType,
+                Boolean isSold, Member member
+    ) {
+        this.title = title;
+        this.content = content;
+        this.isSold = isSold;
+        this.startPrice = startPrice;
+        this.biddingUnit = biddingUnit;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.auctionType = auctionType;
+        this.member = member;
+
+    }
+
 }

@@ -29,5 +29,4 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = ALL)
     private List<ItemCategory> itemCategories = new ArrayList<>();
 
-    // Builder 필요
 }
