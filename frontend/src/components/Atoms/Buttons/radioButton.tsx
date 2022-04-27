@@ -3,11 +3,11 @@ import React from "react";
 
 const { height: ScreenHeight } = Dimensions.get("window");
 
-const radioButton = () => {
+const RadioButton = () => {
   return <View style={styles.radioContainer}></View>;
 };
 
-export default radioButton;
+export default RadioButton;
 
 const styles = StyleSheet.create({
   radioContainer: {

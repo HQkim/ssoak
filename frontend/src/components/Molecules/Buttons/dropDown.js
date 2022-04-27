@@ -4,7 +4,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 
 const { height: ScreenHeight } = Dimensions.get("window");
 
-const dropDown = ({ getSelectInformation }) => {
+const DropDown = ({ getSelectInformation }) => {
   const onClickCategory = (category) => {
     getSelectInformation(category);
   };
@@ -36,4 +36,4 @@ const dropDown = ({ getSelectInformation }) => {
     />
   );
 };
-export default dropDown;
+export default DropDown;

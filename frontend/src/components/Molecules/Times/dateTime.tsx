@@ -2,7 +2,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { View } from "react-native";
 import React, { useState } from "react";
 
-const dateTime = () => {
+const DateTime = () => {
   const [date, setDate] = useState(new Date());
 
   const onChange = (event: any, selectedDate: any) => {
@@ -35,4 +35,4 @@ const dateTime = () => {
   );
 };
 
-export default dateTime;
+export default DateTime;
