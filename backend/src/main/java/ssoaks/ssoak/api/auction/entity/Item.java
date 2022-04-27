@@ -1,8 +1,6 @@
 package ssoaks.ssoak.api.auction.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import ssoaks.ssoak.api.auction.enums.AuctionType;
 import ssoaks.ssoak.api.auction.enums.TradeType;
 import ssoaks.ssoak.api.member.entity.Member;
@@ -19,6 +17,7 @@ import static lombok.AccessLevel.*;
 
 @Getter
 @ToString
+@AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "tb_item")
 @Entity
@@ -78,4 +77,30 @@ public class Item extends BaseModifiedEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_seq", columnDefinition = "BIGINT UNSIGNED")
     private Member member;
+
+
+
+    @Builder
+    public Item(String title, String content, Integer startPrice, Integer biddingUnit,
+                LocalDateTime startTime, LocalDateTime endTime, AuctionType auctionType,
+                TradeType tradeType, List<ItemCategory> itemCategories, List<Image> images,
+                Member member
+    ) {
+        this.title = title;
+        this.content = content;
+        this.startPrice = startPrice;
+        this.biddingUnit = biddingUnit;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.auctionType = auctionType;
+        this.tradeType = tradeType;
+        this.itemCategories = itemCategories;
+        this.images = images;
+        this.member = member;
+
+    }
+
+
+
+
 }
