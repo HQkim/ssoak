@@ -15,7 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 public class Review {
     
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_seq", columnDefinition = "BIGINT UNSIGNED")
     private Long seq;
 

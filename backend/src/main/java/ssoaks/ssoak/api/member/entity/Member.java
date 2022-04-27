@@ -34,7 +34,7 @@ import static lombok.AccessLevel.*;
 public class Member {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_seq", columnDefinition = "BIGINT UNSIGNED")
     private Long seq;
 
@@ -68,14 +68,6 @@ public class Member {
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-
-    // 내가 like한 물품들
-    @OneToMany(mappedBy = "member", cascade = ALL)
-    private List<Like> likes = new ArrayList<>();
-
-    // 내가 판매자인 물품들 (쓰일지 모르겠음)
-    @OneToMany(mappedBy = "member", cascade = ALL)
-    private List<Item> sellingItems = new ArrayList<>();
 
     @Builder
     public Member(String kakaoId, String googleId, String email, String nickname, String profileImageUrl,
