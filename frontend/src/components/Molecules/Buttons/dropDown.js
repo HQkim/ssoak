@@ -29,7 +29,7 @@ const dropDown = ({ getSelectInformation }) => {
         { label: "기타", value: "기타" },
       ]}
       containerStyle={{
-        height: ScreenHeight / 15,
+        height: ScreenHeight / 20,
         marginTop: ScreenHeight / 100,
       }}
       onChangeItem={(item) => onClickCategory(item.value)}

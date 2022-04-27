@@ -18,10 +18,10 @@ const { height: ScreenHeight } = Dimensions.get("window");
 
 const ItemCreation = () => {
   const onSubmit = () => {
-    console.warn(1);
+    // console.warn(1);
   };
   const inputForm = (form: any) => {
-    console.warn(form);
+    // console.warn(form);
   };
   return (
     <ScrollView>
@@ -50,6 +50,7 @@ const ItemCreation = () => {
 const styles = StyleSheet.create({
   container: {
     height: "100%",
+    padding: ScreenHeight / 80,
   },
   titleContainer: {
     alignItems: "center",
