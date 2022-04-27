@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-
+import AuctionChatContainer from "../../Pages/auctionChatContainer";
 import DetailContainer from "../../Pages/detailContainer";
 import MainContainer from "../../Pages/mainContainer";
 import NavigatorTitle from "../../Atoms/Typographies/navigatorTitle";
@@ -37,6 +37,18 @@ const MainStackNavigator = (props: Props) => {
           headerTitle: (props) => (
             <NavigatorTitle
               title={"물품 상세 정보"}
+              style={styles.navigatorTitle}
+            />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="auctionChat"
+        component={AuctionChatContainer}
+        options={{
+          headerTitle: (props) => (
+            <NavigatorTitle
+              title={"실시간 경매 채팅"}
               style={styles.navigatorTitle}
             />
           ),

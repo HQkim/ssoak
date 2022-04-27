@@ -11,10 +11,10 @@ import {
 import React, { useCallback, useState } from "react";
 import MoreButton from "../../Atoms/Buttons/moreButton";
 import CountDown from "../../Atoms/Typographies/countDown";
-import BidButton from "../../Atoms/Buttons/bidButton";
+import GeneralButton from "../../Atoms/Buttons/generalButton";
 import NumberFormat from "react-number-format";
 import { AntDesign } from "@expo/vector-icons";
-
+import { useNavigation } from "@react-navigation/native";
 type Props = {};
 
 const index = ({ item, descStyle, titleStyle }) => {
@@ -24,9 +24,16 @@ const index = ({ item, descStyle, titleStyle }) => {
   const [bidRightNow, setBidRightNow] = useState<string>("15000");
   const [bidAssignValue, setBidAssignValue] = useState<string>("15000");
 
+  const navigation = useNavigation();
   const handleMoreClick = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setShowMore(!showMore);
+  };
+
+  const onHandleChatOpen = () => {
+    navigation.navigate("auctionChat", {
+      id: item.id,
+    });
   };
 
   const handleOnchangebidRightNow = (e: any) => {
@@ -114,7 +121,7 @@ const index = ({ item, descStyle, titleStyle }) => {
           value={""}
           style={styles.textArea}
           textAlign="center"
-          editable={true}
+          editable={false}
           keyboardType="numeric"
           onChange={handleOnchangebidRightNow}
         >
@@ -131,8 +138,8 @@ const index = ({ item, descStyle, titleStyle }) => {
         </TextInput>
         <View style={{ flex: 1, flexDirection: "row" }}>
           <View style={{ flex: 0.1 }} />
-          <BidButton
-            styles={{ bidButton: styles.bidButton, bidText: styles.bidText }}
+          <GeneralButton
+            styles={{ box: styles.bidButton, text: styles.bidText }}
             text={"즉시입찰"}
             onPress={handlebidRightNow}
           >
@@ -142,7 +149,7 @@ const index = ({ item, descStyle, titleStyle }) => {
               color="white"
               style={{ marginRight: 10 }}
             />
-          </BidButton>
+          </GeneralButton>
         </View>
       </View>
       <View style={styles.itemInformationContainer}>
@@ -170,8 +177,8 @@ const index = ({ item, descStyle, titleStyle }) => {
         </TextInput>
         <View style={{ flex: 1, flexDirection: "row" }}>
           <View style={{ flex: 0.1 }} />
-          <BidButton
-            styles={{ bidButton: styles.bidButton, bidText: styles.bidText }}
+          <GeneralButton
+            styles={{ box: styles.bidButton, text: styles.bidText }}
             text={"입찰하기"}
             onPress={handlebidAssignValue}
           >
@@ -181,8 +188,18 @@ const index = ({ item, descStyle, titleStyle }) => {
               color="white"
               style={{ marginRight: 10 }}
             />
-          </BidButton>
+          </GeneralButton>
         </View>
+      </View>
+      <View style={{ flex: 1, flexDirection: "row" }}>
+        <View style={{ flex: 1 }} />
+
+        <GeneralButton
+          styles={{ box: styles.startChatBox, text: styles.startChatText }}
+          onPress={onHandleChatOpen}
+          text="채팅방 참여"
+        />
+        <View style={{ flex: 1 }} />
       </View>
     </View>
   );
@@ -248,5 +265,20 @@ const styles = StyleSheet.create({
   },
   bidText: {
     color: "white",
+  },
+  startChatBox: {
+    flex: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#0176B7",
+    height: Dimensions.get("window").height / 30,
+    marginTop: Dimensions.get("window").height / 50,
+    borderRadius: 9999,
+    borderWidth: 0.5,
+  },
+  startChatText: {
+    color: "white",
+    fontSize: 20,
   },
 });
