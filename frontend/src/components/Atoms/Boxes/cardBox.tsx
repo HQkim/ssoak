@@ -4,11 +4,15 @@ import React, { ReactNode } from "react";
 type Props = {
   children: ReactNode;
   style: any;
+  onPress: () => void;
+  route: any;
 };
 
 const cardBox = (props: Props) => {
   return (
-    <TouchableOpacity style={props.style}>{props.children}</TouchableOpacity>
+    <TouchableOpacity style={props.style} onPress={props.onPress}>
+      {props.children}
+    </TouchableOpacity>
   );
 };
 

@@ -3,6 +3,7 @@ import React from "react";
 import CardBox from "../../Atoms/Boxes/cardBox";
 import MainItemCard from "../../Atoms/Cards/mainItemCard";
 import ItemImageBox from "../../Atoms/Boxes/itemImageBox";
+import { useNavigation } from "@react-navigation/native";
 
 const { height: ScreenHeight } = Dimensions.get("window");
 type Props = {
@@ -11,8 +12,15 @@ type Props = {
 };
 
 const CompleteCard = (props: Props) => {
+  const navigation = useNavigation();
+  const handleCardClick = () => {
+    navigation.navigate("detail", {
+      id: props.item.id,
+    });
+  };
+  // console.log(props.item.id);
   return (
-    <CardBox style={styles.cardBox}>
+    <CardBox style={styles.cardBox} onPress={handleCardClick}>
       <MainItemCard item={props.item} style={styles.mainItemCard}>
         {/* src 다시 해야함 */}
         <View style={styles.cardInnerContainer}>
@@ -30,8 +38,8 @@ const CompleteCard = (props: Props) => {
           </View>
           <View style={styles.divider} />
           <View style={styles.auctionDescription}>
-            <Text>경매 시작가 : 10,000원</Text>
-            <Text>최고 입찰가 : 16,000원</Text>
+            <Text numberOfLines={1}>경매 시작가 : 10,000원</Text>
+            <Text numberOfLines={1}>최고 입찰가 : 16,000원</Text>
           </View>
         </View>
       </MainItemCard>
@@ -50,7 +58,7 @@ const styles = StyleSheet.create({
     width: ScreenHeight / 6,
     height: ScreenHeight / 6,
     backgroundColor: "white",
-    borderRadius: ScreenHeight / 100,
+    borderRadius: ScreenHeight / 50,
     marginRight: ScreenHeight / 100,
     marginLeft: ScreenHeight / 100,
   },

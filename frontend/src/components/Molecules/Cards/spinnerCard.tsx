@@ -1,8 +1,7 @@
-import { StyleSheet, Text, View, Dimensions } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import React from "react";
 import CardBox from "../../Atoms/Boxes/cardBox";
 import MainItemCard from "../../Atoms/Cards/mainItemCard";
-import ItemImageBox from "../../Atoms/Boxes/itemImageBox";
 import SkeletonContent from "react-native-skeleton-content";
 
 const { height: ScreenHeight } = Dimensions.get("window");
@@ -70,7 +69,7 @@ const styles = StyleSheet.create({
     width: ScreenHeight / 6,
     height: ScreenHeight / 6,
     backgroundColor: "white",
-    borderRadius: ScreenHeight / 100,
+    borderRadius: ScreenHeight / 50,
     marginRight: ScreenHeight / 100,
     marginLeft: ScreenHeight / 100,
   },
