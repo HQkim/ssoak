@@ -1,8 +1,14 @@
 import { View, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import Loading from "../Templates/loading";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import BottomTabs from "../Organisms/Navigation";
+import {
+  createStackNavigator,
+  StackNavigationProp,
+} from "@react-navigation/stack";
+// import DetailContainer from "./detailContainer";
 
 const LoadingContainer = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -14,6 +20,14 @@ const LoadingContainer = () => {
     }, 3000);
     setIsLoading(false);
   }, []);
+
+  const Stack = createStackNavigator();
+
+  // const CombinedStack = () => {
+  //   return (
+  //     <Stack.Navigator initialRouteName=""/>
+  //   )
+  // }
 
   return (
     <View style={styles.container}>
