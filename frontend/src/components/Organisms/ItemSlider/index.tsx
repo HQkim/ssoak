@@ -95,7 +95,7 @@ type Props = {
 
 const index = (props: Props) => {
   const isLoading = useSelector(
-    (state: RootState) => state.mainLoader.isLoading,
+    (state: RootState) => state.mainLoader.isLoading
   );
   return (
     <>
