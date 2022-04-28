@@ -14,6 +14,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import ssoaks.ssoak.api.member.entity.Member;
+import ssoaks.ssoak.api.member.exception.BadRequestSoicalLoginException;
 import ssoaks.ssoak.api.member.repository.MemberRepository;
 
 import javax.transaction.Transactional;
@@ -97,13 +98,23 @@ public class AuthServiceImpl implements AuthService {
 
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<MultiValueMap<String, String>> kakaoTokenReq = new HttpEntity<>(params, headers);
-        ResponseEntity<String> response = restTemplate.exchange(
-                "https://kauth.kakao.com/oauth/token",
-                HttpMethod.POST,
-                kakaoTokenReq,
-                String.class
-        );
 
+        System.out.println("=========================1");
+
+        ResponseEntity<String> response = null;
+
+        try {
+            response = restTemplate.exchange(
+                    "https://kauth.kakao.com/oauth/token",
+                    HttpMethod.POST,
+                    kakaoTokenReq,
+                    String.class
+            );
+        } catch (Exception e) {
+            throw new BadRequestSoicalLoginException("잘못된 카카오 로그인 코드");
+        }
+
+        System.out.println("========================2");
         String tokenJson = response.getBody();
         JSONObject jsObject = new JSONObject(tokenJson);
         String accessToken = jsObject.getString("access_token");
