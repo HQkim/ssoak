@@ -20,7 +20,6 @@
     "@unimodules/core": "~7.2.0",
     "expo": "~44.0.0",
     "expo-image-picker": "^12.0.2",
-    "expo-image-picker-multiple": "^1.4.1",
     "expo-status-bar": "~1.2.0",
     "react": "^17.0.1",
     "react-countdown": "^2.3.2",

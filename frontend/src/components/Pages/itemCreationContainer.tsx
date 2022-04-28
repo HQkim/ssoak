@@ -37,7 +37,7 @@ export default CreateNavigator;
 
 const styles = StyleSheet.create({
   navigatorTitle: {
-    fontSize: ScreenHeight / 40,
+    fontSize: 20,
     fontWeight: "200",
   },
 });
