@@ -1,7 +1,6 @@
 package ssoaks.ssoak.api.auction.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ssoaks.ssoak.api.auction.entity.Category;
 import ssoaks.ssoak.api.auction.entity.Item;
 import ssoaks.ssoak.api.auction.entity.ItemCategory;
 
