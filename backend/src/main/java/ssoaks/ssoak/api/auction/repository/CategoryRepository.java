@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ssoaks.ssoak.api.auction.entity.Category;
+import ssoaks.ssoak.api.auction.entity.Item;
+
 import java.util.List;
 import java.util.Optional;
 
