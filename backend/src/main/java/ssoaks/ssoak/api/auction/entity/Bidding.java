@@ -37,19 +37,12 @@ public class Bidding {
     @JoinColumn(name = "item_seq", columnDefinition = "BIGINT UNSIGNED")
     private Item item;
 
-    // @column의 name을 buyer_seq로 주는게 맞는지?
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_seq", columnDefinition = "BIGINT UNSIGNED")
     private Member buyer;
 
 
     // Builder
-
-
-    // changeBidding -> ishammerd update
-
-
-
 
 
 }

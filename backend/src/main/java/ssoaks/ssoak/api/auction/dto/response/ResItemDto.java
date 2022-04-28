@@ -4,10 +4,8 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-import ssoaks.ssoak.api.auction.entity.ItemCategory;
 import ssoaks.ssoak.api.auction.enums.AuctionType;
 import ssoaks.ssoak.api.member.dto.response.MemberSimpleInfoDto;
-import ssoaks.ssoak.api.member.entity.Member;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,15 +22,15 @@ public class ResItemDto {
     private LocalDateTime endTime;
     private AuctionType auctionType;
     private Boolean isSold;
+    private Boolean isLike;
+    private Integer likeCount;
     private MemberSimpleInfoDto member;
     private List<String> itemCategories;
 
-
     @QueryProjection
     @Builder
-    public ResItemDto(String title, Integer startPrice, Integer biddingUnit,
-                      LocalDateTime startTime, LocalDateTime endTime, AuctionType auctionType,
-                      Boolean isSold, MemberSimpleInfoDto member, List<String> itemCategories) {
+
+    public ResItemDto(String title, Integer startPrice, Integer biddingUnit, LocalDateTime startTime, LocalDateTime endTime, AuctionType auctionType, Boolean isSold, Boolean isLike, Integer likeCount, MemberSimpleInfoDto member, List<String> itemCategories) {
         this.title = title;
         this.startPrice = startPrice;
         this.biddingUnit = biddingUnit;
@@ -40,6 +38,8 @@ public class ResItemDto {
         this.endTime = endTime;
         this.auctionType = auctionType;
         this.isSold = isSold;
+        this.isLike = isLike;
+        this.likeCount = likeCount;
         this.member = member;
         this.itemCategories = itemCategories;
     }

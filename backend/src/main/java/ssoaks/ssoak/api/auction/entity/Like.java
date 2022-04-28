@@ -1,6 +1,7 @@
 package ssoaks.ssoak.api.auction.entity;
 
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import static lombok.AccessLevel.*;
@@ -31,4 +32,9 @@ public class Like {
     @JoinColumn(name = "item_seq", columnDefinition = "BIGINT UNSIGNED")
     private Item item;
 
+    @Builder
+    public Like(Member member, Item item) {
+        this.member = member;
+        this.item = item;
+    }
 }
