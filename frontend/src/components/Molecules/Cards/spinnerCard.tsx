@@ -12,7 +12,7 @@ type Props = {
 
 const SpinnerCard = (props: Props) => {
   return (
-    <CardBox style={styles.cardBox}>
+    <CardBox style={styles.cardBox} onPress={() => {}} route="">
       <MainItemCard item={props.item} style={styles.mainItemCard}>
         <SkeletonContent
           containerStyle={{
