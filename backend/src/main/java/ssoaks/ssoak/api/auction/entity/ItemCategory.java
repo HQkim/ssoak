@@ -18,7 +18,7 @@ import static javax.persistence.FetchType.LAZY;
 public class ItemCategory {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_category_seq", columnDefinition = "BIGINT UNSIGNED")
     private Long seq;
 
@@ -30,6 +30,5 @@ public class ItemCategory {
     @JoinColumn(name = "item_seq", columnDefinition = "BIGINT UNSIGNED")
     private Item item;
 
-    // category 수정 필요한지 확인해야함
 
 }

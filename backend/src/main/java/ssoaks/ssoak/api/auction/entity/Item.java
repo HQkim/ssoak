@@ -23,7 +23,7 @@ import static lombok.AccessLevel.*;
 public class Item extends BaseModifiedEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_seq", columnDefinition = "BIGINT UNSIGNED")
     private Long seq;
 
@@ -55,10 +55,6 @@ public class Item extends BaseModifiedEntity {
     // 물품을 like한 멤버들
     @OneToMany(mappedBy = "item", cascade = ALL)
     private List<Like> likes = new ArrayList<>();
-
-    // 물품의 카테고리들
-    @OneToMany(mappedBy = "item", cascade = ALL)
-    private List<ItemCategory> itemCategories = new ArrayList<>();
 
     // 물품의 사진들
     @OneToMany(mappedBy = "item", cascade = ALL, orphanRemoval = true)  // orphanRemoval: 물품이 삭제될때 사진도 다 삭제 <<-필요한지 논의!

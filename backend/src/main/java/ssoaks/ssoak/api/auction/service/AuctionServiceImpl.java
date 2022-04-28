@@ -1,9 +1,11 @@
 package ssoaks.ssoak.api.auction.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ssoaks.ssoak.api.auction.dto.request.ReqItemRegisterDto;
+import ssoaks.ssoak.api.auction.dto.response.ResItemDto;
 import ssoaks.ssoak.api.auction.entity.Category;
 import ssoaks.ssoak.api.auction.entity.Item;
 import ssoaks.ssoak.api.auction.entity.ItemCategory;
@@ -12,13 +14,16 @@ import ssoaks.ssoak.api.auction.enums.AuctionType;
 import ssoaks.ssoak.api.auction.repository.CategoryRepository;
 import ssoaks.ssoak.api.auction.repository.ItemCategoryRepository;
 import ssoaks.ssoak.api.auction.repository.ItemRepository;
+import ssoaks.ssoak.api.member.dto.response.MemberSimpleInfoDto;
 import ssoaks.ssoak.api.member.entity.Member;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-
+@Slf4j
+@Transactional(readOnly = true)
 @Service
 public class AuctionServiceImpl implements AuctionService {
 
@@ -72,5 +77,50 @@ public class AuctionServiceImpl implements AuctionService {
         // image upload 함수 생성
 
     }
+
+    @Override
+    public ResItemDto getItemDetail(Member member, Long itemSeq) {
+
+        Item item = itemRepository.findById(itemSeq)
+                .orElseThrow(() -> new IllegalArgumentException("해당 물품을 찾을 수 없습니다."));
+
+        // 카테고리
+        List<ItemCategory> itemCategories = itemCategoryRepository.findByItem(item)
+                .orElseThrow(() -> new IllegalArgumentException("해당 물품에 대한 카테고리를 찾을 수 없습니다."));
+
+        List<String> categories = itemCategories.stream()
+                .map(itemCategory -> itemCategory.getCategory().getCategoryName())
+                .collect(Collectors.toList());
+
+
+        MemberSimpleInfoDto memberDto = MemberSimpleInfoDto.builder()
+                .seq(member.getSeq())
+                .nickname(member.getNickname())
+                .profileImageUrl(member.getProfileImageUrl())
+                .build();
+
+        // 이미지
+
+
+        // 입찰정보
+
+        // 좋아요 여부
+
+
+        ResItemDto resItemDto = ResItemDto.builder()
+                .title(item.getTitle())
+                .startPrice(item.getStartPrice())
+                .biddingUnit(item.getBiddingUnit())
+                .startTime(item.getStartTime())
+                .endTime(item.getEndTime())
+                .auctionType(item.getAuctionType())
+                .isSold(item.getIsSold())
+                .member(memberDto)
+                .itemCategories(categories)
+                .build();
+
+        return resItemDto;
+    }
+
 
 }

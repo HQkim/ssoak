@@ -19,7 +19,7 @@ import ssoaks.ssoak.api.member.entity.Member;
 public class Like {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "like_seq", columnDefinition = "BIGINT UNSIGNED")
     private Long seq;
 

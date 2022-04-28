@@ -17,7 +17,7 @@ import static lombok.AccessLevel.*;
 public class Image extends BaseModifiedEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "image_seq", columnDefinition = "BIGINT UNSIGNED")
     private Long seq;
 
