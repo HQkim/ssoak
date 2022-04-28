@@ -52,12 +52,8 @@ public class Item extends BaseModifiedEntity {
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isSold;
 
-    // 물품을 like한 멤버들
-    @OneToMany(mappedBy = "item", cascade = ALL)
-    private List<Like> likes = new ArrayList<>();
-
     // 물품의 사진들
-    @OneToMany(mappedBy = "item", cascade = ALL, orphanRemoval = true)  // orphanRemoval: 물품이 삭제될때 사진도 다 삭제 <<-필요한지 논의!
+    @OneToMany(mappedBy = "item", cascade = ALL, orphanRemoval = true)  // orphanRemoval: 물품이 삭제될때 사진도 다 삭제
     private List<Image> images = new ArrayList<>();
 
     // 물품의 입찰 정보들

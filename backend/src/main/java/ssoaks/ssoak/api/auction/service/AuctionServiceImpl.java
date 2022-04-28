@@ -10,16 +10,15 @@ import ssoaks.ssoak.api.auction.entity.Category;
 import ssoaks.ssoak.api.auction.entity.Item;
 import ssoaks.ssoak.api.auction.entity.ItemCategory;
 import ssoaks.ssoak.api.auction.enums.AuctionType;
-//import ssoaks.ssoak.api.auction.repository.CategoryRepository;
 import ssoaks.ssoak.api.auction.repository.CategoryRepository;
 import ssoaks.ssoak.api.auction.repository.ItemCategoryRepository;
 import ssoaks.ssoak.api.auction.repository.ItemRepository;
+import ssoaks.ssoak.api.auction.repository.LikeRepository;
 import ssoaks.ssoak.api.member.dto.response.MemberSimpleInfoDto;
 import ssoaks.ssoak.api.member.entity.Member;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -35,6 +34,12 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Autowired
     ItemCategoryRepository itemCategoryRepository;
+
+    @Autowired
+    LikeRepository likeRepository;
+
+    @Autowired
+    LikeService likeService;
 
     @Transactional
     @Override
@@ -74,7 +79,8 @@ public class AuctionServiceImpl implements AuctionService {
         }
 
         return true;
-        // image upload 함수 생성
+
+        // image upload
 
     }
 
@@ -104,7 +110,9 @@ public class AuctionServiceImpl implements AuctionService {
 
         // 입찰정보
 
-        // 좋아요 여부
+        // 좋아요
+        Boolean like = likeService.isLike(member.getSeq(), itemSeq);
+        Integer cntLike = likeRepository.countLikeByItemSeq(itemSeq);
 
 
         ResItemDto resItemDto = ResItemDto.builder()
@@ -116,6 +124,8 @@ public class AuctionServiceImpl implements AuctionService {
                 .auctionType(item.getAuctionType())
                 .isSold(item.getIsSold())
                 .member(memberDto)
+                .isLike(like)
+                .likeCount(cntLike)
                 .itemCategories(categories)
                 .build();
 
