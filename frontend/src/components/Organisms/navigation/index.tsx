@@ -7,7 +7,7 @@ import ProfileContainer from "../../Pages/profileContainer";
 import { StyleSheet, GestureResponderEvent } from "react-native";
 import CustomTabBarButton from "../../Atoms/Buttons/customTabBarButton";
 import NavigateButton from "../../Atoms/Buttons/navigateButton";
-import ItemCreationContainer from "../../Pages/itemCreationContainer";
+import itemCreationContainer from "../../Pages/itemCreationContainer";
 import MainStackNavigator from "./stackNavigator";
 
 type Props = {};
@@ -41,7 +41,7 @@ const index = ({ navigation }: any) => {
       <Tab.Screen name="Favorite" component={FavoriteContainer} />
       <Tab.Screen
         name="+"
-        component={ItemCreationContainer}
+        component={itemCreationContainer}
         options={{
           tabBarButton: (props) => (
             <CustomTabBarButton

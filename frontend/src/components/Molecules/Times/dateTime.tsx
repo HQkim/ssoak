@@ -20,7 +20,7 @@ const DateTime = () => {
         minimumDate={date}
         locale="ko-KR"
         onChange={onChange}
-        style={{ flex: 2.3 }}
+        style={{ flex: 2 }}
       />
       <DateTimePicker
         testID="dateTimePicker"

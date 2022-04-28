@@ -1,17 +1,14 @@
 import {
   View,
-  Text,
   StyleSheet,
   SafeAreaView,
   Button,
-  Image,
   Keyboard,
   TouchableWithoutFeedback,
   ScrollView,
   Dimensions,
 } from "react-native";
 import React, { useState } from "react";
-import Typography from "../Atoms/Typographies/typography";
 import ItemCreationInput from "../Organisms/Input/itemCreationInput";
 
 const { height: ScreenHeight } = Dimensions.get("window");
@@ -28,12 +25,6 @@ const ItemCreation = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           <SafeAreaView>
-            <View style={styles.titleContainer}>
-              <Typography
-                title={"경매물품 등록하기"}
-                style={{ fontSize: ScreenHeight / 35, fontWeight: "200" }}
-              />
-            </View>
             <ItemCreationInput inputForm={inputForm} />
           </SafeAreaView>
           <View style={{ alignItems: "center", padding: ScreenHeight / 50 }}>
@@ -51,10 +42,6 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
     padding: ScreenHeight / 80,
-  },
-  titleContainer: {
-    alignItems: "center",
-    padding: ScreenHeight / 30,
   },
   buttonContainer: {
     backgroundColor: "#0176B7",
