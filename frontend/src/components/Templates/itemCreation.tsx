@@ -8,12 +8,13 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ItemCreationInput from "../Organisms/Input/itemCreationInput";
 
 const { height: ScreenHeight } = Dimensions.get("window");
 
 const ItemCreation = () => {
+  useEffect(() => {}, []);
   const onSubmit = () => {
     // console.warn(1);
   };
@@ -29,7 +30,7 @@ const ItemCreation = () => {
           </SafeAreaView>
           <View style={{ alignItems: "center", padding: ScreenHeight / 50 }}>
             <View style={styles.buttonContainer}>
-              <Button title="등록하기" onPress={onSubmit} color={"#ffff"} />
+              <Button title="등록하기" onPress={onSubmit} />
             </View>
           </View>
         </View>
