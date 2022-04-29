@@ -2,27 +2,31 @@ import React, { useState } from "react";
 import { View, Button, Text, BackHandler } from "react-native";
 import { WebView } from "react-native-webview";
 import { kakaoLogin } from "../../apis/auth";
+import { useDispatch } from "react-redux";
+import { loginRequestAction } from "../../store/modules/login";
 
 const runFirst = `window.ReactNativeWebView.postMessage("this is message from web");`;
 
 const KakaoLoginContainer = ({ navigation }: any) => {
+  const dispatch = useDispatch();
   const LogInProgress = async (data: any) => {
     const exp = "code=";
     var condition = data.indexOf(exp);
     if (condition != -1) {
       var request_code = data.substring(condition + exp.length);
 
-      await kakaoLogin(request_code)
-        .then((res) => {
-          if (res) {
-            navigation.navigate("Profile");
-          } else {
-            alert("Check your Information");
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      dispatch(loginRequestAction(request_code));
+      // await kakaoLogin(request_code)
+      //   .then((res) => {
+      //     if (res) {
+      //       // navigation.navigate("Profile");
+      //     } else {
+      //       alert("Check your Information");
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     }
   };
 
