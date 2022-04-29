@@ -1,5 +1,5 @@
 import { View, StyleSheet, Dimensions, TextInput, Text } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Border from "../../Atoms/Borders/border";
 import RadioButton from "../../Molecules/Buttons/radioButton";
 import DropDown from "../../Molecules/Buttons/dropDown";
@@ -8,8 +8,12 @@ import DateTime from "../../Molecules/Times/dateTime";
 
 const { height: ScreenHeight } = Dimensions.get("window");
 
+// 사진 데이터, 카테고리, 경매 타입 날리기
 type Props = {
   inputForm: Function;
+  navigation: any;
+  route: object;
+  onSubmit: Function;
 };
 
 const ItemCreationInput = (props: Props) => {
@@ -22,8 +26,24 @@ const ItemCreationInput = (props: Props) => {
   }
   const [form, setForm] = useState<Form | null | any>([]);
 
+  const { title, startPrice, content, categories, actionType } = form;
+
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener("focus", () => {
+      setForm({
+        title: "",
+        startPrice: "",
+        content: "",
+        categories: "",
+        actionType: "",
+      });
+    });
+    return unsubscribe;
+  }, [props.navigation]);
+
   const [select, setSelect] = useState(true);
   const onSelect = (info: boolean | string) => {
+    props.onSubmit(console.warn(3));
     if (typeof info === "boolean") {
       setSelect(info);
       if (info === true) {
@@ -42,7 +62,7 @@ const ItemCreationInput = (props: Props) => {
       }));
     }
   };
-  const onChangeInput = (item: string, value: string | number) => {
+  const onChangeInput = (item: string, value: any) => {
     if (item === "title") {
       setForm((prevState: any) => ({
         form: { ...prevState.form, title: value },
@@ -62,11 +82,16 @@ const ItemCreationInput = (props: Props) => {
   props.inputForm(form);
   return (
     <View>
-      <ImageContainer />
-      <RadioButton getSelectInformation={onSelect} />
+      <ImageContainer navigation={props.navigation} route={props.route} />
+      <RadioButton
+        getSelectInformation={onSelect}
+        navigation={props.navigation}
+        route={props.route}
+      />
       <DropDown getSelectInformation={onSelect} />
       <TextInput
         placeholder={"글 제목"}
+        value={title}
         style={styles.textContainer}
         maxLength={20}
         keyboardType="default"
@@ -76,6 +101,7 @@ const ItemCreationInput = (props: Props) => {
       <Border style={styles.border} />
       <TextInput
         placeholder={"시초가"}
+        value={startPrice}
         style={styles.textContainer}
         maxLength={7}
         keyboardType="numeric"
@@ -97,6 +123,7 @@ const ItemCreationInput = (props: Props) => {
       <Border style={styles.border} />
       <TextInput
         placeholder={"상품 상세 설명"}
+        value={content}
         style={styles.descriptionContainer}
         maxLength={250}
         keyboardType="default"
@@ -110,13 +137,13 @@ const ItemCreationInput = (props: Props) => {
 
 const styles = StyleSheet.create({
   textContainer: {
-    fontSize: ScreenHeight / 45,
+    fontSize: ScreenHeight / 40,
     fontWeight: "200",
-    height: ScreenHeight / 16,
+    height: ScreenHeight / 15,
     padding: ScreenHeight / 50,
   },
   descriptionContainer: {
-    fontSize: ScreenHeight / 45,
+    fontSize: ScreenHeight / 40,
     fontWeight: "200",
     height: ScreenHeight / 4,
     marginTop: ScreenHeight / 100,

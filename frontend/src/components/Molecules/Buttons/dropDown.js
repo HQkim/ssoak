@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Dimensions } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 
@@ -29,7 +29,7 @@ const DropDown = ({ getSelectInformation }) => {
         { label: "기타", value: "기타" },
       ]}
       containerStyle={{
-        height: ScreenHeight / 20,
+        height: ScreenHeight / 15,
         marginTop: ScreenHeight / 100,
       }}
       onChangeItem={(item) => onClickCategory(item.value)}

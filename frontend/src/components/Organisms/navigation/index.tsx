@@ -42,7 +42,8 @@ const index = ({ navigation }: any) => {
       <Tab.Screen
         name="+"
         component={itemCreationContainer}
-        options={{
+        options={({ route }) => ({
+          tabBarStyle: { display: "none" },
           tabBarButton: (props) => (
             <CustomTabBarButton
               {...props}
@@ -52,7 +53,7 @@ const index = ({ navigation }: any) => {
               }}
             />
           ),
-        }}
+        })}
       />
       <Tab.Screen name="Chat" component={FavoriteContainer} />
       <Tab.Screen name="Profile" component={ProfileContainer} />
