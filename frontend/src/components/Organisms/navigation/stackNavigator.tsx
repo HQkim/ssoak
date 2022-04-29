@@ -5,6 +5,7 @@ import AuctionChatContainer from "../../Pages/auctionChatContainer";
 import DetailContainer from "../../Pages/detailContainer";
 import MainContainer from "../../Pages/mainContainer";
 import NavigatorTitle from "../../Atoms/Typographies/navigatorTitle";
+import KakaoLoginContainer from "../../Pages/kakaoLoginContainer";
 
 type Props = {};
 
@@ -53,6 +54,11 @@ const MainStackNavigator = (props: Props) => {
             />
           ),
         }}
+      />
+      <Stack.Screen
+        name="kakaoLogin"
+        component={KakaoLoginContainer}
+        options={{ headerShown: false, title: "카카오 로그인 화면" }}
       />
     </Stack.Navigator>
   );
