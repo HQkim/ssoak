@@ -1,6 +1,7 @@
 package ssoaks.ssoak.api.auction.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.eclipse.jdt.internal.compiler.ast.Expression;
 import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
 import ssoaks.ssoak.api.auction.dto.response.QItemOverviewDto;
 import ssoaks.ssoak.api.auction.entity.Item;
@@ -24,7 +25,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
     @Override
     public List<ItemOverviewDto> getSellingItemsByMember (Long memberSeq) {
         // 참여자수 뽑아야함
-        return queryFactory
+        List<ItemOverviewDto> list = queryFactory
                 .select(new QItemOverviewDto(
                         item.seq,
                         item.title,
@@ -33,14 +34,16 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                         item.endTime,
                         item.auctionType,
                         item.isSold,
-                        bidding.buyer.countDistinct().intValue(),
-                        bidding.biddingPrice.max()
+                        item.biddings.size(),
+                        bidding.biddingPrice.max().coalesce(0)
                 ))
                 .from(item)
-                .leftJoin(item.biddings, bidding).groupBy(item)
+                .join(item.member, member)
+                .leftJoin(item.biddings, bidding).on(bidding.item.eq(item)).groupBy(item)
                 .where(item.member.seq.eq(memberSeq).and(item.endTime.after(LocalDateTime.now()))
-                        .and(item.isSold.eq(false))
-                )
+                        .and(item.isSold.eq(false)))
                 .fetch();
+
+        return list;
     }
 }

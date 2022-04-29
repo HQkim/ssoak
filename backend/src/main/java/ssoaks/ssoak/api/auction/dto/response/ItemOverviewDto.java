@@ -3,10 +3,12 @@ package ssoaks.ssoak.api.auction.dto.response;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import ssoaks.ssoak.api.auction.enums.AuctionType;
 import java.time.LocalDateTime;
 
 @Getter
+@ToString
 public class ItemOverviewDto {
 
     private Long itemSeq;
@@ -16,14 +18,14 @@ public class ItemOverviewDto {
     private LocalDateTime endTime;
     private AuctionType auctionType;
     private Boolean isSold;
-    private Integer participantCount;
+    private Integer biddingCount;
     private Integer lastPrice;
 
 
     @Builder
     @QueryProjection
 
-    public ItemOverviewDto(Long itemSeq, String title, Integer startPrice, LocalDateTime startTime, LocalDateTime endTime, AuctionType auctionType, Boolean isSold, Integer participantCount, Integer lastPrice) {
+    public ItemOverviewDto(Long itemSeq, String title, Integer startPrice, LocalDateTime startTime, LocalDateTime endTime, AuctionType auctionType, Boolean isSold, Integer biddingCount, Integer lastPrice) {
         this.itemSeq = itemSeq;
         this.title = title;
         this.startPrice = startPrice;
@@ -31,7 +33,7 @@ public class ItemOverviewDto {
         this.endTime = endTime;
         this.auctionType = auctionType;
         this.isSold = isSold;
-        this.participantCount = participantCount;
+        this.biddingCount = biddingCount;
         this.lastPrice = lastPrice;
     }
 }
