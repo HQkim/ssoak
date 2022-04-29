@@ -9,7 +9,7 @@ import {
   Dimensions,
   Text,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ItemCreationInput from "../Organisms/Input/itemCreationInput";
 import { NumberFormatValues } from "react-number-format";
 
@@ -21,6 +21,7 @@ type Props = {
 };
 
 const ItemCreation = (props: Props) => {
+  useEffect(() => {}, []);
   const onSubmit = () => {
     // console.warn(1);
   };
