@@ -15,7 +15,6 @@ import static javax.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.*;
 
 @Getter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "tb_item")
@@ -64,7 +63,6 @@ public class Item extends BaseModifiedEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_seq", columnDefinition = "BIGINT UNSIGNED")
     private Member member;
-
 
 
     @Builder

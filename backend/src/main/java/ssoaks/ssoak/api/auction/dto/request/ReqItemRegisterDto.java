@@ -3,6 +3,7 @@ package ssoaks.ssoak.api.auction.dto.request;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 import ssoaks.ssoak.api.auction.enums.AuctionType;
 
 import java.time.LocalDateTime;
@@ -22,6 +23,6 @@ public class ReqItemRegisterDto {
     private LocalDateTime endTime;
     private AuctionType auctionType;
     private List<String> itemCategories;
-//    private List<MultipartFile> images;
+    private List<MultipartFile> images;
 
 }
