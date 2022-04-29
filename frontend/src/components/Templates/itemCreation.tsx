@@ -2,18 +2,25 @@ import {
   View,
   StyleSheet,
   SafeAreaView,
-  Button,
+  TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
   ScrollView,
   Dimensions,
+  Text,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import ItemCreationInput from "../Organisms/Input/itemCreationInput";
+import { NumberFormatValues } from "react-number-format";
 
 const { height: ScreenHeight } = Dimensions.get("window");
 
-const ItemCreation = () => {
+type Props = {
+  navigation: any;
+  route: object;
+};
+
+const ItemCreation = (props: Props) => {
   useEffect(() => {}, []);
   const onSubmit = () => {
     // console.warn(1);
@@ -26,12 +33,17 @@ const ItemCreation = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           <SafeAreaView>
-            <ItemCreationInput inputForm={inputForm} />
+            <ItemCreationInput
+              navigation={props.navigation}
+              route={props.route}
+              inputForm={inputForm}
+              onSubmit={onSubmit}
+            />
           </SafeAreaView>
           <View style={{ alignItems: "center", padding: ScreenHeight / 50 }}>
-            <View style={styles.buttonContainer}>
-              <Button title="등록하기" onPress={onSubmit} />
-            </View>
+            <TouchableOpacity style={styles.buttonContainer} onPress={onSubmit}>
+              <Text style={styles.textContainer}>등록하기</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -50,6 +62,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: ScreenHeight / 17,
     justifyContent: "center",
+    alignItems: "center",
+  },
+  textContainer: {
+    color: "#ffffff",
+    fontWeight: "200",
+    fontSize: ScreenHeight / 40,
   },
 });
 

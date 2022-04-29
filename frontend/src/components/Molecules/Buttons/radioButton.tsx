@@ -1,5 +1,5 @@
 import { StyleSheet, View, TouchableOpacity, Dimensions } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SubRadioButton from "../../Atoms/Buttons/radioButton";
 import Typography from "../../Atoms/Typographies/typography";
 
@@ -7,6 +7,8 @@ const { height: ScreenHeight } = Dimensions.get("window");
 
 type Props = {
   getSelectInformation: Function;
+  navigation: any;
+  route: object;
 };
 
 const RadioButton = (props: Props) => {
@@ -15,6 +17,12 @@ const RadioButton = (props: Props) => {
     setSelect(!select);
     props.getSelectInformation(select);
   };
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener("focus", () => {
+      setSelect(true);
+    });
+    return unsubscribe;
+  }, [props.navigation]);
   return (
     <View
       style={{
