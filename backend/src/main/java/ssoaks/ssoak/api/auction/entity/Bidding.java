@@ -33,7 +33,7 @@ public class Bidding {
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isHammered;
 
-    @ManyToOne(fetch = LAZY, cascade = ALL)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "item_seq", columnDefinition = "BIGINT UNSIGNED")
     private Item item;
 

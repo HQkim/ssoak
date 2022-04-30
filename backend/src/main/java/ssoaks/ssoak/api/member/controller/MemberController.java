@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileDTO;
-import ssoaks.ssoak.api.member.dto.response.ResMemberProfileSellingDTO;
+import ssoaks.ssoak.api.member.dto.response.ResMemberProfileItemsDTO;
 import ssoaks.ssoak.api.member.entity.Member;
 import ssoaks.ssoak.api.member.service.MemberService;
 import ssoaks.ssoak.common.dto.BaseDataResponseDTO;
@@ -41,12 +41,12 @@ public class MemberController {
     }
 
     @GetMapping("/selling")
-    public ResponseEntity<BaseDataResponseDTO<ResMemberProfileSellingDTO>> getSellingItems () {
+    public ResponseEntity<BaseDataResponseDTO<ResMemberProfileItemsDTO>> getSellingItems () {
         log.debug("/members/profile/selling getSellingItems 호출됨");
 
         Member member = memberService.getMemberByAuthentication();
         Long member_seq = member.getSeq();
-        BaseDataResponseDTO<ResMemberProfileSellingDTO> resMemberProfileSelling;
+        BaseDataResponseDTO<ResMemberProfileItemsDTO> resMemberProfileSelling;
 
         // 회원정보 조회 실패
         if (member == null) {
@@ -57,8 +57,8 @@ public class MemberController {
         // 회원정보 조회 성공
         List<ItemOverviewDto> sellingItems = memberService.getSellingItemsByMemberSeq(member_seq);
 
-        resMemberProfileSelling = new BaseDataResponseDTO<ResMemberProfileSellingDTO>(200, "판매중 아이템 조회 성공",
-                ResMemberProfileSellingDTO.builder().itemOverviewDtos(sellingItems).build());
+        resMemberProfileSelling = new BaseDataResponseDTO<ResMemberProfileItemsDTO>(200, "판매중 아이템 조회 성공",
+                ResMemberProfileItemsDTO.builder().itemOverviewDtos(sellingItems).build());
 
         return ResponseEntity.status(200).body(resMemberProfileSelling);
     }

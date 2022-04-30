@@ -15,7 +15,7 @@ import static javax.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.*;
 
 @Getter
-@AllArgsConstructor
+@ToString(of = {"seq", "title", "content", "startPrice", "biddingUnit", "startTime", "endTime", "auctionType", "isSold"})
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "tb_item")
 @Entity
@@ -56,7 +56,7 @@ public class Item extends BaseModifiedEntity {
     private List<Image> images = new ArrayList<>();
 
     // 물품의 입찰 정보들
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", cascade = ALL)
     private List<Bidding> biddings = new ArrayList<>();
 
     // 물품의 판매자
