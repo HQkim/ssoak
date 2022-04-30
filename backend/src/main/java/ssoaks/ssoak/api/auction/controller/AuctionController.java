@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ssoaks.ssoak.api.auction.dto.request.ReqItemRegisterDto;
 import ssoaks.ssoak.api.auction.dto.response.ResItemDto;
 import ssoaks.ssoak.api.auction.service.AuctionService;
@@ -15,6 +16,7 @@ import ssoaks.ssoak.common.dto.BaseDataResponseDTO;
 import ssoaks.ssoak.common.dto.BaseResponseDTO;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -32,13 +34,13 @@ public class AuctionController {
 
     // 물품 생성
     @PostMapping
-    public ResponseEntity<BaseResponseDTO> registerItem(@Valid @RequestPart(value = "reqItemRegister") ReqItemRegisterDto reqItemRegisterDto) { //, List<MultipartFile> images
+    public ResponseEntity<BaseResponseDTO> registerItem(@Valid @RequestPart(value = "reqItemRegister") ReqItemRegisterDto reqItemRegisterDto, @RequestPart(value = "itemImages") List<MultipartFile> itemImages) { //,
 
         log.debug("registerItem - {}", reqItemRegisterDto);
         Member member = memberService.getMemberByAuthentication();
 
         try {
-            if (!auctionService.createItem(member, reqItemRegisterDto)) {
+            if (!auctionService.createItem(member, reqItemRegisterDto, itemImages)) {
                 return ResponseEntity.status(409).body(new BaseResponseDTO(409, "이미 등록된 물품입니다."));
             }
         } catch (Exception e) {
@@ -56,7 +58,7 @@ public class AuctionController {
 
         ResItemDto resItemDto = null;
         try {
-            resItemDto = auctionService.getItemDetail(member, itemSeq);
+            resItemDto = auctionService.getItemDetail(2L, itemSeq);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(404).body(new BaseDataResponseDTO(404, "존재하지 않는 물품입니다.", resItemDto));
         } catch (Exception e) {
@@ -99,6 +101,5 @@ public class AuctionController {
         }
         return ResponseEntity.status(200).body(new BaseResponseDTO(204, "좋아요를 취소했습니다."));
     }
-
 
 }

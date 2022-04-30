@@ -28,7 +28,9 @@ public class Image extends BaseModifiedEntity {
     @JoinColumn(name = "item_seq", columnDefinition = "BIGINT UNSIGNED")
     private Item item;
 
-
-    // image 수정 change Image
-
+    @Builder
+    public Image(String imageUrl, Item item) {
+        this.imageUrl = imageUrl;
+        this.item = item;
+    }
 }

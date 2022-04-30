@@ -65,7 +65,6 @@ public class Item extends BaseModifiedEntity {
     private Member member;
 
 
-
     @Builder
     public Item(String title, String content, Integer startPrice, Integer biddingUnit,
                 LocalDateTime startTime, LocalDateTime endTime, AuctionType auctionType,
