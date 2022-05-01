@@ -11,5 +11,5 @@ public interface MemberService {
     Member getMemberByAuthentication();
     ResMemberProfileDTO getMyProfile();
     List<ItemOverviewDto> getMySellingItems();
-
+    List<ItemOverviewDto> getMySoldItems();
 }

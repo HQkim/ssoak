@@ -72,5 +72,19 @@ public class MemberServiceImpl implements MemberService{
         return sellingItems;
     }
 
+    @Override
+    public List<ItemOverviewDto> getMySoldItems() {
+        Long memberSeq;
+
+        try {
+            memberSeq = getMemberByAuthentication().getSeq();
+        } catch (Exception e) {
+            throw new NotFoundMemberException("MemberServiceImple getSellingItemsByMemberSeq() 회원정보 호출 실패");
+        }
+
+        List<ItemOverviewDto> soldItems = itemRepository.getSoldItemsByMember(memberSeq);
+
+        return soldItems;
+    }
 }
 

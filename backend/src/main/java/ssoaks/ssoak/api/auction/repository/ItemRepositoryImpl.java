@@ -46,4 +46,29 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
 
         return list;
     }
+
+    @Override
+    public List<ItemOverviewDto> getSoldItemsByMember (Long memberSeq) {
+        // 참여자수 뽑아야함
+        List<ItemOverviewDto> list = queryFactory
+                .select(new QItemOverviewDto(
+                        item.seq,
+                        item.title,
+                        item.startPrice,
+                        item.startTime,
+                        item.endTime,
+                        item.auctionType,
+                        item.isSold,
+                        item.biddings.size(),
+                        bidding.biddingPrice.max().coalesce(0)
+                ))
+                .from(item)
+                .join(item.member, member)
+                .leftJoin(item.biddings, bidding).on(bidding.item.eq(item)).groupBy(item)
+                .where(item.member.seq.eq(memberSeq).and(item.endTime.before(LocalDateTime.now()))
+                        .and(item.isSold.eq(true)))
+                .fetch();
+
+        return list;
+    }
 }

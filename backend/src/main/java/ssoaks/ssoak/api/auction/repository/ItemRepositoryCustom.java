@@ -7,4 +7,5 @@ import java.util.List;
 public interface ItemRepositoryCustom {
 
     List<ItemOverviewDto> getSellingItemsByMember(Long memberSeq);
+    List<ItemOverviewDto> getSoldItemsByMember(Long memberSeq);
 }
