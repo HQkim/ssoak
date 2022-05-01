@@ -28,10 +28,8 @@ import java.net.URL;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-//    @Autowired
     private final PasswordEncoder passwordEncoder;
 
-//    @Autowired
     private final MemberRepository memberRepository;
 
     @Override

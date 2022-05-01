@@ -9,6 +9,7 @@ import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileDTO;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileItemsDTO;
 import ssoaks.ssoak.api.member.entity.Member;
+import ssoaks.ssoak.api.member.exception.NotFoundMemberException;
 import ssoaks.ssoak.api.member.service.MemberService;
 import ssoaks.ssoak.common.dto.BaseDataResponseDTO;
 
@@ -20,44 +21,49 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberController {
 
-//    @Autowired
     private final MemberService memberService;
 
     @GetMapping("")
     public ResponseEntity<BaseDataResponseDTO<ResMemberProfileDTO>> getMyProfile () {
         log.debug("API getMyProfile 호출됨");
 
-        Member member = memberService.getMemberByAuthentication();
-        BaseDataResponseDTO<ResMemberProfileDTO> memberProfile;
+        BaseDataResponseDTO<ResMemberProfileDTO> resMemberProfile;
+        ResMemberProfileDTO myProfile;
 
-        // 회원정보 조회 실패
-        if (member == null) {
-            memberProfile = new BaseDataResponseDTO<>(400, "회원정보 조회 실패", null);
-            return ResponseEntity.status(400).body(memberProfile);
+        try {
+            myProfile = memberService.getMyProfile();
+        } catch (NotFoundMemberException e) {
+            log.error(e.getMessage());
+            resMemberProfile = new BaseDataResponseDTO<>(401, "회원 권한 없음", null);
+            return ResponseEntity.status(401).body(resMemberProfile);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            resMemberProfile = new BaseDataResponseDTO<>(500, "내부 서버 에러", null);
+            return ResponseEntity.status(500).body(resMemberProfile);
         }
 
-        // 회원정보 조회 성공
-        memberProfile = new BaseDataResponseDTO<>(200, "회원정보 조회 성공",
-                new ResMemberProfileDTO(member.getSeq(), member.getEmail(), member.getNickname(), member.getProfileImageUrl(), member.getGrade()));
-        return ResponseEntity.status(200).body(memberProfile);
+        resMemberProfile = new BaseDataResponseDTO<>(200, "회원정보 조회 성공", myProfile) ;
+        return ResponseEntity.status(200).body(resMemberProfile);
     }
 
     @GetMapping("/selling")
     public ResponseEntity<BaseDataResponseDTO<ResMemberProfileItemsDTO>> getSellingItems () {
         log.debug("/members/profile/selling getSellingItems 호출됨");
 
-        Member member = memberService.getMemberByAuthentication();
-        Long member_seq = member.getSeq();
         BaseDataResponseDTO<ResMemberProfileItemsDTO> resMemberProfileSelling;
+        List<ItemOverviewDto> sellingItems;
 
-        // 회원정보 조회 실패
-        if (member == null) {
-            resMemberProfileSelling = new BaseDataResponseDTO<>(400, "회원정보 조회 실패", null);
-            return ResponseEntity.status(400).body(resMemberProfileSelling);
+        try {
+            sellingItems = memberService.getMySellingItems();
+        } catch (NotFoundMemberException e) {
+            log.error(e.getMessage());
+            resMemberProfileSelling = new BaseDataResponseDTO<>(401, "회원 권한 없음", null);
+            return ResponseEntity.status(401).body(resMemberProfileSelling);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            resMemberProfileSelling = new BaseDataResponseDTO<>(500, "내부 서버 에러", null);
+            return ResponseEntity.status(500).body(resMemberProfileSelling);
         }
-
-        // 회원정보 조회 성공
-        List<ItemOverviewDto> sellingItems = memberService.getSellingItemsByMemberSeq(member_seq);
 
         resMemberProfileSelling = new BaseDataResponseDTO<ResMemberProfileItemsDTO>(200, "판매중 아이템 조회 성공",
                 ResMemberProfileItemsDTO.builder().itemOverviewDtos(sellingItems).build());

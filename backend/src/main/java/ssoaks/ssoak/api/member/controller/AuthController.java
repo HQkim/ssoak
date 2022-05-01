@@ -23,13 +23,10 @@ import ssoaks.ssoak.common.jwt.JwtAuthenticationProvider;
 @RequiredArgsConstructor
 public class AuthController {
 
-//    @Autowired
     private final AuthService authService;
 
-//    @Autowired
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
-//    @Autowired
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @PostMapping("/kakao")
