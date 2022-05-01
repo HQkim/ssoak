@@ -4,9 +4,9 @@ import ssoaks.ssoak.api.member.entity.Member;
 
 public interface LikeService {
 
-    void like(Member member, Long itemSeq) throws Exception;
+    void like(Long itemSeq) throws Exception;
 
-    void unLike(Member member, Long itemSeq);
+    void unLike(Long itemSeq);
 
     Boolean isLike(Long memberSeq, Long itemSeq);
 

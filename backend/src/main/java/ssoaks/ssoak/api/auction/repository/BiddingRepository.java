@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface BiddingRepository extends JpaRepository<Bidding, Long> {
 
-//    Optional<Bidding> findby
+    Optional<Bidding> findByItemSeqOrderBySeqDesc(Long itemSeq);
 }

@@ -11,6 +11,7 @@ import ssoaks.ssoak.api.auction.repository.ItemRepository;
 import ssoaks.ssoak.api.auction.repository.LikeRepository;
 import ssoaks.ssoak.api.member.entity.Member;
 import ssoaks.ssoak.api.member.repository.MemberRepository;
+import ssoaks.ssoak.api.member.service.MemberService;
 
 @Slf4j
 @Transactional(readOnly = true)
@@ -24,22 +25,25 @@ public class LikeServiceImpl implements LikeService {
 
     private final MemberRepository memberRepository;
 
+    private final MemberService memberService;
+
     @Transactional
     @Override
-    public void like(Member member, Long itemSeq) throws Exception {
+    public void like(Long itemSeq) throws Exception {
+
+        log.debug("like Item - {}", itemSeq);
+        Member member = memberService.getMemberByAuthentication();
+        System.out.println("like - memberSeq - " + member.getSeq());
+
         Like findLike = likeRepository.findByItemSeqAndMemberSeq(itemSeq, member.getSeq());
 
         if(findLike == null) {
             Item item = itemRepository.findBySeq(itemSeq)
                     .orElseThrow(() -> new IllegalArgumentException("물품을 찾을 수 없습니다."));
 
-            // memberDto로 Refactoring 후 변경 예정
-            Member memberTmp = memberRepository.findById(member.getSeq())
-                    .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
-
             likeRepository.save(Like.builder()
                     .item(item)
-                    .member(memberTmp)
+                    .member(member)
                     .build());
         } else {
             log.error("Like Item error -{}", itemSeq);
@@ -50,8 +54,13 @@ public class LikeServiceImpl implements LikeService {
 
     @Transactional
     @Override
-    public void unLike(Member member, Long itemSeq) {
+    public void unLike(Long itemSeq) {
+
+        log.debug("unlike Item - {}", itemSeq);
+        Member member = memberService.getMemberByAuthentication();
+
         Like findLike = likeRepository.findByItemSeqAndMemberSeq(itemSeq, member.getSeq());
+
         if (findLike == null) {
             throw new IllegalStateException("좋아요한 물품을 찾을 수 없습니다.");
         } else if (findLike.getMember().getSeq().equals(member.getSeq())) {

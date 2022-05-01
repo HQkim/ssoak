@@ -35,11 +35,8 @@ public class AuctionController {
     @PostMapping
     public ResponseEntity<BaseResponseDTO> registerItem(@Valid @RequestPart(value = "reqItemRegister") ReqItemRegisterDto reqItemRegisterDto, @RequestPart(value = "itemImages") List<MultipartFile> itemImages) { //,
 
-        log.debug("registerItem - {}", reqItemRegisterDto);
-        Member member = memberService.getMemberByAuthentication();
-
         try {
-            if (!auctionService.createItem(member, reqItemRegisterDto, itemImages)) {
+            if (!auctionService.createItem(reqItemRegisterDto, itemImages)) {
                 return ResponseEntity.status(409).body(new BaseResponseDTO(409, "이미 등록된 물품입니다."));
             }
         } catch (Exception e) {
@@ -52,12 +49,9 @@ public class AuctionController {
     @GetMapping("/{itemSeq}")
     public ResponseEntity<BaseDataResponseDTO> getItem(@PathVariable("itemSeq") Long itemSeq) {
 
-        log.debug("getItem - {}", itemSeq);
-        Member member = memberService.getMemberByAuthentication();
-
         ResItemDto resItemDto = null;
         try {
-            resItemDto = auctionService.getItemDetail(2L, itemSeq);
+            resItemDto = auctionService.getItemDetail(itemSeq);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(404).body(new BaseDataResponseDTO(404, "존재하지 않는 물품입니다.", resItemDto));
         } catch (Exception e) {
@@ -71,14 +65,12 @@ public class AuctionController {
     @PostMapping("/{itemSeq}/like")
     public ResponseEntity<BaseResponseDTO> like(@PathVariable("itemSeq") Long itemSeq) {
 
-        log.debug("like Item - {}", itemSeq);
-        Member member = memberService.getMemberByAuthentication();
-
         try {
-            likeService.like(member, itemSeq);
+            likeService.like(itemSeq);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(404).body(new BaseResponseDTO(404, "존재하지 않는 물품입니다."));
         } catch (Exception e) {
+            System.out.println("like exception -e " + e);
             return ResponseEntity.status(405).body(new BaseResponseDTO(405, "이미 좋아요한 물품입니다."));
         }
         return ResponseEntity.status(201).body(new BaseResponseDTO(201, "좋아요를 눌렀습니다."));
@@ -88,11 +80,8 @@ public class AuctionController {
     @DeleteMapping("/{itemSeq}/like")
     public ResponseEntity<BaseResponseDTO> unlike(@PathVariable("itemSeq") Long itemSeq) {
 
-        log.debug("unlike Item - {}", itemSeq);
-        Member member = memberService.getMemberByAuthentication();
-
         try {
-            likeService.unLike(member,itemSeq);
+            likeService.unLike(itemSeq);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(404).body(new BaseResponseDTO(404, "물품을 찾을 수 없습니다."));
         } catch (Exception e) {
