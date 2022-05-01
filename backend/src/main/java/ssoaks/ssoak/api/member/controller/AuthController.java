@@ -1,5 +1,6 @@
 package ssoaks.ssoak.api.member.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,16 +20,17 @@ import ssoaks.ssoak.common.jwt.JwtAuthenticationProvider;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/members/login")
+@RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
-    AuthService authService;
+//    @Autowired
+    private final AuthService authService;
 
-    @Autowired
-    JwtAuthenticationProvider jwtAuthenticationProvider;
+//    @Autowired
+    private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
-    @Autowired
-    AuthenticationManagerBuilder authenticationManagerBuilder;
+//    @Autowired
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @PostMapping("/kakao")
     public ResponseEntity<BaseDataResponseDTO<ResSocialLoginDTO>> loginByKakao(@RequestBody ReqSocialLoginDTO reqSocialLoginDTO) {

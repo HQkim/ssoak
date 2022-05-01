@@ -1,5 +1,6 @@
 package ssoaks.ssoak.api.auction.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,18 +20,16 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/auctions")
 public class AuctionController {
 
-    @Autowired
-    private MemberService memberService;
+    private final MemberService memberService;
 
-    @Autowired
-    private AuctionService auctionService;
+    private final AuctionService auctionService;
 
-    @Autowired
-    private LikeService likeService;
+    private final LikeService likeService;
 
     // 물품 생성
     @PostMapping

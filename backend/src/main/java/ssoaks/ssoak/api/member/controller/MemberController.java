@@ -1,5 +1,6 @@
 package ssoaks.ssoak.api.member.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,11 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/members/profile")
+@RequiredArgsConstructor
 public class MemberController {
 
-    @Autowired
-    private MemberService memberService;
+//    @Autowired
+    private final MemberService memberService;
 
     @GetMapping("")
     public ResponseEntity<BaseDataResponseDTO<ResMemberProfileDTO>> getMyProfile () {

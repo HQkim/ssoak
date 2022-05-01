@@ -1,5 +1,6 @@
 package ssoaks.ssoak.api.member.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,13 +18,14 @@ import java.util.Optional;
 @Slf4j
 @Transactional(readOnly = true)
 @Service
+@RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
 
-    @Autowired
-    private MemberRepository memberRepository;
+//    @Autowired
+    private final MemberRepository memberRepository;
 
-    @Autowired
-    private ItemRepository itemRepository;
+//    @Autowired
+    private final ItemRepository itemRepository;
 
     @Override
     public Member getMemberByAuthentication() {

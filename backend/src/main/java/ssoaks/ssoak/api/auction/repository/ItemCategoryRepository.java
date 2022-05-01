@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface ItemCategoryRepository extends JpaRepository<ItemCategory, Long> {
 
     Optional<List<ItemCategory>> findByItem (Item item);
+
 }

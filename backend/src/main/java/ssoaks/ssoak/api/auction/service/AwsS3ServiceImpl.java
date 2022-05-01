@@ -27,11 +27,9 @@ public class AwsS3ServiceImpl implements AwsS3Service{
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    @Autowired
-    AmazonS3Client amazonS3Client;
+    private final AmazonS3Client amazonS3Client;
 
-    @Autowired
-    ImageRepository imageRepository;
+    private final ImageRepository imageRepository;
 
 
 
