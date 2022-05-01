@@ -1,5 +1,6 @@
 package ssoaks.ssoak.api.auction.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,31 +26,24 @@ import java.util.stream.Collectors;
 @Slf4j
 @Transactional(readOnly = true)
 @Service
+@RequiredArgsConstructor
 public class AuctionServiceImpl implements AuctionService {
 
-    @Autowired
-    CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-    @Autowired
-    ItemRepository itemRepository;
+    private final ItemRepository itemRepository;
 
-    @Autowired
-    MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-    @Autowired
-    ItemCategoryRepository itemCategoryRepository;
+    private final ItemCategoryRepository itemCategoryRepository;
 
-    @Autowired
-    LikeRepository likeRepository;
+    private final LikeRepository likeRepository;
 
-    @Autowired
-    LikeService likeService;
+    private final LikeService likeService;
 
-    @Autowired
-    ImageRepository imageRepository;
+    private final ImageRepository imageRepository;
 
-    @Autowired
-    AwsS3Service awsS3Service;
+    private final AwsS3Service awsS3Service;
 
     @Transactional
     @Override

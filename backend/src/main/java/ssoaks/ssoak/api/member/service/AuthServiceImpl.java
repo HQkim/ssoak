@@ -2,6 +2,7 @@ package ssoaks.ssoak.api.member.service;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -24,13 +25,14 @@ import java.net.URL;
 
 @Transactional
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+//    @Autowired
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    MemberRepository memberRepository;
+//    @Autowired
+    private final MemberRepository memberRepository;
 
     @Override
     public Member loginByKakao(String authCode) {

@@ -1,5 +1,6 @@
 package ssoaks.ssoak.api.auction.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,16 +15,14 @@ import ssoaks.ssoak.api.member.repository.MemberRepository;
 @Slf4j
 @Transactional(readOnly = true)
 @Service
+@RequiredArgsConstructor
 public class LikeServiceImpl implements LikeService {
 
-    @Autowired
-    LikeRepository likeRepository;
+    private final LikeRepository likeRepository;
 
-    @Autowired
-    ItemRepository itemRepository;
+    private final ItemRepository itemRepository;
 
-    @Autowired
-    MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     @Override
