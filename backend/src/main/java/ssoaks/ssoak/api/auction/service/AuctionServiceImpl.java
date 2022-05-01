@@ -1,22 +1,22 @@
 package ssoaks.ssoak.api.auction.service;
 
 import lombok.RequiredArgsConstructor;
+import com.amazonaws.services.dynamodbv2.xspec.M;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ssoaks.ssoak.api.auction.dto.request.ReqItemRegisterDto;
+import ssoaks.ssoak.api.auction.dto.response.BiddingDto;
 import ssoaks.ssoak.api.auction.dto.response.ResItemDto;
-import ssoaks.ssoak.api.auction.entity.Category;
-import ssoaks.ssoak.api.auction.entity.Image;
-import ssoaks.ssoak.api.auction.entity.Item;
-import ssoaks.ssoak.api.auction.entity.ItemCategory;
+import ssoaks.ssoak.api.auction.entity.*;
 import ssoaks.ssoak.api.auction.enums.AuctionType;
 import ssoaks.ssoak.api.auction.repository.*;
 import ssoaks.ssoak.api.member.dto.response.MemberSimpleInfoDto;
 import ssoaks.ssoak.api.member.entity.Member;
 import ssoaks.ssoak.api.member.repository.MemberRepository;
+import ssoaks.ssoak.api.member.service.MemberService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -45,9 +45,16 @@ public class AuctionServiceImpl implements AuctionService {
 
     private final AwsS3Service awsS3Service;
 
+    private final MemberService memberService;
+
+    private final BiddingRepository biddingRepository;
+
     @Transactional
     @Override
-    public Boolean createItem(Member member, ReqItemRegisterDto itemRegisterRequestDto, List<MultipartFile> itemImages) {
+    public Boolean createItem(ReqItemRegisterDto itemRegisterRequestDto, List<MultipartFile> itemImages) {
+
+        log.debug("registerItem - {}", itemRegisterRequestDto);
+        Member member = memberService.getMemberByAuthentication();
 
         LocalDateTime startTime = null;
 
@@ -83,21 +90,25 @@ public class AuctionServiceImpl implements AuctionService {
             itemCategoryRepository.save(itemCategory);
         }
 
-
-
         // image upload
         uploadItemImages(item, itemImages);
 
         return true;
     }
 
-
     @Override
-    public ResItemDto getItemDetail(Long memberSeq, Long itemSeq) {
+    public ResItemDto getItemDetail(Long itemSeq) {
+
+        log.debug("getItem - {}", itemSeq);
+        Member member = memberService.getMemberByAuthentication();
+
+        System.out.println("============item============");
         Item item = itemRepository.findById(itemSeq)
                 .orElseThrow(() -> new IllegalArgumentException("해당 물품을 찾을 수 없습니다."));
 
-        // 카테고리
+        System.out.println("============category============");
+
+        // category
         List<ItemCategory> itemCategories = itemCategoryRepository.findByItem(item)
                 .orElseThrow(() -> new IllegalArgumentException("해당 물품에 대한 카테고리를 찾을 수 없습니다."));
 
@@ -105,16 +116,23 @@ public class AuctionServiceImpl implements AuctionService {
                 .map(itemCategory -> itemCategory.getCategory().getCategoryName())
                 .collect(Collectors.toList());
 
-        //member
-        Optional<Member> member = memberRepository.findBySeq(memberSeq);
 
+        // member -> 조회한 유저
         MemberSimpleInfoDto memberDto = MemberSimpleInfoDto.builder()
-                .seq(member.get().getSeq())
-                .nickname(member.get().getNickname())
-                .profileImageUrl(member.get().getProfileImageUrl())
+                .seq(member.getSeq())
+                .nickname(member.getNickname())
+                .profileImageUrl(member.getProfileImageUrl())
                 .build();
 
-        // 이미지
+        System.out.println("=====seller======");
+        MemberSimpleInfoDto seller = MemberSimpleInfoDto.builder()
+                .seq(item.getMember().getSeq())
+                .nickname(item.getMember().getNickname())
+                .profileImageUrl(item.getMember().getProfileImageUrl())
+                .build();
+
+        System.out.println("=========images==========");
+        // images
         List<Image> itemImages = imageRepository.findByItemSeqOrderBySeq(itemSeq)
                 .orElseThrow(() -> new IllegalArgumentException("해당 물품에 대한 이미지를 찾을 수 없습니다."));
 
@@ -123,10 +141,33 @@ public class AuctionServiceImpl implements AuctionService {
                 .collect(Collectors.toList());
 
 
-        // 입찰정보
+        // 입찰정보 - 입찰가, 입찰한 사람에 대한 SimpleDto
+        System.out.println("======bidding=======");
+        Bidding bidding = biddingRepository.findByItemSeqOrderBySeqDesc(itemSeq).orElse(null);
 
-        // 좋아요
-        Boolean like = likeService.isLike(memberSeq, itemSeq);
+        BiddingDto biddingDto = null;
+
+
+        if (bidding != null) {
+
+            MemberSimpleInfoDto buyer = MemberSimpleInfoDto.builder()
+                    .seq(bidding.getBuyer().getSeq())
+                    .nickname(bidding.getBuyer().getNickname())
+                    .profileImageUrl(bidding.getBuyer().getProfileImageUrl())
+                    .build();
+
+            biddingDto = BiddingDto.builder()
+                    .biddingPrice(bidding.getBiddingPrice())
+                    .biddingDate(bidding.getBiddingDate())
+                    .buyer(buyer)
+                    .build();
+
+        }
+
+
+        System.out.println("=========like===========");
+        // like
+        Boolean like = likeService.isLike(member.getSeq(), itemSeq);
         Integer cntLike = likeRepository.countLikeByItemSeq(itemSeq);
 
 
@@ -144,6 +185,8 @@ public class AuctionServiceImpl implements AuctionService {
                 .likeCount(cntLike)
                 .itemCategories(categories)
                 .itemImages(images)
+                .bidding(biddingDto)
+                .seller(seller)
                 .build();
 
         return resItemDto;
@@ -153,7 +196,6 @@ public class AuctionServiceImpl implements AuctionService {
     public void uploadItemImages(Item item, List<MultipartFile> itemImages) {
 
         itemImages.forEach(image -> {
-
             String imageUrl = awsS3Service.uploadImage(image);
             Image imageBuild = Image.builder()
                     .imageUrl(imageUrl)

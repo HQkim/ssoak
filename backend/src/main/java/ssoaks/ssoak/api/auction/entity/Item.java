@@ -51,10 +51,6 @@ public class Item extends BaseModifiedEntity {
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isSold;
 
-    // 물품의 사진들
-    @OneToMany(mappedBy = "item", cascade = ALL, orphanRemoval = true)  // orphanRemoval: 물품이 삭제될때 사진도 다 삭제
-    private List<Image> images = new ArrayList<>();
-
     // 물품의 입찰 정보들
     @OneToMany(mappedBy = "item", cascade = ALL)
     private List<Bidding> biddings = new ArrayList<>();
@@ -63,7 +59,6 @@ public class Item extends BaseModifiedEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_seq", columnDefinition = "BIGINT UNSIGNED")
     private Member member;
-
 
     @Builder
     public Item(String title, String content, Integer startPrice, Integer biddingUnit,

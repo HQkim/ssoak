@@ -1,5 +1,6 @@
 package ssoaks.ssoak.api.auction.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -41,8 +42,12 @@ public class Bidding {
     @JoinColumn(name = "member_seq", columnDefinition = "BIGINT UNSIGNED")
     private Member buyer;
 
-
-    // Builder
-
-
+    @Builder
+    public Bidding(Integer biddingPrice, LocalDateTime biddingDate, Boolean isHammered, Item item, Member buyer) {
+        this.biddingPrice = biddingPrice;
+        this.biddingDate = biddingDate;
+        this.isHammered = isHammered;
+        this.item = item;
+        this.buyer = buyer;
+    }
 }

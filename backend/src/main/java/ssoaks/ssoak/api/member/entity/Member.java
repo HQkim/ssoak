@@ -77,4 +77,5 @@ public class Member {
         this.isDeleted = isDeleted;
         this.password = password;
     }
+
 }
