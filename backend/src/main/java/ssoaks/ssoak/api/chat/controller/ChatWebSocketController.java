@@ -39,8 +39,15 @@ public class ChatWebSocketController {
 
     @MessageMapping("/live_auction")
     public void LiveAuctionHandler(ReqLiveAuctionMessageDto reqLiveAuctionMessageDto) {
+
         Member member = memberService.getMemberByAuthentication();
         ResLiveAuctionMessageDto resLiveAuctionMessageDto = liveAuctionMessageService.sendAuctionMessage(reqLiveAuctionMessageDto, member);
-        template.convertAndSend("/topic/" + reqLiveAuctionMessageDto.getItemSeq(), resLiveAuctionMessageDto);
+
+        if (resLiveAuctionMessageDto == null) {
+            template.convertAndSend("/topic/" + reqLiveAuctionMessageDto.getItemSeq(),
+                    "현재 가격보다 크지 않은 입찰입니다");
+        } else {
+            template.convertAndSend("/topic/" + reqLiveAuctionMessageDto.getItemSeq(), resLiveAuctionMessageDto);
+        }
     }
 }

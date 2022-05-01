@@ -19,7 +19,7 @@ import static javax.persistence.FetchType.*;
 public class Chat extends BaseCreatedEntity {
 
     @Column(name = "chat_seq", columnDefinition = "BIGINT UNSIGNED")
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long seq;
 
