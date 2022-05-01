@@ -65,7 +65,7 @@ public class MemberController {
             return ResponseEntity.status(500).body(resMemberProfileSelling);
         }
 
-        resMemberProfileSelling = new BaseDataResponseDTO<ResMemberProfileItemsDTO>(200, "판매중 아이템 조회 성공",
+        resMemberProfileSelling = new BaseDataResponseDTO<ResMemberProfileItemsDTO>(200, "판매중 물품 조회 성공",
                 ResMemberProfileItemsDTO.builder().itemOverviewDtos(sellingItems).build());
 
         return ResponseEntity.status(200).body(resMemberProfileSelling);
@@ -90,9 +90,34 @@ public class MemberController {
             return ResponseEntity.status(500).body(resMemberProfileSold);
         }
 
-        resMemberProfileSold = new BaseDataResponseDTO<ResMemberProfileItemsDTO>(200, "판매완료 아이템 조회 성공",
+        resMemberProfileSold = new BaseDataResponseDTO<ResMemberProfileItemsDTO>(200, "판매완료 물품 조회 성공",
                 ResMemberProfileItemsDTO.builder().itemOverviewDtos(soldItems).build());
 
         return ResponseEntity.status(200).body(resMemberProfileSold);
+    }
+
+    @GetMapping("/unsold")
+    public ResponseEntity<BaseDataResponseDTO<ResMemberProfileItemsDTO>> getMyUnsoldItems () {
+        log.debug("MemberController getMyUnsoldItems 호출됨");
+
+        BaseDataResponseDTO<ResMemberProfileItemsDTO> resMemberProfileUnsold;
+        List<ItemOverviewDto> unsoldItems;
+
+        try {
+            unsoldItems = memberService.getMyUnsoldItems();
+        } catch (NotFoundMemberException e) {
+            log.error(e.getMessage());
+            resMemberProfileUnsold = new BaseDataResponseDTO<>(401, "회원 권한 없음", null);
+            return ResponseEntity.status(401).body(resMemberProfileUnsold);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            resMemberProfileUnsold = new BaseDataResponseDTO<>(500, "내부 서버 에러", null);
+            return ResponseEntity.status(500).body(resMemberProfileUnsold);
+        }
+
+        resMemberProfileUnsold = new BaseDataResponseDTO<ResMemberProfileItemsDTO>(200, "판매가 안된 물품 조회 성공",
+                ResMemberProfileItemsDTO.builder().itemOverviewDtos(unsoldItems).build());
+
+        return ResponseEntity.status(200).body(resMemberProfileUnsold);
     }
 }
