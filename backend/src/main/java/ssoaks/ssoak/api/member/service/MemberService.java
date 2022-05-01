@@ -12,4 +12,6 @@ public interface MemberService {
     ResMemberProfileDTO getMyProfile();
     List<ItemOverviewDto> getMySellingItems();
     List<ItemOverviewDto> getMySoldItems();
+    List<ItemOverviewDto> getMyUnsoldItems();
+
 }
