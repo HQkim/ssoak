@@ -2,12 +2,6 @@ package ssoaks.ssoak.api.auction.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import ssoaks.ssoak.api.auction.entity.Bidding;
-import ssoaks.ssoak.api.auction.entity.QBidding;
-import ssoaks.ssoak.api.auction.entity.QItem;
-import ssoaks.ssoak.api.chat.dto.QResLiveAuctionMessageDto;
-import ssoaks.ssoak.api.chat.dto.ResLiveAuctionMessageDto;
-import ssoaks.ssoak.api.member.entity.QMember;
-
 import javax.persistence.EntityManager;
 
 import static ssoaks.ssoak.api.auction.entity.QBidding.*;
