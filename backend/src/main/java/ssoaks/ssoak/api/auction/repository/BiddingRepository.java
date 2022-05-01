@@ -5,7 +5,11 @@ import ssoaks.ssoak.api.auction.entity.Bidding;
 
 import java.util.Optional;
 
-public interface BiddingRepository extends JpaRepository<Bidding, Long> {
+public interface BiddingRepository extends JpaRepository<Bidding, Long>, BiddingRepositoryCustom {
 
+<<<<<<< Updated upstream
     Optional<Bidding> findByItemSeqOrderBySeqDesc(Long itemSeq);
+=======
+    Bidding findByItemSeq(Long itemSeq);
+>>>>>>> Stashed changes
 }

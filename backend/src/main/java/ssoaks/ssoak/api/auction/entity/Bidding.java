@@ -42,6 +42,11 @@ public class Bidding {
     @JoinColumn(name = "member_seq", columnDefinition = "BIGINT UNSIGNED")
     private Member buyer;
 
+<<<<<<< Updated upstream
+=======
+
+    // Builder
+>>>>>>> Stashed changes
     @Builder
     public Bidding(Integer biddingPrice, LocalDateTime biddingDate, Boolean isHammered, Item item, Member buyer) {
         this.biddingPrice = biddingPrice;
