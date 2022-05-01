@@ -24,12 +24,7 @@ import static lombok.AccessLevel.*;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = PROTECTED)
-@Table(
-        name = "tb_member",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "email")
-        }
-)
+@Table(name = "tb_member")
 @Getter
 public class Member {
 

@@ -8,7 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ssoaks.ssoak.api.auction.entity.Item;
 import ssoaks.ssoak.api.auction.repository.ItemRepository;
 import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
+import ssoaks.ssoak.api.member.dto.response.ResMemberProfileDTO;
 import ssoaks.ssoak.api.member.entity.Member;
+import ssoaks.ssoak.api.member.exception.BadRequestSoicalLoginException;
+import ssoaks.ssoak.api.member.exception.NotFoundMemberException;
 import ssoaks.ssoak.api.member.repository.MemberRepository;
 import ssoaks.ssoak.common.util.SecurityUtil;
 
@@ -21,11 +24,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
 
-//    @Autowired
     private final MemberRepository memberRepository;
 
-//    @Autowired
     private final ItemRepository itemRepository;
+
 
     @Override
     public Member getMemberByAuthentication() {
@@ -38,10 +40,34 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public List<ItemOverviewDto> getSellingItemsByMemberSeq(Long memberSeq) {
+    public ResMemberProfileDTO getMyProfile() {
+
+        Member member;
+
+        try {
+            member = getMemberByAuthentication();
+        } catch (Exception e) {
+            throw new NotFoundMemberException("MemberServiceImple getMyProfile() 회원정보 호출 실패");
+        }
+
+        ResMemberProfileDTO memberProfile = new ResMemberProfileDTO(member.getSeq(), member.getEmail(),
+                member.getNickname(), member.getProfileImageUrl(), member.getGrade());
+
+        return memberProfile;
+    }
+
+    @Override
+    public List<ItemOverviewDto> getMySellingItems() {
+
+        Long memberSeq;
+
+        try {
+            memberSeq = getMemberByAuthentication().getSeq();
+        } catch (Exception e) {
+            throw new NotFoundMemberException("MemberServiceImple getSellingItemsByMemberSeq() 회원정보 호출 실패");
+        }
 
         List<ItemOverviewDto> sellingItems = itemRepository.getSellingItemsByMember(memberSeq);
-
 
         return sellingItems;
     }

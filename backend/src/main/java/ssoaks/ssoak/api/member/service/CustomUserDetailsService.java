@@ -15,6 +15,7 @@ import ssoaks.ssoak.api.member.repository.MemberRepository;
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
+
     private final MemberRepository memberRepository;
 
     @Override
