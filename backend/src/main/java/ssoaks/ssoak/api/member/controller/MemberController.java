@@ -25,7 +25,7 @@ public class MemberController {
 
     @GetMapping("")
     public ResponseEntity<BaseDataResponseDTO<ResMemberProfileDTO>> getMyProfile () {
-        log.debug("API getMyProfile 호출됨");
+        log.debug("MemberController getMyProfile 호출됨");
 
         BaseDataResponseDTO<ResMemberProfileDTO> resMemberProfile;
         ResMemberProfileDTO myProfile;
@@ -47,8 +47,8 @@ public class MemberController {
     }
 
     @GetMapping("/selling")
-    public ResponseEntity<BaseDataResponseDTO<ResMemberProfileItemsDTO>> getSellingItems () {
-        log.debug("/members/profile/selling getSellingItems 호출됨");
+    public ResponseEntity<BaseDataResponseDTO<ResMemberProfileItemsDTO>> getMySellingItems () {
+        log.debug("MemberController getMySellingItems 호출됨");
 
         BaseDataResponseDTO<ResMemberProfileItemsDTO> resMemberProfileSelling;
         List<ItemOverviewDto> sellingItems;
@@ -71,5 +71,28 @@ public class MemberController {
         return ResponseEntity.status(200).body(resMemberProfileSelling);
     }
 
+    @GetMapping("/sold")
+    public ResponseEntity<BaseDataResponseDTO<ResMemberProfileItemsDTO>> getMySoldItems () {
+        log.debug("MemberController getMySoldItems 호출됨");
 
+        BaseDataResponseDTO<ResMemberProfileItemsDTO> resMemberProfileSold;
+        List<ItemOverviewDto> soldItems;
+
+        try {
+            soldItems = memberService.getMySoldItems();
+        } catch (NotFoundMemberException e) {
+            log.error(e.getMessage());
+            resMemberProfileSold = new BaseDataResponseDTO<>(401, "회원 권한 없음", null);
+            return ResponseEntity.status(401).body(resMemberProfileSold);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            resMemberProfileSold = new BaseDataResponseDTO<>(500, "내부 서버 에러", null);
+            return ResponseEntity.status(500).body(resMemberProfileSold);
+        }
+
+        resMemberProfileSold = new BaseDataResponseDTO<ResMemberProfileItemsDTO>(200, "판매완료 아이템 조회 성공",
+                ResMemberProfileItemsDTO.builder().itemOverviewDtos(soldItems).build());
+
+        return ResponseEntity.status(200).body(resMemberProfileSold);
+    }
 }
