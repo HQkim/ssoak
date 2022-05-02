@@ -1,14 +1,20 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import React, { useEffect } from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import OnSale from "../Templates/onSale";
 
-type Props = {};
+type Props = {
+  navigation: any;
+  route: object;
+};
 
-const OnSaleContainer = (props: Props) => {
-  return (
-    <View>
-      <Text>onSaleContainer</Text>
-    </View>
-  );
+const OnSaleContainer = ({ navigation, route }: Props) => {
+  useEffect(() => {
+    navigation.addListener("focus", () => {
+      console.warn("onSale");
+    });
+  }, [navigation]);
+  return <OnSale />;
 };
 
 export default OnSaleContainer;
