@@ -27,16 +27,14 @@ type Props = {
   onRefresh: () => any | undefined;
   navigation: any | undefined;
   route: object;
-  // profile: object | undefined;
+  profile: {
+    email: string;
+    grade: number;
+    nickname: string;
+    profileImageUrl: string;
+    seq: number;
+  };
 };
-
-// type Profile = {
-//   email: string;
-//   grade: number;
-//   nickname: string;
-//   proigileImageUrl: string;
-//   seq: number;
-// };
 
 const { height: ScreenHeight } = Dimensions.get("window");
 const { width: ScreenWidth } = Dimensions.get("window");
@@ -121,8 +119,8 @@ const Profile = (props: Props) => {
               position: "relative",
               marginTop: -ScreenHeight / 12,
             }}
-            // source={{ uri: profile.data.profileImageUrl }}
-            source={require("../../../assets/temp.jpg")}
+            source={{ uri: props.profile.profileImageUrl }}
+            // source={require("../../../assets/temp.jpg")}
           />
           <Feather
             name="camera"
@@ -137,15 +135,15 @@ const Profile = (props: Props) => {
           />
           <View style={{ alignItems: "center", marginTop: ScreenHeight / 50 }}>
             <Text style={{ fontSize: 20, padding: 10, fontWeight: "bold" }}>
-              {/* {profile.data.nickname} */}
+              {props.profile.nickname}
               test
             </Text>
             <Text style={{ fontSize: 15, padding: 7, fontWeight: "bold" }}>
-              {/* {profile.data.email} */}
+              {props.profile.email}
               test
             </Text>
             <Text style={{ fontSize: 15, padding: 7, fontWeight: "bold" }}>
-              {/* {profile.data.grade} */}
+              {props.profile.grade}
               test
             </Text>
           </View>

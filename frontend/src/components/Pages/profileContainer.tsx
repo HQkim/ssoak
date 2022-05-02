@@ -30,7 +30,7 @@ type Profile = {
   email: string;
   grade: number;
   nickname: string;
-  proigileImageUrl: string;
+  profileImageUrl: string;
   seq: number;
 };
 
@@ -52,13 +52,26 @@ const ProfileContainer = ({ navigation, route }: Props) => {
   const getAccessToken = async () => {
     try {
       const token = await AsyncStorage.getItem("accessToken");
+      console.log("1-------------------------------------------------", token);
       if (token !== null) {
         setAccessToken(token);
         setIsLogin(true);
-        kakaoProfile(token).then((res) => setProfile(res));
+        try {
+          console.log("2-----------------------------------------------");
+          kakaoProfile(token).then((res) => {
+            console.log("첫번째---------------------------------", res);
+            setProfile(res.data);
+          });
+          console.log("3----------------------------------------------------");
+        } catch (err) {
+          console.log("4-----------------------------------------------", err);
+        }
       }
     } catch (e) {
-      console.log(e);
+      console.log(
+        "5----------------------------------------------------------------",
+        e
+      );
     }
   };
 
@@ -82,7 +95,12 @@ const ProfileContainer = ({ navigation, route }: Props) => {
   return (
     <View>
       {isLogin ? (
-        <Profile onRefresh={() => onStartLoading(true)} profile={profile} />
+        <Profile
+          onRefresh={() => onStartLoading(true)}
+          profile={profile}
+          navigation={navigation}
+          route={route}
+        />
       ) : (
         <View style={styles.container}>
           <Image source={LogoImage} style={styles.logoImg} />
