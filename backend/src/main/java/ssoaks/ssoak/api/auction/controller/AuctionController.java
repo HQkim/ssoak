@@ -45,6 +45,18 @@ public class AuctionController {
         return ResponseEntity.status(201).body(new BaseDataResponseDTO(201, "물품 등록 성공", itemSeqDto));
     }
 
+    // 임시 이미지 업로드 테스트 api
+    @PostMapping("/test")
+    public ResponseEntity<BaseResponseDTO> testImage(@RequestPart(value = "itemImages") List<MultipartFile> itemImages) {
+        try {
+            auctionService.createImageTest(itemImages);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(409).body(new BaseResponseDTO(409, "물품 등록에 실패하였습니다."));
+        }
+        return ResponseEntity.status(201).body(new BaseResponseDTO(201, "물품 등록 성공"));
+    }
+
     // 물품 수정 -> 진행중
     @PatchMapping("/{itemSeq}")
     public ResponseEntity<BaseDataResponseDTO> changeItem(@PathVariable("itemSeq") Long itemSeq,
@@ -61,6 +73,18 @@ public class AuctionController {
             return ResponseEntity.status(409).body(new BaseDataResponseDTO(409, "물품 수정 실패", resItemSeqDto));
         }
         return ResponseEntity.status(201).body(new BaseDataResponseDTO(201, "물품 수정 성공", resItemSeqDto));
+    }
+
+    @DeleteMapping("/{itemSeq}")
+    public ResponseEntity<BaseResponseDTO> deleteItem(@PathVariable("itemSeq") Long itemSeq) {
+        try {
+            auctionService.deleteItem(itemSeq);
+        } catch (IllegalArgumentException e) {
+
+        } catch (Exception e) {
+
+        }
+        return null;
     }
 
     // 물품 상세 조회
