@@ -169,4 +169,29 @@ public class MemberController {
         resMemberProfile = new BaseDataResponseDTO<>(200, "다른 회원정보 조회 성공", profile) ;
         return ResponseEntity.status(200).body(resMemberProfile);
     }
+
+    @GetMapping("/buy")
+    public ResponseEntity<BaseDataResponseDTO<ResMemberProfileItemsDTO>> getMyBoughtItems () {
+        log.debug("MemberController getMyBoughtItems 호출됨");
+
+        BaseDataResponseDTO<ResMemberProfileItemsDTO> resMemberProfileBought;
+        List<ItemOverviewDto> boughtItems;
+
+        try {
+            boughtItems = memberService.getMyBoughtItems();
+        } catch (NotAuthenticatedMemberException e) {
+            log.error(e.getMessage());
+            resMemberProfileBought = new BaseDataResponseDTO<>(401, "회원 권한 없음", null);
+            return ResponseEntity.status(401).body(resMemberProfileBought);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            resMemberProfileBought = new BaseDataResponseDTO<>(500, "내부 서버 에러", null);
+            return ResponseEntity.status(500).body(resMemberProfileBought);
+        }
+
+        resMemberProfileBought = new BaseDataResponseDTO<>(200, "구매한 물품 조회 성공",
+                ResMemberProfileItemsDTO.builder().itemOverviewDtos(boughtItems).build());
+
+        return ResponseEntity.status(200).body(resMemberProfileBought);
+    }
 }

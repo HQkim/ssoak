@@ -108,4 +108,27 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
 
         return list;
     }
+
+    @Override
+    public  List<ItemOverviewDto> getBoughtItemOverviewsByMember(Long memberSeq) {
+
+        List<ItemOverviewDto> list = queryFactory
+                .select(new QItemOverviewDto(
+                        item.seq,
+                        item.title,
+                        item.startPrice,
+                        item.startTime,
+                        item.endTime,
+                        item.auctionType,
+                        item.isSold,
+                        item.biddings.size().coalesce(0),
+                        bidding.biddingPrice.max().coalesce(0)      // 이쪽 쿼리문이 아직 잘 이해가 안간다...
+                ))
+                .from(item)
+                .leftJoin(item.biddings, bidding).groupBy(item)
+                .where(bidding.buyer.seq.eq(memberSeq).and(bidding.isHammered.eq(true)))
+                .fetch();
+
+        return list;
+    }
 }

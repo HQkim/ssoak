@@ -141,12 +141,29 @@ public class MemberServiceImpl implements MemberService{
 
         otherMember = memberRepository.findBySeq(memberSeq).orElseThrow(() -> new NotFoundMemberException("회원을 찾을 수 없음"));
 
+        // 나중에 count만 따로 가져오는 repository 메소드 만들어서 쓰는것이 나아보임.
         List<Item> soldItems = itemRepository.getSoldItemsByMember(memberSeq);
 
         ResOtherMemberProfileDTO memberProfile = new ResOtherMemberProfileDTO(otherMember.getSeq(), otherMember.getNickname(),
                 otherMember.getProfileImageUrl(), otherMember.getGrade(), otherMember.getIsDeleted(), soldItems.size());
 
         return memberProfile;
+    }
+
+    @Override
+    public List<ItemOverviewDto> getMyBoughtItems() {
+        Long memberSeq;
+
+        try {
+            memberSeq = getMemberByAuthentication().getSeq();
+        } catch (Exception e) {
+            throw new NotAuthenticatedMemberException("MemberServiceImple getMyBoughtItems() 회원정보 호출 실패");
+        }
+
+        List<ItemOverviewDto> unsoldItems = itemRepository.getBoughtItemOverviewsByMember(memberSeq);
+
+        return unsoldItems;
+
 
     }
 }
