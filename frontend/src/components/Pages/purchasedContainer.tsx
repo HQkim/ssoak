@@ -1,14 +1,20 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import React, { useEffect } from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import Purchased from "../Templates/purchased";
 
-type Props = {};
+type Props = {
+  navigation: any;
+  route: object;
+};
 
-const PurchasedContainer = (props: Props) => {
-  return (
-    <View>
-      <Text>purchasedContainer</Text>
-    </View>
-  );
+const PurchasedContainer = ({ navigation, route }: Props) => {
+  useEffect(() => {
+    navigation.addListener("focus", () => {
+      console.warn("purchased");
+    });
+  }, [navigation]);
+  return <Purchased />;
 };
 
 export default PurchasedContainer;
