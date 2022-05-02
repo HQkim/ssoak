@@ -9,6 +9,8 @@ import CustomTabBarButton from "../../Atoms/Buttons/customTabBarButton";
 import NavigateButton from "../../Atoms/Buttons/navigateButton";
 import itemCreationContainer from "../../Pages/itemCreationContainer";
 import MainStackNavigator from "./stackNavigator";
+import ProfileStackNavigator from "./profileStackNavigator";
+import FavoriteStackNavigator from "./favoriteStackNavigator";
 
 type Props = {};
 
@@ -38,7 +40,8 @@ const index = ({ navigation }: any) => {
       })}
     >
       <Tab.Screen name="Home" component={MainStackNavigator} />
-      <Tab.Screen name="Favorite" component={FavoriteContainer} />
+      {/* <Tab.Screen name="Favorite" component={FavoriteContainer} /> */}
+      <Tab.Screen name="Favorite" component={FavoriteStackNavigator} />
       <Tab.Screen
         name="+"
         component={itemCreationContainer}
@@ -56,7 +59,8 @@ const index = ({ navigation }: any) => {
         })}
       />
       <Tab.Screen name="Chat" component={FavoriteContainer} />
-      <Tab.Screen name="Profile" component={ProfileContainer} />
+      {/* <Tab.Screen name="Profile" component={ProfileContainer} /> */}
+      <Tab.Screen name="Profile" component={ProfileStackNavigator} />
     </Tab.Navigator>
   );
 };
