@@ -34,17 +34,13 @@ public class AwsS3ServiceImpl implements AwsS3Service{
     @Override
     public String uploadImage(MultipartFile multipartFile) {
 
-        String imageUrl = createFileName(multipartFile.getOriginalFilename());
-        System.out.println("imageURl >>>>>>>>>>>>" + imageUrl);
 
+        String imageUrl = createFileName(multipartFile.getOriginalFilename());
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(multipartFile.getSize()); // byte
         objectMetadata.setContentType(multipartFile.getContentType()); // contentType
 
-
         try (InputStream inputStream = multipartFile.getInputStream()) {
-            log.error("error - {}", multipartFile);
-
             amazonS3Client.putObject(
                     new PutObjectRequest(bucket, imageUrl, inputStream, objectMetadata)
                             .withCannedAcl(CannedAccessControlList.PublicRead)
@@ -52,8 +48,14 @@ public class AwsS3ServiceImpl implements AwsS3Service{
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, String.format("파일(%s) 업로드에 실패했습니다.", multipartFile.getOriginalFilename()));
         }
-
         return imageUrl;
+    }
+
+
+    @Override
+    public Boolean deleteImage(String imageUrl) {
+        amazonS3Client.deleteObject(bucket, imageUrl);
+        return null;
     }
 
     @Override
