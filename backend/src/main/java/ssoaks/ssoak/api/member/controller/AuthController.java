@@ -2,7 +2,6 @@ package ssoaks.ssoak.api.member.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -31,7 +30,7 @@ public class AuthController {
 
     @PostMapping("/kakao")
     public ResponseEntity<BaseDataResponseDTO<ResSocialLoginDTO>> loginByKakao(@RequestBody ReqSocialLoginDTO reqSocialLoginDTO) {
-        log.debug("/members/login/kakao loginByKakao 호출됨");
+        log.debug("AuthController loginByKakao 호출됨");
         String code = reqSocialLoginDTO.getCode();
 
         Member member;
