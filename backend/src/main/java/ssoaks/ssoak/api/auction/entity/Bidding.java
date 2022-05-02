@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import ssoaks.ssoak.api.member.entity.Member;
+import ssoaks.ssoak.common.entity.base.BaseCreatedEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ import static lombok.AccessLevel.*;
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "tb_bidding")
 @Entity
-public class Bidding {
+public class Bidding extends BaseCreatedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,9 +28,6 @@ public class Bidding {
 
     @Column(nullable = false, columnDefinition = "INT UNSIGNED")
     private Integer biddingPrice;
-
-    @Column(nullable = false, columnDefinition = "TIMESTAMP")
-    private LocalDateTime biddingDate;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isHammered;
@@ -43,9 +41,8 @@ public class Bidding {
     private Member buyer;
 
     @Builder
-    public Bidding(Integer biddingPrice, LocalDateTime biddingDate, Boolean isHammered, Item item, Member buyer) {
+    public Bidding(Integer biddingPrice, Boolean isHammered, Item item, Member buyer) {
         this.biddingPrice = biddingPrice;
-        this.biddingDate = biddingDate;
         this.isHammered = isHammered;
         this.item = item;
         this.buyer = buyer;

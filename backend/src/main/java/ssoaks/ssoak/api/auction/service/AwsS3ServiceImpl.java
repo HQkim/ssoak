@@ -31,8 +31,6 @@ public class AwsS3ServiceImpl implements AwsS3Service{
 
     private final ImageRepository imageRepository;
 
-
-
     @Override
     public String uploadImage(MultipartFile multipartFile) {
 
