@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ssoaks.ssoak.api.auction.entity.Item;
 import ssoaks.ssoak.api.auction.repository.ItemRepository;
 import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileDTO;
+import ssoaks.ssoak.api.member.dto.response.ResOtherMemberProfileDTO;
 import ssoaks.ssoak.api.member.entity.Member;
+import ssoaks.ssoak.api.member.exception.NotAuthenticatedMemberException;
 import ssoaks.ssoak.api.member.exception.NotFoundMemberException;
 import ssoaks.ssoak.api.member.repository.MemberRepository;
 import ssoaks.ssoak.common.util.SecurityUtil;
@@ -43,8 +46,9 @@ public class MemberServiceImpl implements MemberService{
 
         try {
             member = getMemberByAuthentication();
+            System.out.println("==============출력!!!!!");
         } catch (Exception e) {
-            throw new NotFoundMemberException("MemberServiceImple getMyProfile() 회원정보 호출 실패");
+            throw new NotAuthenticatedMemberException("MemberServiceImple getMyProfile() 회원정보 호출 실패");
         }
 
         ResMemberProfileDTO memberProfile = new ResMemberProfileDTO(member.getSeq(), member.getEmail(),
@@ -61,10 +65,10 @@ public class MemberServiceImpl implements MemberService{
         try {
             memberSeq = getMemberByAuthentication().getSeq();
         } catch (Exception e) {
-            throw new NotFoundMemberException("MemberServiceImple getMySellingItems() 회원정보 호출 실패");
+            throw new NotAuthenticatedMemberException("MemberServiceImple getMySellingItems() 회원정보 호출 실패");
         }
 
-        List<ItemOverviewDto> sellingItems = itemRepository.getSellingItemsByMember(memberSeq);
+        List<ItemOverviewDto> sellingItems = itemRepository.getSellingItemOverviewsByMember(memberSeq);
 
         return sellingItems;
     }
@@ -76,10 +80,10 @@ public class MemberServiceImpl implements MemberService{
         try {
             memberSeq = getMemberByAuthentication().getSeq();
         } catch (Exception e) {
-            throw new NotFoundMemberException("MemberServiceImple getMySoldItems() 회원정보 호출 실패");
+            throw new NotAuthenticatedMemberException("MemberServiceImple getMySoldItems() 회원정보 호출 실패");
         }
 
-        List<ItemOverviewDto> soldItems = itemRepository.getSoldItemsByMember(memberSeq);
+        List<ItemOverviewDto> soldItems = itemRepository.getSoldItemOverviewsByMember(memberSeq);
 
         return soldItems;
     }
@@ -92,10 +96,10 @@ public class MemberServiceImpl implements MemberService{
         try {
             memberSeq = getMemberByAuthentication().getSeq();
         } catch (Exception e) {
-            throw new NotFoundMemberException("MemberServiceImple getMyUnsoldItems() 회원정보 호출 실패");
+            throw new NotAuthenticatedMemberException("MemberServiceImple getMyUnsoldItems() 회원정보 호출 실패");
         }
 
-        List<ItemOverviewDto> unsoldItems = itemRepository.getUnsoldItemsByMember(memberSeq);
+        List<ItemOverviewDto> unsoldItems = itemRepository.getUnsoldItemOverviewsByMember(memberSeq);
 
         return unsoldItems;
     }
@@ -109,7 +113,7 @@ public class MemberServiceImpl implements MemberService{
         try {
             member = getMemberByAuthentication();
         } catch (Exception e) {
-            throw new NotFoundMemberException("MemberServiceImple deleteMember() 회원정보 호출 실패");
+            throw new NotAuthenticatedMemberException("MemberServiceImple deleteMember() 회원정보 호출 실패");
         }
 
         try {
@@ -121,6 +125,29 @@ public class MemberServiceImpl implements MemberService{
         memberRepository.save(member);
 
         return 200;
+    }
+
+    @Override
+    public ResOtherMemberProfileDTO getOtherMemberProfile(Long memberSeq) {
+
+        Member member;
+        Member otherMember;
+
+        try {
+            member = getMemberByAuthentication();
+        } catch (Exception e) {
+            throw new NotAuthenticatedMemberException("MemberServiceImple getOtherMemberProfile() 회원정보 호출 실패");
+        }
+
+        otherMember = memberRepository.findBySeq(memberSeq).orElseThrow(() -> new NotFoundMemberException("회원을 찾을 수 없음"));
+
+        List<Item> soldItems = itemRepository.getSoldItemsByMember(memberSeq);
+
+        ResOtherMemberProfileDTO memberProfile = new ResOtherMemberProfileDTO(otherMember.getSeq(), otherMember.getNickname(),
+                otherMember.getProfileImageUrl(), otherMember.getGrade(), otherMember.getIsDeleted(), soldItems.size());
+
+        return memberProfile;
+
     }
 }
 

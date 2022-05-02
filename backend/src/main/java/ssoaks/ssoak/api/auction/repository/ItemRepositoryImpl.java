@@ -23,7 +23,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
     }
 
     @Override
-    public List<ItemOverviewDto> getSellingItemsByMember (Long memberSeq) {
+    public List<ItemOverviewDto> getSellingItemOverviewsByMember(Long memberSeq) {
 
         List<ItemOverviewDto> list = queryFactory
                 .select(new QItemOverviewDto(
@@ -48,7 +48,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
     }
 
     @Override
-    public List<ItemOverviewDto> getSoldItemsByMember (Long memberSeq) {
+    public List<ItemOverviewDto> getSoldItemOverviewsByMember(Long memberSeq) {
 
         List<ItemOverviewDto> list = queryFactory
                 .select(new QItemOverviewDto(
@@ -73,7 +73,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
     }
 
     @Override
-    public List<ItemOverviewDto> getUnsoldItemsByMember(Long memberSeq) {
+    public List<ItemOverviewDto> getUnsoldItemOverviewsByMember(Long memberSeq) {
 
         List<ItemOverviewDto> list = queryFactory
                 .select(new QItemOverviewDto(
@@ -95,6 +95,17 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                 .fetch();
 
         return list;
+    }
 
+    @Override
+    public List<Item> getSoldItemsByMember(Long memberSeq) {
+
+        List<Item> list = queryFactory
+                .select(item)
+                .from(item)
+                .where(item.member.seq.eq(memberSeq).and(item.isSold.eq(true)))
+                .fetch();
+
+        return list;
     }
 }
