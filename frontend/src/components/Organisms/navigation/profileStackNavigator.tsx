@@ -5,7 +5,7 @@ import ProfileContainer from "../../Pages/profileContainer";
 import FavoriteContainer from "../../Pages/favoriteContainer";
 import OnSaleContainer from "../../Pages/onSaleContainer";
 import PurchasedContainer from "../../Pages/purchasedContainer";
-import HistroyContainer from "../../Pages/historyContainer";
+import HistoryContainer from "../../Pages/historyContainer";
 import NavigatorTitle from "../../Atoms/Typographies/navigatorTitle";
 
 type Props = {};
@@ -70,8 +70,8 @@ const ProfileStackNavigator = (props: Props) => {
         }}
       />
       <Stack.Screen
-        name="hitory"
-        component={HistroyContainer}
+        name="history"
+        component={HistoryContainer}
         options={{
           headerTitleAlign: "center",
           headerTitle: (props) => (

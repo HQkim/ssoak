@@ -20,33 +20,37 @@ import { kakaoProfile } from "../../apis/auth";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
+import { useNavigation } from "@react-navigation/native";
+import NavigateButton from "../Atoms/Buttons/navigateButton";
 
 type Props = {
   onRefresh: () => any | undefined;
-  navigation: any;
+  navigation: any | undefined;
   route: object;
+  // profile: object | undefined;
 };
 
-type Profile = {
-  email: string;
-  grade: number;
-  nickname: string;
-  proigileImageUrl: string;
-  seq: number;
-};
+// type Profile = {
+//   email: string;
+//   grade: number;
+//   nickname: string;
+//   proigileImageUrl: string;
+//   seq: number;
+// };
 
 const { height: ScreenHeight } = Dimensions.get("window");
 const { width: ScreenWidth } = Dimensions.get("window");
 
-const Profile = ({ onRefresh, profile, navigation, route }: any) => {
+const Profile = (props: Props) => {
   const isLoading = useSelector(
     (state: RootState) => state.mainLoader.isLoading
   );
+  const navigation = useNavigation();
   return (
     <View>
       <ScrollView
         refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+          <RefreshControl refreshing={isLoading} onRefresh={props.onRefresh} />
         }
       >
         <View
@@ -117,8 +121,8 @@ const Profile = ({ onRefresh, profile, navigation, route }: any) => {
               position: "relative",
               marginTop: -ScreenHeight / 12,
             }}
-            source={{ uri: profile.data.profileImageUrl }}
-            // source={require("../../../assets/temp.jpg")}
+            // source={{ uri: profile.data.profileImageUrl }}
+            source={require("../../../assets/temp.jpg")}
           />
           <Feather
             name="camera"
@@ -133,15 +137,15 @@ const Profile = ({ onRefresh, profile, navigation, route }: any) => {
           />
           <View style={{ alignItems: "center", marginTop: ScreenHeight / 50 }}>
             <Text style={{ fontSize: 20, padding: 10, fontWeight: "bold" }}>
-              {profile.data.nickname}
+              {/* {profile.data.nickname} */}
               test
             </Text>
             <Text style={{ fontSize: 15, padding: 7, fontWeight: "bold" }}>
-              {profile.data.email}
+              {/* {profile.data.email} */}
               test
             </Text>
             <Text style={{ fontSize: 15, padding: 7, fontWeight: "bold" }}>
-              {profile.data.grade}
+              {/* {profile.data.grade} */}
               test
             </Text>
           </View>
@@ -185,7 +189,7 @@ const Profile = ({ onRefresh, profile, navigation, route }: any) => {
                   <Text>구매완료 목록</Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("hitory")}>
+              <TouchableOpacity onPress={() => navigation.navigate("history")}>
                 <View style={styles.viewShadow}>
                   <View></View>
                   <FontAwesome5
