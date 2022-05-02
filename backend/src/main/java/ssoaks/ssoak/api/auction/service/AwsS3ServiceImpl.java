@@ -33,24 +33,30 @@ public class AwsS3ServiceImpl implements AwsS3Service{
 
     @Override
     public String uploadImage(MultipartFile multipartFile) {
-
-
+        System.out.println("===S3ServiceImpl - uplaodImage=====");
+        System.out.println("filename -->" + multipartFile.getOriginalFilename());
         String imageUrl = createFileName(multipartFile.getOriginalFilename());
+        System.out.println("imageUrl == " + imageUrl);
         ObjectMetadata objectMetadata = new ObjectMetadata();
+        System.out.println("multipartFile.getSize() : " + multipartFile.getSize());
         objectMetadata.setContentLength(multipartFile.getSize()); // byte
+        System.out.println("multipartFile.getContentType : " + multipartFile.getContentType());
         objectMetadata.setContentType(multipartFile.getContentType()); // contentType
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
+            System.out.println("======amazonS3 - putObject======");
             amazonS3Client.putObject(
                     new PutObjectRequest(bucket, imageUrl, inputStream, objectMetadata)
                             .withCannedAcl(CannedAccessControlList.PublicRead)
             );
+            System.out.println("===put Object 성공!===");
         } catch (IOException e) {
+            log.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, String.format("파일(%s) 업로드에 실패했습니다.", multipartFile.getOriginalFilename()));
         }
-        return imageUrl;
+        System.out.println("uploadImage 성공 - imageUrl "+ imageUrl);
+        return "https://ssoak-bucket.s3.ap-northeast-2.amazonaws.com/" + imageUrl;
     }
-
 
     @Override
     public Boolean deleteImage(String imageUrl) {
@@ -60,14 +66,17 @@ public class AwsS3ServiceImpl implements AwsS3Service{
 
     @Override
     public String createFileName(String fileName) {
+        System.out.println("====createFileName ====");
         return UUID.randomUUID().toString().concat(getFileExtension(fileName));
     }
 
     @Override
     public String getFileExtension(String fileName) {
+        System.out.println("========getFileExtension=======");
         try {
             return fileName.substring(fileName.lastIndexOf("."));
         } catch (StringIndexOutOfBoundsException e) {
+            log.error(e.getMessage());
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 형식의 파일(" + fileName + ") 입니다.");
         }

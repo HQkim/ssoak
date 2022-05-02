@@ -93,6 +93,33 @@ public class AuctionServiceImpl implements AuctionService {
         return itemSeqDto;
     }
 
+    @Transactional
+    @Override
+    public void createImageTest(List<MultipartFile> itemImages) {
+//        log.debug("registerItem - {}");
+        Member member = memberService.getMemberByAuthentication();
+
+        Item item = Item.builder()
+                .title("testImage")
+                .content("image upload Test")
+                .startPrice(1000)
+                .biddingUnit(100)
+                .startTime(LocalDateTime.now())
+                .endTime(LocalDateTime.now())
+                .auctionType(AuctionType.NORMAL)
+                .isSold(false)
+                .member(member)
+                .build();
+        itemRepository.save(item);
+
+        System.out.println("======createImageTest==========");
+        for (MultipartFile itemImage : itemImages) {
+            System.out.println("아이템 이미지 클래스 확인 == " + itemImage.getClass());
+        }
+        System.out.println("=================================");
+        uploadItemImages(item, itemImages);
+    }
+
     @Override
     public ResItemDto getItemDetail(Long itemSeq) {
         log.debug("getItem - {}", itemSeq);
@@ -174,14 +201,17 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public void uploadItemImages(Item item, List<MultipartFile> itemImages) {
+        System.out.println("=========uploadItemImages==========");
         itemImages.forEach(image -> {
             String imageUrl = awsS3Service.uploadImage(image);
+            System.out.println("uploadItemImages  - imageUrl == " + imageUrl);
             Image imageBuild = Image.builder()
                     .imageUrl(imageUrl)
                     .item(item)
                     .build();
             imageRepository.save(imageBuild);
         });
+        System.out.println("====uploadItemImages==END==================");
     }
 
     @Transactional
@@ -223,5 +253,30 @@ public class AuctionServiceImpl implements AuctionService {
         }
 
     }
+
+    @Override
+    public Boolean deleteItem(Long itemSeq) {
+        log.debug("changeItem - {}", itemSeq);
+        Member member = memberService.getMemberByAuthentication();
+
+        Item item = itemRepository.findBySeq(itemSeq)
+                .orElseThrow(() -> new IllegalArgumentException("물품 조회 실패 "));
+        if (item.getMember().getSeq() != member.getSeq()) {
+            throw new NotAllowedChangeItemException("본인의 경매만 삭제 가능합니다.");
+        }
+
+        Bidding bidding = biddingRepository.findTop1ByItemSeqOrderBySeqDesc(itemSeq).orElse(null);
+        if (item.getAuctionType().equals(AuctionType.NORMAL) && !(bidding == null)) {
+            throw new NotAllowedChangeItemException("이미 진행중인 경매는 삭제가 불가능합니다.");
+        } else if (item.getAuctionType().equals(AuctionType.LIVE) && item.getStartTime().isBefore(LocalDateTime.now())) {
+            throw new NotAllowedChangeItemException("이미 진행중인 경매는 삭제가 불가능합니다.");
+        } else {
+
+            return null;
+        }
+    }
+
+
+
 
 }
