@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileDTO;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileItemsDTO;
+import ssoaks.ssoak.api.member.dto.response.ResOtherMemberProfileDTO;
+import ssoaks.ssoak.api.member.exception.NotAuthenticatedMemberException;
 import ssoaks.ssoak.api.member.exception.NotFoundMemberException;
 import ssoaks.ssoak.api.member.service.MemberService;
 import ssoaks.ssoak.common.dto.BaseDataResponseDTO;
@@ -31,7 +33,7 @@ public class MemberController {
 
         try {
             myProfile = memberService.getMyProfile();
-        } catch (NotFoundMemberException e) {
+        } catch (NotAuthenticatedMemberException e) {
             log.error(e.getMessage());
             resMemberProfile = new BaseDataResponseDTO<>(401, "회원 권한 없음", null);
             return ResponseEntity.status(401).body(resMemberProfile);
@@ -54,7 +56,7 @@ public class MemberController {
 
         try {
             sellingItems = memberService.getMySellingItems();
-        } catch (NotFoundMemberException e) {
+        } catch (NotAuthenticatedMemberException e) {
             log.error(e.getMessage());
             resMemberProfileSelling = new BaseDataResponseDTO<>(401, "회원 권한 없음", null);
             return ResponseEntity.status(401).body(resMemberProfileSelling);
@@ -79,7 +81,7 @@ public class MemberController {
 
         try {
             soldItems = memberService.getMySoldItems();
-        } catch (NotFoundMemberException e) {
+        } catch (NotAuthenticatedMemberException e) {
             log.error(e.getMessage());
             resMemberProfileSold = new BaseDataResponseDTO<>(401, "회원 권한 없음", null);
             return ResponseEntity.status(401).body(resMemberProfileSold);
@@ -104,7 +106,7 @@ public class MemberController {
 
         try {
             unsoldItems = memberService.getMyUnsoldItems();
-        } catch (NotFoundMemberException e) {
+        } catch (NotAuthenticatedMemberException e) {
             log.error(e.getMessage());
             resMemberProfileUnsold = new BaseDataResponseDTO<>(401, "회원 권한 없음", null);
             return ResponseEntity.status(401).body(resMemberProfileUnsold);
@@ -128,7 +130,7 @@ public class MemberController {
             Integer statusCode = memberService.deleteMember();
             if (statusCode == 409)
                 return ResponseEntity.status(409).body(new BaseResponseDTO(409, "계정 삭제 실패"));
-        } catch (NotFoundMemberException e) {
+        } catch (NotAuthenticatedMemberException e) {
             log.error(e.getMessage());
             return ResponseEntity.status(401).body(new BaseResponseDTO(401, "회원 권한 없음"));
         } catch (Exception e) {
@@ -138,6 +140,33 @@ public class MemberController {
 
         return ResponseEntity.status(200).body(new BaseResponseDTO(200, "계정 삭제 성공"));
 
+    }
 
+    @GetMapping("/{memberSeq}")
+    public ResponseEntity<BaseDataResponseDTO<ResOtherMemberProfileDTO>> getOtherMemberProfile (@PathVariable("memberSeq") Long memberSeq) {
+        log.debug("MemberController getOtherMemberProfile 호출됨");
+
+        BaseDataResponseDTO<ResOtherMemberProfileDTO> resMemberProfile;
+        ResOtherMemberProfileDTO profile;
+
+        try {
+            profile = memberService.getOtherMemberProfile(memberSeq);
+        } catch (NotAuthenticatedMemberException e) {
+            log.error(e.getMessage());
+            resMemberProfile = new BaseDataResponseDTO<>(401, "회원 권한 없음", null);
+            return ResponseEntity.status(401).body(resMemberProfile);
+        } catch (NotFoundMemberException e) {
+            log.error(e.getMessage());
+            resMemberProfile = new BaseDataResponseDTO<>(404, "회원을 찾을 수 없음", null);
+            return ResponseEntity.status(404).body(resMemberProfile);
+        }
+        catch (Exception e) {
+            log.error(e.getMessage());
+            resMemberProfile = new BaseDataResponseDTO<>(500, "내부 서버 에러", null);
+            return ResponseEntity.status(500).body(resMemberProfile);
+        }
+
+        resMemberProfile = new BaseDataResponseDTO<>(200, "다른 회원정보 조회 성공", profile) ;
+        return ResponseEntity.status(200).body(resMemberProfile);
     }
 }
