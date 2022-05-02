@@ -9,4 +9,6 @@ public interface AwsS3Service {
     String createFileName(String fileName);
 
     String getFileExtension(String fileName);
+
+    Boolean deleteImage(String imageUrl);
 }

@@ -9,8 +9,10 @@ import ssoaks.ssoak.api.auction.dto.request.ReqItemChangeDto;
 import ssoaks.ssoak.api.auction.dto.request.ReqItemRegisterDto;
 import ssoaks.ssoak.api.auction.dto.response.BiddingSimpleInfoDto;
 import ssoaks.ssoak.api.auction.dto.response.ResItemDto;
+import ssoaks.ssoak.api.auction.dto.response.ResItemSeqDto;
 import ssoaks.ssoak.api.auction.entity.*;
 import ssoaks.ssoak.api.auction.enums.AuctionType;
+import ssoaks.ssoak.api.auction.exception.NotAllowedChangeItemException;
 import ssoaks.ssoak.api.auction.repository.*;
 import ssoaks.ssoak.api.member.dto.response.MemberSimpleInfoDto;
 import ssoaks.ssoak.api.member.entity.Member;
@@ -19,7 +21,6 @@ import ssoaks.ssoak.api.member.service.MemberService;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -50,20 +51,18 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Transactional
     @Override
-    public Boolean createItem(ReqItemRegisterDto itemRegisterRequestDto, List<MultipartFile> itemImages) {
-
+    public ResItemSeqDto createItem(ReqItemRegisterDto itemRegisterRequestDto, List<MultipartFile> itemImages) {
         log.debug("registerItem - {}", itemRegisterRequestDto);
         Member member = memberService.getMemberByAuthentication();
 
         LocalDateTime startTime = null;
-
         if (itemRegisterRequestDto.getAuctionType().equals(AuctionType.NORMAL)){
             startTime = LocalDateTime.now();
         }
         else if (itemRegisterRequestDto.getAuctionType().equals(AuctionType.LIVE)) {
             startTime = itemRegisterRequestDto.getStartTime();
         }
-        // 아이템 등록
+        // item
         Item item = Item.builder()
                 .title(itemRegisterRequestDto.getTitle())
                 .content(itemRegisterRequestDto.getContent())
@@ -77,7 +76,7 @@ public class AuctionServiceImpl implements AuctionService {
                 .build();
         itemRepository.save(item);
 
-        // 카테고리 등록
+        // category
         for (String cate : itemRegisterRequestDto.getItemCategories()) {
             Category category = categoryRepository.findByCategoryName(cate).get();
 
@@ -90,17 +89,14 @@ public class AuctionServiceImpl implements AuctionService {
         // image upload
         uploadItemImages(item, itemImages);
 
-        return true;
+        ResItemSeqDto itemSeqDto = ResItemSeqDto.builder().itemSeq(item.getSeq()).build();
+        return itemSeqDto;
     }
-
-
 
     @Override
     public ResItemDto getItemDetail(Long itemSeq) {
-
         log.debug("getItem - {}", itemSeq);
         Member member = memberService.getMemberByAuthentication();
-
         Item item = itemRepository.findById(itemSeq)
                 .orElseThrow(() -> new IllegalArgumentException("해당 물품을 찾을 수 없습니다."));
 
@@ -151,7 +147,6 @@ public class AuctionServiceImpl implements AuctionService {
                     .buyer(buyer)
                     .build();
         }
-
         // like
         Boolean like = likeService.isLike(member.getSeq(), itemSeq);
         Integer cntLike = likeRepository.countLikeByItemSeq(itemSeq);
@@ -179,7 +174,6 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public void uploadItemImages(Item item, List<MultipartFile> itemImages) {
-
         itemImages.forEach(image -> {
             String imageUrl = awsS3Service.uploadImage(image);
             Image imageBuild = Image.builder()
@@ -190,30 +184,43 @@ public class AuctionServiceImpl implements AuctionService {
         });
     }
 
+    @Transactional
     @Override
     public void changeItem(Long itemSeq, ReqItemChangeDto itemChangeDto, List<MultipartFile> itemImages) {
+        log.debug("changeItem - {}", itemSeq);
+        Member member = memberService.getMemberByAuthentication();
 
-        // item 변경
         Item item = itemRepository.findBySeq(itemSeq)
                 .orElseThrow(() -> new IllegalArgumentException("물품 조회 실패 "));
-
-        item.changeItem(itemChangeDto.getTitle(), itemChangeDto.getContent(),
-                itemChangeDto.getStartPrice(), itemChangeDto.getBiddingUnit(),
-                itemChangeDto.getStartTime(), itemChangeDto.getEndTime(), itemChangeDto.getAuctionType());
-        itemRepository.save(item);
-
-        // category 변경
-        List<ItemCategory> categories = itemCategoryRepository.findByItem(item)
-                .orElseThrow(()-> new IllegalArgumentException("실패"));
-
-        for (ItemCategory category : categories) {
-            Category cate = categoryRepository.findByCategoryName(itemChangeDto.getItemCategories().get(0)).orElse(null);
-            category.changeItemCategory(cate);
-            itemCategoryRepository.save(category);
+        if (item.getMember().getSeq() != member.getSeq()) {
+            throw new NotAllowedChangeItemException("본인의 경매만 수정이 가능합니다.");
         }
 
-        // image 변경 ->
+        Bidding bidding = biddingRepository.findTop1ByItemSeqOrderBySeqDesc(itemSeq).orElse(null);
 
+        if (item.getAuctionType().equals(AuctionType.NORMAL) && !(bidding == null)) {
+            throw new NotAllowedChangeItemException("이미 진행중인 경매는 수정이 불가능합니다.");
+        } else if (item.getAuctionType().equals(AuctionType.LIVE) && item.getStartTime().isBefore(LocalDateTime.now())) {
+            throw new NotAllowedChangeItemException("이미 진행중인 경매는 수정이 불가능합니다.");
+        } else {
+            // item
+            System.out.println(itemChangeDto.getTitle());
+            item.changeItem(itemChangeDto.getTitle(), itemChangeDto.getContent(),
+                    itemChangeDto.getStartPrice(), (int) Math.round(itemChangeDto.getStartPrice()*0.1),
+                    itemChangeDto.getStartTime(), itemChangeDto.getEndTime(), itemChangeDto.getAuctionType());
+
+            // category
+            List<ItemCategory> categories = itemCategoryRepository.findByItem(item)
+                    .orElseThrow(()-> new IllegalArgumentException("카테고리 조회에 실패했습니다."));
+            for (ItemCategory category : categories) {
+                Category cate = categoryRepository.findByCategoryName(itemChangeDto.getItemCategories().get(0)).orElse(null);
+                category.changeItemCategory(cate);
+            }
+            // image
+            List<Image> imageList = imageRepository.findAllByItemSeq(itemSeq);
+            imageRepository.deleteAll(imageList);
+            uploadItemImages(item, itemImages);
+        }
 
     }
 

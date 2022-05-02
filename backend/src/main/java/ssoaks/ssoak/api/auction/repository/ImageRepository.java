@@ -11,4 +11,6 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
 
     Optional<List<Image>> findByItemSeqOrderBySeq (Long itemSeq);
 
+    List<Image> findAllByItemSeq(Long itemSeq);
+
 }
