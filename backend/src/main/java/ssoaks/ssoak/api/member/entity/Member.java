@@ -5,19 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import ssoaks.ssoak.api.auction.entity.Item;
-import ssoaks.ssoak.api.auction.entity.Like;
+
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
-import static javax.persistence.CascadeType.*;
 import static lombok.AccessLevel.*;
 
 
@@ -54,7 +50,7 @@ public class Member {
     @CreatedDate
     private LocalDateTime signupTime;
 
-    @LastModifiedDate
+    @LastModifiedDate // 이거 빼야함
     private LocalDateTime loginTime;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
@@ -78,4 +74,9 @@ public class Member {
         this.password = password;
     }
 
+    public void deleteMember() {
+        if(!this.isDeleted) {
+            this.isDeleted = true;
+        }
+    }
 }

@@ -2,16 +2,15 @@ package ssoaks.ssoak.api.member.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileDTO;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileItemsDTO;
-import ssoaks.ssoak.api.member.entity.Member;
 import ssoaks.ssoak.api.member.exception.NotFoundMemberException;
 import ssoaks.ssoak.api.member.service.MemberService;
 import ssoaks.ssoak.common.dto.BaseDataResponseDTO;
+import ssoaks.ssoak.common.dto.BaseResponseDTO;
 
 import java.util.List;
 
@@ -119,5 +118,26 @@ public class MemberController {
                 ResMemberProfileItemsDTO.builder().itemOverviewDtos(unsoldItems).build());
 
         return ResponseEntity.status(200).body(resMemberProfileUnsold);
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity<BaseResponseDTO> deleteMember () {
+        log.debug("MemberController deleteMyAccount 호출됨");
+
+        try {
+            Integer statusCode = memberService.deleteMember();
+            if (statusCode == 409)
+                return ResponseEntity.status(409).body(new BaseResponseDTO(409, "계정 삭제 실패"));
+        } catch (NotFoundMemberException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(401).body(new BaseResponseDTO(401, "회원 권한 없음"));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(500).body(new BaseResponseDTO(500, "내부 서버 에러"));
+        }
+
+        return ResponseEntity.status(200).body(new BaseResponseDTO(200, "계정 삭제 성공"));
+
+
     }
 }

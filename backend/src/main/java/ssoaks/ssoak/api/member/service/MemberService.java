@@ -13,5 +13,6 @@ public interface MemberService {
     List<ItemOverviewDto> getMySellingItems();
     List<ItemOverviewDto> getMySoldItems();
     List<ItemOverviewDto> getMyUnsoldItems();
+    Integer deleteMember();
 
 }
