@@ -5,7 +5,7 @@ import ItemCreation from "../Templates/itemCreation";
 import NavigatorTitle from "../Atoms/Typographies/navigatorTitle";
 import { useNavigation } from "@react-navigation/native";
 
-const { height: ScreenHeight } = Dimensions.get("window");
+const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
 
 type Props = {
   navigation: any;
@@ -29,6 +29,7 @@ const CreateNavigator = (props: Props) => {
         name="ItemCreation"
         component={ItemCreation}
         options={{
+          headerTitleAlign: "center",
           headerTitle: (props) => (
             <NavigatorTitle
               title={"경매물품 등록하기"}
@@ -38,7 +39,7 @@ const CreateNavigator = (props: Props) => {
           headerLeft: () => (
             <TouchableOpacity
               onPress={onCancel}
-              style={{ marginHorizontal: 20 }}
+              style={{ marginHorizontal: ScreenWidth / 16 }}
             >
               <Text style={styles.navigatorTitle}>X</Text>
             </TouchableOpacity>
@@ -54,6 +55,6 @@ export default CreateNavigator;
 const styles = StyleSheet.create({
   navigatorTitle: {
     fontSize: 20,
-    fontWeight: "200",
+    fontWeight: "300",
   },
 });

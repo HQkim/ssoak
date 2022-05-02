@@ -25,7 +25,7 @@ const index = ({ imageUrls, style }: any) => {
                 uri: url,
               }}
               resizeMode="contain"
-              style={{ width: Dimensions.get("window").height / 3, flex: 1 }}
+              style={{ width: Dimensions.get("window").width / 1, flex: 1 }}
             />
           </ReactNativeZoomableView>
         </View>
