@@ -77,4 +77,17 @@ public class Item extends BaseModifiedEntity {
 
     }
 
+    public void changeItem(String title, String content, Integer startPrice,
+                           Integer biddingUnit, LocalDateTime startTime, LocalDateTime endTime,
+                           AuctionType auctionType) {
+        this.title = title;
+        this.content = content;
+        this.startPrice = startPrice;
+        this.biddingUnit = biddingUnit;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.auctionType = auctionType;
+    }
+
+
 }

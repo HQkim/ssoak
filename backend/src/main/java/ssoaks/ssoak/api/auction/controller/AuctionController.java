@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ssoaks.ssoak.api.auction.dto.request.ReqItemChangeDto;
 import ssoaks.ssoak.api.auction.dto.request.ReqItemRegisterDto;
 import ssoaks.ssoak.api.auction.dto.response.ResItemDto;
 import ssoaks.ssoak.api.auction.service.AuctionService;
@@ -33,7 +34,8 @@ public class AuctionController {
 
     // 물품 생성
     @PostMapping
-    public ResponseEntity<BaseResponseDTO> registerItem(@Valid @RequestPart(value = "reqItemRegister") ReqItemRegisterDto reqItemRegisterDto, @RequestPart(value = "itemImages") List<MultipartFile> itemImages) { //,
+    public ResponseEntity<BaseResponseDTO> registerItem(@Valid @RequestPart(value = "reqItemRegister") ReqItemRegisterDto reqItemRegisterDto,
+                                                        @RequestPart(value = "itemImages") List<MultipartFile> itemImages) {
 
         try {
             if (!auctionService.createItem(reqItemRegisterDto, itemImages)) {
@@ -43,6 +45,19 @@ public class AuctionController {
             return ResponseEntity.status(409).body(new BaseResponseDTO(409, "물품 등록에 실패하였습니다."));
         }
         return ResponseEntity.status(201).body(new BaseResponseDTO(201, "물품 등록 성공"));
+    }
+
+    // 물품 수정 -> 진행중
+    @PatchMapping("/{itemSeq}")
+    public ResponseEntity<BaseResponseDTO> changeItem(@PathVariable("itemSeq") Long itemSeq,
+                                                      @Valid @RequestPart(value = "item") ReqItemChangeDto reqItemChangeDto,
+                                                      @RequestPart(value = "itemImages") List<MultipartFile> itemImages) {
+        try {
+            auctionService.changeItem(itemSeq, reqItemChangeDto, itemImages);
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(new BaseResponseDTO(409, "물품 수정 실패"));
+        }
+        return null;
     }
 
     // 물품 상세 조회
@@ -89,5 +104,6 @@ public class AuctionController {
         }
         return ResponseEntity.status(200).body(new BaseResponseDTO(204, "좋아요를 취소했습니다."));
     }
+
 
 }

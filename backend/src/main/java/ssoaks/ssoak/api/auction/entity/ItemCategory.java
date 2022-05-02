@@ -30,5 +30,8 @@ public class ItemCategory {
     @JoinColumn(name = "item_seq", columnDefinition = "BIGINT UNSIGNED")
     private Item item;
 
-
+    // 물품 수정 - 카테고리 수정
+    public void changeItemCategory(Category category) {
+        this.category = category;
+    }
 }

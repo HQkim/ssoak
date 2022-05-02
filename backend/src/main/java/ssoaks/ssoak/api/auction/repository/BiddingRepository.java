@@ -7,8 +7,8 @@ import java.util.Optional;
 
 public interface BiddingRepository extends JpaRepository<Bidding, Long>, BiddingRepositoryCustom {
 
-    Optional<Bidding> findByItemSeqOrderBySeqDesc(Long itemSeq);
-
     Bidding findByItemSeq(Long itemSeq);
+
+    Optional<Bidding> findTop1ByItemSeqOrderBySeqDesc(Long itemSeq);
 
 }

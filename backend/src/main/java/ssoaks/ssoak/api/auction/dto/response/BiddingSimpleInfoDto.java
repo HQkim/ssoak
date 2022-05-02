@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @ToString
-public class BiddingDto {
+public class BiddingSimpleInfoDto {
 
     private Integer biddingPrice;
     private LocalDateTime biddingDate;
@@ -18,7 +18,7 @@ public class BiddingDto {
 
     @Builder
     @QueryProjection
-    public BiddingDto(Integer biddingPrice, LocalDateTime biddingDate, MemberSimpleInfoDto buyer) {
+    public BiddingSimpleInfoDto(Integer biddingPrice, LocalDateTime biddingDate, MemberSimpleInfoDto buyer) {
         this.biddingPrice = biddingPrice;
         this.biddingDate = biddingDate;
         this.buyer = buyer;

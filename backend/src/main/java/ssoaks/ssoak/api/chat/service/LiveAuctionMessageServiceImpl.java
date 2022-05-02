@@ -42,7 +42,7 @@ public class LiveAuctionMessageServiceImpl implements LiveAuctionMessageService{
                 Bidding newBidding = Bidding.builder()
                         .item(item)
                         .buyer(member)
-                        .biddingDate(LocalDateTime.now())
+//                        .biddingDate(LocalDateTime.now())
                         .biddingPrice(price)
                         .isHammered(latestBidding.getIsHammered())
                         .build();
