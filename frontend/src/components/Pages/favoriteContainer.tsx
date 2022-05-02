@@ -20,32 +20,7 @@ const FavoriteContainer = ({ navigation, route }: Props) => {
     });
   }, [navigation]);
 
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: "#719DD7",
-        },
-      }}
-    >
-      <Stack.Screen
-        name="FavoriteTemplate"
-        component={Favorite}
-        options={{
-          title: "찜한 목록",
-          headerTitleAlign: "center",
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={onCancel}
-              style={{ marginHorizontal: 20 }}
-            >
-              <Text style={styles.navigatorCancle}>X</Text>
-            </TouchableOpacity>
-          ),
-        }}
-      />
-    </Stack.Navigator>
-  );
+  return <Favorite />;
 };
 
 export default FavoriteContainer;

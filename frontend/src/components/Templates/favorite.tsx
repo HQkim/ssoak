@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import AuctionTypeTag from "../Atoms/Tags/auctionTypeTag";
+import CompletedTag from "../Atoms/Tags/completedTag";
 
 type Props = {};
 
@@ -21,8 +23,7 @@ const Favorite = (props: Props) => {
   const items: any[] = [
     {
       id: 1,
-      title:
-        "SONY ILCE-7M3 팝니다SONY ILCE-7M3 팝니다SONY ILCE-7M3 팝니다SONY ILCE-7M3 팝니다",
+      title: "SONY ILCE-7M333333",
       price: 12000,
       type: "실시간",
       isCompleted: true,
@@ -45,6 +46,10 @@ const Favorite = (props: Props) => {
       heart: true,
     },
   ];
+  const goDetail = () => {
+    console.warn("상세목록으로 이동");
+    // navigation.navigate("/")
+  };
 
   const pressHeart = () => {
     setHeart((prev) => !prev);
@@ -54,51 +59,32 @@ const Favorite = (props: Props) => {
       {items.map((item, index) => (
         <View key={index} style={styles.favListContainer}>
           <View>
-            {item.type === "실시간" ? (
-              <Text
-                style={{
-                  fontSize: 15,
-                  width: ScreenWidth / 6,
-                  backgroundColor: "#EA759A",
-                  borderRadius: ScreenWidth / 12,
-                  textAlign: "center",
-                }}
-              >
-                실시간
-              </Text>
-            ) : (
-              <Text
-                style={{
-                  fontSize: 15,
-                  width: ScreenWidth / 6,
-                  backgroundColor: "#F8A33E",
-                  borderRadius: ScreenWidth / 12,
-                  textAlign: "center",
-                }}
-              >
-                일반
-              </Text>
-            )}
+            <AuctionTypeTag
+              styles={{ tag: styles.auctionTypeTag }}
+              text={item.type}
+            ></AuctionTypeTag>
           </View>
           <View style={{ flexDirection: "row", marginTop: 10 }}>
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 2 }}>
               <Image
                 source={randomImage}
                 style={{ width: ScreenHeight / 10, height: ScreenHeight / 10 }}
               />
             </View>
-            <View style={{ flex: 2 }}>
+            <View style={{ flex: 4 }}>
               <Text style={{ fontSize: 18 }} numberOfLines={2}>
                 {item.title}
               </Text>
               <Text>{item.isCompleted}</Text>
               <View style={{ flexDirection: "row" }}>
                 {item.isCompleted === true ? (
-                  <Text style={{ flex: 1 }}>거래완료</Text>
+                  <CompletedTag
+                    styles={{ tag: styles.completedTypeTag }}
+                    text={"거래완료"}
+                  />
                 ) : (
                   <Text style={{ fontSize: 15, flex: 1 }}>현재 입찰가 :</Text>
                 )}
-
                 <TextInput
                   editable={false}
                   maxLength={15}
@@ -119,7 +105,7 @@ const Favorite = (props: Props) => {
             >
               <TouchableOpacity onPress={() => pressHeart}>
                 {item.heart === true ? (
-                  <Ionicons name="heart" size={24} color="#FF7777" />
+                  <Ionicons name="heart" size={24} color="#EA759A" />
                 ) : (
                   <Ionicons name="heart" size={24} color="black" />
                 )}
@@ -128,7 +114,7 @@ const Favorite = (props: Props) => {
           </View>
           <View
             style={{
-              borderBottomColor: "#7D7D7D",
+              borderBottomColor: "#d7d4d4",
               borderBottomWidth: 1,
               marginTop: 15,
             }}
@@ -152,5 +138,20 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 0.5,
     height: 24,
+  },
+  auctionTypeTag: {
+    fontSize: 15,
+    width: ScreenWidth / 6,
+    backgroundColor: "#F8A33E",
+    borderRadius: ScreenWidth / 12,
+    textAlign: "center",
+  },
+  completedTypeTag: {
+    fontSize: 15,
+    width: ScreenWidth / 6,
+    backgroundColor: "#C4C4C4",
+    borderRadius: ScreenWidth / 12,
+    textAlign: "center",
+    marginRight: ScreenWidth / 12,
   },
 });
