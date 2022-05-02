@@ -10,3 +10,18 @@ export const kakaoLogin = async (access_code: string) => {
   }
   return response.data;
 };
+
+export const kakaoProfile = async (access_Token: string) => {
+  const response = await instance.get("/members/profile", {
+    headers: {
+      Authorization: `Bearer ${access_Token}`,
+    },
+  });
+  if (response.data.statusCode === 200) {
+    return response.data;
+  } else if (response.data.statusCode === 401) {
+    console.warn("회원 권한 없음");
+  } else if (response.data.statusCode === 500) {
+    console.warn("내부 서버 에러");
+  }
+};
