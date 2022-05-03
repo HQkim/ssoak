@@ -110,6 +110,53 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Transactional
     @Override
+    public ResItemSeqDto createItemV2(ReqItemRegisterDto itemRegisterRequestDto) {
+        System.out.println("========createItemV2===========");
+        log.debug("registerItem - {}", itemRegisterRequestDto);
+        Member member = memberService.getMemberByAuthentication();
+
+        LocalDateTime startTime = null;
+        if (itemRegisterRequestDto.getAuctionType().equals(AuctionType.NORMAL)){
+            startTime = LocalDateTime.now();
+        }
+        else if (itemRegisterRequestDto.getAuctionType().equals(AuctionType.LIVE)) {
+            startTime = itemRegisterRequestDto.getStartTime();
+        }
+        // item
+        Item item = Item.builder()
+                .title(itemRegisterRequestDto.getTitle())
+                .content(itemRegisterRequestDto.getContent())
+                .startPrice(itemRegisterRequestDto.getStartPrice())
+                .biddingUnit((int) Math.round(itemRegisterRequestDto.getStartPrice()*0.1))
+                .startTime(startTime)
+                .endTime(itemRegisterRequestDto.getEndTime())
+                .auctionType(itemRegisterRequestDto.getAuctionType())
+                .isSold(false)
+                .member(member)
+                .build();
+        itemRepository.save(item);
+
+        // category
+        for (String cate : itemRegisterRequestDto.getItemCategories()) {
+            Category category = categoryRepository.findByCategoryName(cate).get();
+
+            ItemCategory itemCategory = ItemCategory.builder()
+                    .category(category)
+                    .item(item)
+                    .build();
+            itemCategoryRepository.save(itemCategory);
+        }
+
+        System.out.println("=========image upload===========");
+        // image upload
+        uploadItemImages(item, itemRegisterRequestDto.getImages());
+
+        ResItemSeqDto itemSeqDto = ResItemSeqDto.builder().itemSeq(item.getSeq()).build();
+        return itemSeqDto;
+    }
+
+    @Transactional
+    @Override
     public void createImageTest(List<MultipartFile> itemImages) {
 //        log.debug("registerItem - {}");
         Member member = memberService.getMemberByAuthentication();

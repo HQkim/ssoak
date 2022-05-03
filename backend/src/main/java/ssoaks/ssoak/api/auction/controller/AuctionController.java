@@ -33,17 +33,41 @@ public class AuctionController {
 
     // 물품 생성
     @PostMapping
-    public ResponseEntity<BaseDataResponseDTO> registerItem(@Valid @RequestPart(value = "reqItemRegister") ReqItemRegisterDto reqItemRegisterDto,
-                                                        @RequestPart(value = "itemImages") List<MultipartFile> itemImages) {
+    public ResponseEntity<BaseDataResponseDTO> registerItem(@RequestPart(value = "reqItemRegister", required = false) ReqItemRegisterDto reqItemRegister,
+                                                        @RequestPart(value = "itemImages", required = false) List<MultipartFile> itemImages) {
+        System.out.println("==========물품생성=========");
         ResItemSeqDto itemSeqDto = null;
         try {
-            itemSeqDto = auctionService.createItem(reqItemRegisterDto, itemImages);
+            for (MultipartFile itemImage : itemImages) {
+                System.out.println("itemImages - image - filename" + itemImage.getOriginalFilename());
+            }
+            System.out.println("requestItemRegister - title >>" + reqItemRegister.getTitle() );
+
+            itemSeqDto = auctionService.createItem(reqItemRegister, itemImages);
         } catch (Exception e) {
             log.error(e.getMessage());
             return ResponseEntity.status(409).body(new BaseDataResponseDTO(409, "물품 등록에 실패하였습니다.", itemSeqDto));
         }
         return ResponseEntity.status(201).body(new BaseDataResponseDTO(201, "물품 등록 성공", itemSeqDto));
     }
+
+    //물품생성 V2
+    @PostMapping("/create")
+    public ResponseEntity<BaseDataResponseDTO> registerItemV2(ReqItemRegisterDto reqItemRegister) {
+
+        System.out.println("==========물품생성=========");
+        System.out.println("reqItemRegister - " + reqItemRegister);
+        ResItemSeqDto itemSeqDto = null;
+        try {
+            System.out.println("requestItemRegister " + reqItemRegister);
+            itemSeqDto = auctionService.createItemV2(reqItemRegister);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(409).body(new BaseDataResponseDTO(409, "물품 등록에 실패하였습니다.", itemSeqDto));
+        }
+        return ResponseEntity.status(201).body(new BaseDataResponseDTO(201, "물품 등록 성공", itemSeqDto));
+    }
+
 
     // 임시 이미지 업로드 테스트 api
     @PostMapping("/test")

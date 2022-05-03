@@ -14,6 +14,8 @@ public interface AuctionService {
 
     ResItemSeqDto createItem(ReqItemRegisterDto itemRegisterRequestDto, List<MultipartFile> itemImages);
 
+    ResItemSeqDto createItemV2(ReqItemRegisterDto itemRegisterDto);
+
     ResItemDto getItemDetail(Long itemSeq);
 
     void uploadItemImages(Item item, List<MultipartFile> itemImages);
