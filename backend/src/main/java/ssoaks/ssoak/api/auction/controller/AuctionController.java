@@ -26,41 +26,17 @@ import java.util.List;
 public class AuctionController {
 
     private final MemberService memberService;
-
     private final AuctionService auctionService;
-
     private final LikeService likeService;
 
-    // 물품 생성
+
+    //물품생성
     @PostMapping
-    public ResponseEntity<BaseDataResponseDTO> registerItem(@RequestPart(value = "reqItemRegister", required = false) ReqItemRegisterDto reqItemRegister,
-                                                        @RequestPart(value = "itemImages", required = false) List<MultipartFile> itemImages) {
-        System.out.println("==========물품생성=========");
+    public ResponseEntity<BaseDataResponseDTO> registerItem(ReqItemRegisterDto reqItemRegister) {
+
         ResItemSeqDto itemSeqDto = null;
         try {
-            for (MultipartFile itemImage : itemImages) {
-                System.out.println("itemImages - image - filename" + itemImage.getOriginalFilename());
-            }
-            System.out.println("requestItemRegister - title >>" + reqItemRegister.getTitle() );
-
-            itemSeqDto = auctionService.createItem(reqItemRegister, itemImages);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return ResponseEntity.status(409).body(new BaseDataResponseDTO(409, "물품 등록에 실패하였습니다.", itemSeqDto));
-        }
-        return ResponseEntity.status(201).body(new BaseDataResponseDTO(201, "물품 등록 성공", itemSeqDto));
-    }
-
-    //물품생성 V2
-    @PostMapping("/create")
-    public ResponseEntity<BaseDataResponseDTO> registerItemV2(ReqItemRegisterDto reqItemRegister) {
-
-        System.out.println("==========물품생성=========");
-        System.out.println("reqItemRegister - " + reqItemRegister);
-        ResItemSeqDto itemSeqDto = null;
-        try {
-            System.out.println("requestItemRegister " + reqItemRegister);
-            itemSeqDto = auctionService.createItemV2(reqItemRegister);
+            itemSeqDto = auctionService.createItem(reqItemRegister);
         } catch (Exception e) {
             log.error(e.getMessage());
             return ResponseEntity.status(409).body(new BaseDataResponseDTO(409, "물품 등록에 실패하였습니다.", itemSeqDto));
@@ -81,14 +57,15 @@ public class AuctionController {
         return ResponseEntity.status(201).body(new BaseResponseDTO(201, "물품 등록 성공"));
     }
 
-    // 물품 수정 -> 진행중
+    // 물품 수정
     @PatchMapping("/{itemSeq}")
     public ResponseEntity<BaseDataResponseDTO> changeItem(@PathVariable("itemSeq") Long itemSeq,
-                                                      @Valid @RequestPart(value = "item") ReqItemChangeDto reqItemChangeDto,
-                                                      @RequestPart(value = "itemImages") List<MultipartFile> itemImages) {
+                                                      ReqItemChangeDto reqItemChangeDto) {
+
+        System.out.println("===물품수정=====> reqItemChangeDto : " + reqItemChangeDto);
         ResItemSeqDto resItemSeqDto = ResItemSeqDto.builder().itemSeq(itemSeq).build();
         try {
-            auctionService.changeItem(itemSeq, reqItemChangeDto, itemImages);
+            auctionService.changeItem(itemSeq, reqItemChangeDto);
         } catch (NotAllowedChangeItemException e) {
             log.error(e.getMessage());
             return ResponseEntity.status(409).body(new BaseDataResponseDTO(409, e.getMessage(), resItemSeqDto));
@@ -99,16 +76,19 @@ public class AuctionController {
         return ResponseEntity.status(201).body(new BaseDataResponseDTO(201, "물품 수정 성공", resItemSeqDto));
     }
 
+    // 물품 삭제
     @DeleteMapping("/{itemSeq}")
     public ResponseEntity<BaseResponseDTO> deleteItem(@PathVariable("itemSeq") Long itemSeq) {
         try {
             auctionService.deleteItem(itemSeq);
         } catch (IllegalArgumentException e) {
-
+            log.error(e.getMessage());
+            return ResponseEntity.status(404).body(new BaseResponseDTO(404, "존재하지 않는 물품입니다"));
         } catch (Exception e) {
-
+            log.error(e.getMessage());
+            return ResponseEntity.status(409).body(new BaseResponseDTO(409, "물품 삭제에 실패했습니다"));
         }
-        return null;
+        return ResponseEntity.status(204).body(new BaseResponseDTO(204, "물품 삭제 성공"));
     }
 
     // 물품 상세 조회
@@ -125,7 +105,6 @@ public class AuctionController {
             log.error(e.getMessage());
             return ResponseEntity.status(409).body(new BaseDataResponseDTO<>(409, "물품 조회에 실패했습니다", resItemDto));
         }
-
         return ResponseEntity.status(200).body(new BaseDataResponseDTO<>(200, "물품 조회에 성공했습니다.", resItemDto));
     }
 
@@ -152,8 +131,10 @@ public class AuctionController {
         try {
             likeService.unLike(itemSeq);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body(new BaseResponseDTO(404, "물품을 찾을 수 없습니다."));
+            log.error(e.getMessage());
+            return ResponseEntity.status(404).body(new BaseResponseDTO(404, "존재하지 않는 물품입니다."));
         } catch (Exception e) {
+            log.error(e.getMessage());
             return ResponseEntity.status(500).body(new BaseResponseDTO(500, "좋아요 취소에 실패했습니다."));
         }
         return ResponseEntity.status(200).body(new BaseResponseDTO(204, "좋아요를 취소했습니다."));

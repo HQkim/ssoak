@@ -16,11 +16,11 @@ import ssoaks.ssoak.api.auction.exception.NotAllowedChangeItemException;
 import ssoaks.ssoak.api.auction.repository.*;
 import ssoaks.ssoak.api.member.dto.response.MemberSimpleInfoDto;
 import ssoaks.ssoak.api.member.entity.Member;
-import ssoaks.ssoak.api.member.repository.MemberRepository;
 import ssoaks.ssoak.api.member.service.MemberService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -32,8 +32,6 @@ public class AuctionServiceImpl implements AuctionService {
     private final CategoryRepository categoryRepository;
 
     private final ItemRepository itemRepository;
-
-    private final MemberRepository memberRepository;
 
     private final ItemCategoryRepository itemCategoryRepository;
 
@@ -49,78 +47,22 @@ public class AuctionServiceImpl implements AuctionService {
 
     private final BiddingRepository biddingRepository;
 
-    @Transactional
-    @Override
-    public ResItemSeqDto createItem(ReqItemRegisterDto itemRegisterRequestDto, List<MultipartFile> itemImages) {
-        log.debug("registerItem - {}", itemRegisterRequestDto);
-        Member member = memberService.getMemberByAuthentication();
-        System.out.println("AuctionServiceImpl createItem memberSeq: " + member.getSeq());
-
-        LocalDateTime startTime = null;
-        if (itemRegisterRequestDto.getAuctionType().equals(AuctionType.NORMAL)){
-            startTime = LocalDateTime.now();
-            System.out.println("AuctionServiceImpl AuctionType: " + itemRegisterRequestDto.getAuctionType());
-        }
-        else if (itemRegisterRequestDto.getAuctionType().equals(AuctionType.LIVE)) {
-            startTime = itemRegisterRequestDto.getStartTime();
-            System.out.println("AuctionServiceImpl AuctionType: " + itemRegisterRequestDto.getAuctionType());
-        }
-        // item
-        System.out.println("=========Item save start========");
-        Item item = Item.builder()
-                .title(itemRegisterRequestDto.getTitle())
-                .content(itemRegisterRequestDto.getContent())
-                .startPrice(itemRegisterRequestDto.getStartPrice())
-                .biddingUnit((int) Math.round(itemRegisterRequestDto.getStartPrice()*0.1))
-                .startTime(startTime)
-                .endTime(itemRegisterRequestDto.getEndTime())
-                .auctionType(itemRegisterRequestDto.getAuctionType())
-                .isSold(false)
-                .member(member)
-                .build();
-        itemRepository.save(item);
-        System.out.println("=========Item save finished========");
-
-        // category
-        System.out.println("=========Category save start========");
-        for (String cate : itemRegisterRequestDto.getItemCategories()) {
-            Category category = categoryRepository.findByCategoryName(cate).get();
-
-            ItemCategory itemCategory = ItemCategory.builder()
-                    .category(category)
-                    .item(item)
-                    .build();
-            itemCategoryRepository.save(itemCategory);
-        }
-        System.out.println("=========Category save finished========");
-
-        // image upload
-        System.out.println("======createImage start==========");
-        for (MultipartFile itemImage : itemImages) {
-            System.out.println("아이템 이미지 클래스 확인 == " + itemImage.getClass());
-        }
-        uploadItemImages(item, itemImages);
-        System.out.println("======createImage finished==========");
-
-        System.out.println("======itemSeqDto start==========");
-        ResItemSeqDto itemSeqDto = ResItemSeqDto.builder().itemSeq(item.getSeq()).build();
-        System.out.println("======itemSeqDto finished==========");
-        return itemSeqDto;
-    }
 
     @Transactional
     @Override
-    public ResItemSeqDto createItemV2(ReqItemRegisterDto itemRegisterRequestDto) {
-        System.out.println("========createItemV2===========");
+    public ResItemSeqDto createItem(ReqItemRegisterDto itemRegisterRequestDto) {
         log.debug("registerItem - {}", itemRegisterRequestDto);
         Member member = memberService.getMemberByAuthentication();
 
         LocalDateTime startTime = null;
+        LocalDateTime endTime = null;
         if (itemRegisterRequestDto.getAuctionType().equals(AuctionType.NORMAL)){
             startTime = LocalDateTime.now();
+            endTime = itemRegisterRequestDto.getEndTime();
         }
         else if (itemRegisterRequestDto.getAuctionType().equals(AuctionType.LIVE)) {
             startTime = itemRegisterRequestDto.getStartTime();
+            endTime = startTime.plusMinutes(30L);
         }
         // item
         Item item = Item.builder()
@@ -129,7 +71,7 @@ public class AuctionServiceImpl implements AuctionService {
                 .startPrice(itemRegisterRequestDto.getStartPrice())
                 .biddingUnit((int) Math.round(itemRegisterRequestDto.getStartPrice()*0.1))
                 .startTime(startTime)
-                .endTime(itemRegisterRequestDto.getEndTime())
+                .endTime(endTime)
                 .auctionType(itemRegisterRequestDto.getAuctionType())
                 .isSold(false)
                 .member(member)
@@ -146,8 +88,6 @@ public class AuctionServiceImpl implements AuctionService {
                     .build();
             itemCategoryRepository.save(itemCategory);
         }
-
-        System.out.println("=========image upload===========");
         // image upload
         uploadItemImages(item, itemRegisterRequestDto.getImages());
 
@@ -173,12 +113,6 @@ public class AuctionServiceImpl implements AuctionService {
                 .member(member)
                 .build();
         itemRepository.save(item);
-
-        System.out.println("======createImageTest==========");
-        for (MultipartFile itemImage : itemImages) {
-            System.out.println("아이템 이미지 클래스 확인 == " + itemImage.getClass());
-        }
-        System.out.println("=================================");
         uploadItemImages(item, itemImages);
     }
 
@@ -263,22 +197,20 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public void uploadItemImages(Item item, List<MultipartFile> itemImages) {
-        System.out.println("=========uploadItemImages==========");
+
         itemImages.forEach(image -> {
             String imageUrl = awsS3Service.uploadImage(image);
-            System.out.println("uploadItemImages  - imageUrl == " + imageUrl);
             Image imageBuild = Image.builder()
                     .imageUrl(imageUrl)
                     .item(item)
                     .build();
             imageRepository.save(imageBuild);
         });
-        System.out.println("====uploadItemImages==END==================");
     }
 
     @Transactional
     @Override
-    public void changeItem(Long itemSeq, ReqItemChangeDto itemChangeDto, List<MultipartFile> itemImages) {
+    public void changeItem(Long itemSeq, ReqItemChangeDto itemChangeDto) {
         log.debug("changeItem - {}", itemSeq);
         Member member = memberService.getMemberByAuthentication();
 
@@ -289,14 +221,12 @@ public class AuctionServiceImpl implements AuctionService {
         }
 
         Bidding bidding = biddingRepository.findTop1ByItemSeqOrderBySeqDesc(itemSeq).orElse(null);
-
         if (item.getAuctionType().equals(AuctionType.NORMAL) && !(bidding == null)) {
             throw new NotAllowedChangeItemException("이미 진행중인 경매는 수정이 불가능합니다.");
         } else if (item.getAuctionType().equals(AuctionType.LIVE) && item.getStartTime().isBefore(LocalDateTime.now())) {
             throw new NotAllowedChangeItemException("이미 진행중인 경매는 수정이 불가능합니다.");
         } else {
             // item
-            System.out.println(itemChangeDto.getTitle());
             item.changeItem(itemChangeDto.getTitle(), itemChangeDto.getContent(),
                     itemChangeDto.getStartPrice(), (int) Math.round(itemChangeDto.getStartPrice()*0.1),
                     itemChangeDto.getStartTime(), itemChangeDto.getEndTime(), itemChangeDto.getAuctionType());
@@ -311,11 +241,12 @@ public class AuctionServiceImpl implements AuctionService {
             // image
             List<Image> imageList = imageRepository.findAllByItemSeq(itemSeq);
             imageRepository.deleteAll(imageList);
-            uploadItemImages(item, itemImages);
+            uploadItemImages(item, itemChangeDto.getImages());
         }
 
     }
 
+    @Transactional
     @Override
     public Boolean deleteItem(Long itemSeq) {
         log.debug("changeItem - {}", itemSeq);
@@ -333,9 +264,20 @@ public class AuctionServiceImpl implements AuctionService {
         } else if (item.getAuctionType().equals(AuctionType.LIVE) && item.getStartTime().isBefore(LocalDateTime.now())) {
             throw new NotAllowedChangeItemException("이미 진행중인 경매는 삭제가 불가능합니다.");
         } else {
-
-            return null;
+            // delete image
+            List<Image> imageList = imageRepository.findAllByItemSeq(itemSeq);
+            imageRepository.deleteAll(imageList);
+            // delete likes
+            List<Like> likes = likeRepository.findAllByItemSeq(itemSeq);
+            likeRepository.deleteAll(likes);
+            // delete category
+            List<ItemCategory> itemCategories = itemCategoryRepository.findAllByItemSeq(itemSeq);
+            itemCategoryRepository.deleteAll(itemCategories);
+            // delete item, bidding
+            itemRepository.delete(item);
+            return true;
         }
+
     }
 
 
