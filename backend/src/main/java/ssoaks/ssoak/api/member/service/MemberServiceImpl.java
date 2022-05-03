@@ -43,10 +43,12 @@ public class MemberServiceImpl implements MemberService{
     public ResMemberProfileDTO getMyProfile() {
 
         Member member;
+        Long memberSeq;
 
         try {
             member = getMemberByAuthentication();
-            System.out.println("==============출력!!!!!");
+            memberSeq = member.getSeq();
+
         } catch (Exception e) {
             throw new NotAuthenticatedMemberException("MemberServiceImple getMyProfile() 회원정보 호출 실패");
         }
@@ -109,9 +111,11 @@ public class MemberServiceImpl implements MemberService{
     public Integer deleteMember() {
 
         Member member;
+        Long memberSeq;
 
         try {
             member = getMemberByAuthentication();
+            memberSeq = member.getSeq();
         } catch (Exception e) {
             throw new NotAuthenticatedMemberException("MemberServiceImple deleteMember() 회원정보 호출 실패");
         }
@@ -135,6 +139,7 @@ public class MemberServiceImpl implements MemberService{
 
         try {
             member = getMemberByAuthentication();
+            member.getSeq();
         } catch (Exception e) {
             throw new NotAuthenticatedMemberException("MemberServiceImple getOtherMemberProfile() 회원정보 호출 실패");
         }
