@@ -10,3 +10,27 @@ export const kakaoLogin = async (access_code: string) => {
   }
   return response.data;
 };
+
+export const kakaoProfile = async (access_Token: string) => {
+  try {
+    const response = await instance.get("/members/profile", {
+      headers: {
+        Authorization: `Bearer ${access_Token}`,
+      },
+    });
+    console.log("kakao1---------------------", response.data);
+    if (response.data.statusCode == 200) {
+      console.log("kakao2---------------------", response.data);
+      return response.data;
+    } else if (response.data.statusCode == 401) {
+      console.log("kakao3---------------------", response.data);
+      console.warn("회원 권한 없음");
+    } else if (response.data.statusCode == 500) {
+      console.log("kakao4---------------------", response.data);
+      console.warn("내부 서버 에러");
+    }
+  } catch (err) {
+    console.log("kakao5---------------------", err);
+    console.log(err);
+  }
+};

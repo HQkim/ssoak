@@ -1,16 +1,37 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import React, { useEffect } from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import Favorite from "../Templates/favorite";
 
-type Props = {};
+type Props = {
+  navigation: any;
+  route: object;
+};
 
-const FavoriteContainer = (props: Props) => {
-  return (
-    <View>
-      <Text>favoriteContainer</Text>
-    </View>
-  );
+const Stack = createStackNavigator();
+
+const FavoriteContainer = ({ navigation, route }: Props) => {
+  const onCancel = () => {
+    navigation.navigate("main");
+  };
+  useEffect(() => {
+    navigation.addListener("focus", () => {
+      console.log("hi");
+    });
+  }, [navigation]);
+
+  return <Favorite />;
 };
 
 export default FavoriteContainer;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  navigatorTitle: {
+    fontSize: 20,
+    fontWeight: "200",
+  },
+  navigatorCancle: {
+    fontSize: 20,
+    fontWeight: "200",
+  },
+});

@@ -1,20 +1,18 @@
 import { StyleSheet, Text, View, Dimensions } from "react-native";
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import AuctionChatContainer from "../../Pages/auctionChatContainer";
-import DetailContainer from "../../Pages/detailContainer";
-import MainContainer from "../../Pages/mainContainer";
-import AuctionDetailContainer from "../../Pages/auctionDetailContainer";
-import AuctionContainer from "../../Pages/auctionContainer";
-import NavigatorTitle from "../../Atoms/Typographies/navigatorTitle";
-import KakaoLoginContainer from "../../Pages/kakaoLoginContainer";
+import ProfileContainer from "../../Pages/profileContainer";
 import FavoriteContainer from "../../Pages/favoriteContainer";
+import OnSaleContainer from "../../Pages/onSaleContainer";
+import PurchasedContainer from "../../Pages/purchasedContainer";
+import HistoryContainer from "../../Pages/historyContainer";
+import NavigatorTitle from "../../Atoms/Typographies/navigatorTitle";
 
 type Props = {};
 
 const Stack = createStackNavigator();
 const { width: ScreenWidth } = Dimensions.get("window");
-const MainStackNavigator = (props: Props) => {
+const ProfileStackNavigator = (props: Props) => {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -31,72 +29,64 @@ const MainStackNavigator = (props: Props) => {
       }}
     >
       <Stack.Screen
-        name="main"
-        component={MainContainer}
-        options={{ headerShown: false, title: "메인 화면" }}
+        name="profile"
+        component={ProfileContainer}
+        options={{ headerShown: false, title: "마이페이지" }}
       />
       <Stack.Screen
-        name="detail"
-        component={DetailContainer}
+        name="favorite"
+        component={FavoriteContainer}
+        options={{
+          headerTitleAlign: "center",
+          headerTitle: (props) => (
+            <NavigatorTitle title={"찜한 목록"} style={styles.navigatorTitle} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="onsale"
+        component={OnSaleContainer}
         options={{
           headerTitleAlign: "center",
           headerTitle: (props) => (
             <NavigatorTitle
-              title={"물품 상세 정보"}
+              title={"판매중 목록"}
               style={styles.navigatorTitle}
             />
           ),
         }}
       />
       <Stack.Screen
-        name="auctionDetail"
-        component={AuctionDetailContainer}
+        name="purchase"
+        component={PurchasedContainer}
         options={{
           headerTitleAlign: "center",
           headerTitle: (props) => (
             <NavigatorTitle
-              title={"물품 상세 정보"}
+              title={"구매완료 목록"}
               style={styles.navigatorTitle}
             />
           ),
         }}
       />
       <Stack.Screen
-        name="auction"
-        component={AuctionContainer}
+        name="history"
+        component={HistoryContainer}
         options={{
           headerTitleAlign: "center",
           headerTitle: (props) => (
             <NavigatorTitle
-              title={"물품 입찰 정보"}
+              title={"판매이력 목록"}
               style={styles.navigatorTitle}
             />
           ),
         }}
-      />
-      <Stack.Screen
-        name="auctionChat"
-        component={AuctionChatContainer}
-        options={{
-          headerTitleAlign: "center",
-          headerTitle: (props) => (
-            <NavigatorTitle
-              title={"실시간 경매 채팅"}
-              style={styles.navigatorTitle}
-            />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="kakaoLogin"
-        component={KakaoLoginContainer}
-        options={{ headerShown: false, title: "카카오 로그인 화면" }}
       />
     </Stack.Navigator>
   );
 };
 
-export default MainStackNavigator;
+export default ProfileStackNavigator;
 
 const styles = StyleSheet.create({
   navigatorTitle: {
