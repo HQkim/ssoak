@@ -12,6 +12,7 @@ import java.util.List;
 
 import static ssoaks.ssoak.api.auction.entity.QBidding.bidding;
 import static ssoaks.ssoak.api.auction.entity.QItem.item;
+import static ssoaks.ssoak.api.auction.entity.QLike.like;
 import static ssoaks.ssoak.api.member.entity.QMember.member;
 
 public class ItemRepositoryImpl implements ItemRepositoryCustom{
@@ -34,12 +35,11 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                         item.endTime,
                         item.auctionType,
                         item.isSold,
-                        item.biddings.size(),
+                        bidding.biddingPrice.count().intValue().coalesce(0),
                         bidding.biddingPrice.max().coalesce(0)
                 ))
                 .from(item)
-                .join(item.member, member)
-                .leftJoin(item.biddings, bidding).on(bidding.item.eq(item)).groupBy(item)
+                .leftJoin(item.biddings, bidding).groupBy(item)
                 .where(item.member.seq.eq(memberSeq).and(item.endTime.after(LocalDateTime.now()))
                         .and(item.isSold.eq(false)))
                 .fetch();
@@ -59,12 +59,11 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                         item.endTime,
                         item.auctionType,
                         item.isSold,
-                        item.biddings.size(),
+                        bidding.biddingPrice.count().intValue().coalesce(0),
                         bidding.biddingPrice.max().coalesce(0)
                 ))
                 .from(item)
-                .join(item.member, member)
-                .leftJoin(item.biddings, bidding).on(bidding.item.eq(item)).groupBy(item)
+                .leftJoin(item.biddings, bidding).groupBy(item)
                 .where(item.member.seq.eq(memberSeq).and(item.endTime.before(LocalDateTime.now()))
                         .and(item.isSold.eq(true)))
                 .fetch();
@@ -84,12 +83,11 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                         item.endTime,
                         item.auctionType,
                         item.isSold,
-                        item.biddings.size().coalesce(0),
+                        bidding.biddingPrice.count().intValue().coalesce(0),
                         bidding.biddingPrice.max().coalesce(0)
                 ))
                 .from(item)
-                .join(item.member, member)
-                .leftJoin(item.biddings, bidding).on(bidding.item.eq(item)).groupBy(item)
+                .leftJoin(item.biddings, bidding).groupBy(item)
                 .where(item.member.seq.eq(memberSeq).and(item.endTime.before(LocalDateTime.now()))
                         .and(item.isSold.eq(false)))
                 .fetch();
@@ -110,7 +108,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
     }
 
     @Override
-    public  List<ItemOverviewDto> getBoughtItemOverviewsByMember(Long memberSeq) {
+    public List<ItemOverviewDto> getBoughtItemOverviewsByMember(Long memberSeq) {
 
         List<ItemOverviewDto> list = queryFactory
                 .select(new QItemOverviewDto(
@@ -121,14 +119,39 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                         item.endTime,
                         item.auctionType,
                         item.isSold,
-                        item.biddings.size().coalesce(0),
-                        bidding.biddingPrice.max().coalesce(0)      // 이쪽 쿼리문이 아직 잘 이해가 안간다...
+                        item.biddings.size(),
+//                        bidding.biddingPrice.count().intValue().coalesce(0), // bidding에 대한 조건을 걸었기 때문에 이렇게 하지말고 위처럼 새로 sub쿼리 날려야함
+                        bidding.biddingPrice.max().coalesce(0)      // groupby하면 어차피 1개가 되므로 바로 불러와도 된다.
                 ))
                 .from(item)
-                .leftJoin(item.biddings, bidding).groupBy(item)
+                .join(item.biddings, bidding).groupBy(item)
                 .where(bidding.buyer.seq.eq(memberSeq).and(bidding.isHammered.eq(true)))
                 .fetch();
 
         return list;
+    }
+
+    @Override
+    public List<ItemOverviewDto> getLikedItemOverviewsByMember(Long memberSeq) {
+
+        List<ItemOverviewDto> list_liked = queryFactory
+                .select(new QItemOverviewDto(
+                        item.seq,
+                        item.title,
+                        item.startPrice,
+                        item.startTime,
+                        item.endTime,
+                        item.auctionType,
+                        item.isSold,
+                        item.biddings.size(),
+                        bidding.biddingPrice.max().coalesce(0)
+                ))
+                .from(item)
+                .join(item.likes, like)
+                .leftJoin(item.biddings, bidding).groupBy(item)
+                .where(like.member.seq.eq(memberSeq))
+                .fetch();
+
+        return list_liked;
     }
 }

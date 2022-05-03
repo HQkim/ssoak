@@ -55,6 +55,10 @@ public class Item extends BaseModifiedEntity {
     @OneToMany(mappedBy = "item", cascade = ALL)
     private List<Bidding> biddings = new ArrayList<>();
 
+    // 물품에 대한 좋아요 (added by Hyunkyu - querydsl에서 필요)
+    @OneToMany(mappedBy = "item", cascade = ALL)
+    private List<Like> likes = new ArrayList<>();
+
     // 물품의 판매자
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_seq", columnDefinition = "BIGINT UNSIGNED")
