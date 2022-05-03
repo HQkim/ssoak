@@ -23,6 +23,5 @@ public class ReqItemRegisterDto {
     private LocalDateTime endTime;
     private AuctionType auctionType;
     private List<String> itemCategories;
-    private List<MultipartFile> images;
 
 }

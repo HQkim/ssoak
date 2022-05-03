@@ -54,15 +54,19 @@ public class AuctionServiceImpl implements AuctionService {
     public ResItemSeqDto createItem(ReqItemRegisterDto itemRegisterRequestDto, List<MultipartFile> itemImages) {
         log.debug("registerItem - {}", itemRegisterRequestDto);
         Member member = memberService.getMemberByAuthentication();
+        System.out.println("AuctionServiceImpl createItem memberSeq: " + member.getSeq());
 
         LocalDateTime startTime = null;
         if (itemRegisterRequestDto.getAuctionType().equals(AuctionType.NORMAL)){
             startTime = LocalDateTime.now();
+            System.out.println("AuctionServiceImpl AuctionType: " + itemRegisterRequestDto.getAuctionType());
         }
         else if (itemRegisterRequestDto.getAuctionType().equals(AuctionType.LIVE)) {
             startTime = itemRegisterRequestDto.getStartTime();
+            System.out.println("AuctionServiceImpl AuctionType: " + itemRegisterRequestDto.getAuctionType());
         }
         // item
+        System.out.println("=========Item save start========");
         Item item = Item.builder()
                 .title(itemRegisterRequestDto.getTitle())
                 .content(itemRegisterRequestDto.getContent())
@@ -75,8 +79,10 @@ public class AuctionServiceImpl implements AuctionService {
                 .member(member)
                 .build();
         itemRepository.save(item);
+        System.out.println("=========Item save finished========");
 
         // category
+        System.out.println("=========Category save start========");
         for (String cate : itemRegisterRequestDto.getItemCategories()) {
             Category category = categoryRepository.findByCategoryName(cate).get();
 
@@ -86,10 +92,19 @@ public class AuctionServiceImpl implements AuctionService {
                     .build();
             itemCategoryRepository.save(itemCategory);
         }
-        // image upload
-        uploadItemImages(item, itemImages);
+        System.out.println("=========Category save finished========");
 
+        // image upload
+        System.out.println("======createImage start==========");
+        for (MultipartFile itemImage : itemImages) {
+            System.out.println("아이템 이미지 클래스 확인 == " + itemImage.getClass());
+        }
+        uploadItemImages(item, itemImages);
+        System.out.println("======createImage finished==========");
+
+        System.out.println("======itemSeqDto start==========");
         ResItemSeqDto itemSeqDto = ResItemSeqDto.builder().itemSeq(item.getSeq()).build();
+        System.out.println("======itemSeqDto finished==========");
         return itemSeqDto;
     }
 
