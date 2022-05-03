@@ -7,7 +7,13 @@ type Props = {};
 const ImageSkeleton = (props: Props) => {
   const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
   return (
-    <View style={{ justifyContent: "center", alignItems: "center" }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <SkeletonContent
         containerStyle={{
           width: ScreenHeight / 3,

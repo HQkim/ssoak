@@ -68,6 +68,7 @@ const DetailContainer = (props: Props) => {
           showPageIndicator={showIndicator}
           keyboardDismissMode={"on-drag"}
           overdrag={true}
+          layoutDirection="ltr"
         >
           {isLoading ? (
             <ImageSkeleton />
