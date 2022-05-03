@@ -18,10 +18,12 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/api/v1")
+        registry.addEndpoint("/api/v1/ws")
                 .setAllowedOriginPatterns("*")
 //                .setAllowedOriginPatterns("http://localhost:8080")
                 .withSockJS();
+        System.out.println("registry -> string" + registry.toString());
+
 
     }
 
@@ -32,8 +34,4 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.enableSimpleBroker("/topic", "/queue");
     }
 
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration){
-        registration.interceptors(stompHandler);
-    }
 }

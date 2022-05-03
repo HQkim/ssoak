@@ -27,14 +27,13 @@ public class ChatWebSocketController {
 
     private final SimpMessagingTemplate template;
 
-    // 초기화된 websocket에는 /api/v1
-    // 메시지 보내는 경로: /pub/chat
+
     @MessageMapping("/chat")
     public void ChatHandler(ReqChatDto reqChatDto) {
 
         ResChatDto resChatDto = chatService.insertChat(reqChatDto);
         template.convertAndSend("/queue/" + reqChatDto.getItemSeq()
-                + "_" + reqChatDto.getSellerSeq() + "_" + reqChatDto.getBuyerSeq(), resChatDto);
+                + "_" + reqChatDto.getBuyerSeq(), resChatDto);
     }
 
     @MessageMapping("/live_auction")
