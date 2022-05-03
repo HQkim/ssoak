@@ -60,6 +60,10 @@ public class MemberController {
             log.error(e.getMessage());
             resMemberProfileSelling = new BaseDataResponseDTO<>(401, "회원 권한 없음", null);
             return ResponseEntity.status(401).body(resMemberProfileSelling);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            resMemberProfileSelling = new BaseDataResponseDTO<>(409, "판매중 물품 조회 실패", null);
+            return ResponseEntity.status(409).body(resMemberProfileSelling);
         } catch (Exception e) {
             log.error(e.getMessage());
             resMemberProfileSelling = new BaseDataResponseDTO<>(500, "내부 서버 에러", null);
@@ -85,6 +89,10 @@ public class MemberController {
             log.error(e.getMessage());
             resMemberProfileSold = new BaseDataResponseDTO<>(401, "회원 권한 없음", null);
             return ResponseEntity.status(401).body(resMemberProfileSold);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            resMemberProfileSold = new BaseDataResponseDTO<>(409, "판매완료 물품 조회 실패", null);
+            return ResponseEntity.status(409).body(resMemberProfileSold);
         } catch (Exception e) {
             log.error(e.getMessage());
             resMemberProfileSold = new BaseDataResponseDTO<>(500, "내부 서버 에러", null);
@@ -110,6 +118,10 @@ public class MemberController {
             log.error(e.getMessage());
             resMemberProfileUnsold = new BaseDataResponseDTO<>(401, "회원 권한 없음", null);
             return ResponseEntity.status(401).body(resMemberProfileUnsold);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            resMemberProfileUnsold = new BaseDataResponseDTO<>(409, "판매가 안된 물품 조회 실패", null);
+            return ResponseEntity.status(409).body(resMemberProfileUnsold);
         } catch (Exception e) {
             log.error(e.getMessage());
             resMemberProfileUnsold = new BaseDataResponseDTO<>(500, "내부 서버 에러", null);
@@ -183,6 +195,10 @@ public class MemberController {
             log.error(e.getMessage());
             resMemberProfileBought = new BaseDataResponseDTO<>(401, "회원 권한 없음", null);
             return ResponseEntity.status(401).body(resMemberProfileBought);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            resMemberProfileBought = new BaseDataResponseDTO<>(409, "구매한 물품 조회 실패", null);
+            return ResponseEntity.status(409).body(resMemberProfileBought);
         } catch (Exception e) {
             log.error(e.getMessage());
             resMemberProfileBought = new BaseDataResponseDTO<>(500, "내부 서버 에러", null);
@@ -208,6 +224,10 @@ public class MemberController {
             log.error(e.getMessage());
             resMemberProfileLikes = new BaseDataResponseDTO<>(401, "회원 권한 없음", null);
             return ResponseEntity.status(401).body(resMemberProfileLikes);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            resMemberProfileLikes = new BaseDataResponseDTO<>(409, "찜한 물품 조회 실패", null);
+            return ResponseEntity.status(409).body(resMemberProfileLikes);
         } catch (Exception e) {
             log.error(e.getMessage());
             resMemberProfileLikes = new BaseDataResponseDTO<>(500, "내부 서버 에러", null);
