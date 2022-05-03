@@ -12,15 +12,13 @@ import java.util.List;
 
 public interface AuctionService {
 
-    ResItemSeqDto createItem(ReqItemRegisterDto itemRegisterRequestDto, List<MultipartFile> itemImages);
-
-    ResItemSeqDto createItemV2(ReqItemRegisterDto itemRegisterDto);
+    ResItemSeqDto createItem(ReqItemRegisterDto reqItemRegister);
 
     ResItemDto getItemDetail(Long itemSeq);
 
     void uploadItemImages(Item item, List<MultipartFile> itemImages);
 
-    void changeItem(Long itemSeq, ReqItemChangeDto itemChangeDto, List<MultipartFile> itemImages);
+    void changeItem(Long itemSeq, ReqItemChangeDto itemChangeDto);
 
     Boolean deleteItem(Long itemSeq);
 
