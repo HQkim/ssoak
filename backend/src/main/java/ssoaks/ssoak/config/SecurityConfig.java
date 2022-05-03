@@ -64,13 +64,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/api/v1/**").permitAll()  // >>>> 모든 url 접근을 허용
                 .antMatchers("/api/v1/members", "/api/v1/members/login",
                         "/api/v1/members/auth/email", "/api/v1/members/auth/email/check", "/api/v1/members/auth/email/password",
-                        "/api/v1/members/login/kakao", "/api/v1/members/login/google").permitAll()  // 해당 url 접근을 모두 허용
+                        "/api/v1/members/login/kakao", "/api/v1/members/login/google", "/api/v1/ws").permitAll()  // 해당 url 접근을 모두 허용
                 .anyRequest().authenticated()
-
-                .and()
-                .authorizeHttpRequests()
-                .antMatchers("api/v1/ws")
-                .permitAll()
 
                 .and()
                 .apply(new JwtSecurityConfig(jwtAuthenticationProvider))
