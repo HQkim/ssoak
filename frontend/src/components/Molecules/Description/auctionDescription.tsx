@@ -54,7 +54,7 @@ const AuctionDescription = ({ item }) => {
         <Ionicons
           name={"heart-outline"}
           size={ScreenWidth / 9}
-          color={"#F8A33E"}
+          color={"#EA759A"}
           onPress={onClickHeart}
         />
       </View>
