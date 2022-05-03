@@ -163,8 +163,21 @@ public class MemberServiceImpl implements MemberService{
         List<ItemOverviewDto> unsoldItems = itemRepository.getBoughtItemOverviewsByMember(memberSeq);
 
         return unsoldItems;
+    }
 
+    @Override
+    public List<ItemOverviewDto> getMyLikedItems() {
+        Long memberSeq;
 
+        try {
+            memberSeq = getMemberByAuthentication().getSeq();
+        } catch (Exception e) {
+            throw new NotAuthenticatedMemberException("MemberServiceImple getMyBoughtItems() 회원정보 호출 실패");
+        }
+
+        List<ItemOverviewDto> likedItems = itemRepository.getLikedItemOverviewsByMember(memberSeq);
+
+        return likedItems;
     }
 }
 

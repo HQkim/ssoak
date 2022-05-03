@@ -194,4 +194,29 @@ public class MemberController {
 
         return ResponseEntity.status(200).body(resMemberProfileBought);
     }
+
+    @GetMapping("/likes")
+    public ResponseEntity<BaseDataResponseDTO<ResMemberProfileItemsDTO>> getMyLikedItems () {
+        log.debug("MemberController getMyLikedItems 호출됨");
+
+        BaseDataResponseDTO<ResMemberProfileItemsDTO> resMemberProfileLikes;
+        List<ItemOverviewDto> LikedItems;
+
+        try {
+            LikedItems = memberService.getMyLikedItems();
+        } catch (NotAuthenticatedMemberException e) {
+            log.error(e.getMessage());
+            resMemberProfileLikes = new BaseDataResponseDTO<>(401, "회원 권한 없음", null);
+            return ResponseEntity.status(401).body(resMemberProfileLikes);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            resMemberProfileLikes = new BaseDataResponseDTO<>(500, "내부 서버 에러", null);
+            return ResponseEntity.status(500).body(resMemberProfileLikes);
+        }
+
+        resMemberProfileLikes = new BaseDataResponseDTO<>(200, "찜한 물품 조회 성공",
+                ResMemberProfileItemsDTO.builder().itemOverviewDtos(LikedItems).build());
+
+        return ResponseEntity.status(200).body(resMemberProfileLikes);
+    }
 }

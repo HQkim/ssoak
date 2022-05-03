@@ -17,4 +17,6 @@ public interface MemberService {
     Integer deleteMember();
     ResOtherMemberProfileDTO getOtherMemberProfile(Long memberSeq);
     List<ItemOverviewDto> getMyBoughtItems();
+    List<ItemOverviewDto> getMyLikedItems();
+
 }
