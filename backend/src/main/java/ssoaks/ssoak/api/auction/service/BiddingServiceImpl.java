@@ -10,6 +10,7 @@ import ssoaks.ssoak.api.auction.dto.response.BiddingSimpleInfoDto;
 import ssoaks.ssoak.api.auction.entity.Bidding;
 import ssoaks.ssoak.api.auction.entity.Item;
 import ssoaks.ssoak.api.auction.enums.AuctionType;
+import ssoaks.ssoak.api.auction.exception.FailBiddingException;
 import ssoaks.ssoak.api.auction.exception.NotAllowedBiddingItemException;
 import ssoaks.ssoak.api.auction.repository.BiddingRepository;
 import ssoaks.ssoak.api.auction.repository.ItemRepository;
@@ -76,17 +77,51 @@ public class BiddingServiceImpl implements BiddingService {
                 .profileImageUrl(member.getProfileImageUrl())
                 .build();
 
-        BiddingSimpleInfoDto biddingSimpleInfoDto = BiddingSimpleInfoDto.builder()
+        return BiddingSimpleInfoDto.builder()
                 .biddingPrice(bidding.getBiddingPrice())
                 .biddingDate(bidding.getCreatedDate())
                 .buyer(memberSimpleInfoDto)
                 .build();
-
-        return biddingSimpleInfoDto;
     }
 
+    @Transactional
     @Override
     public BiddingSimpleInfoDto successBidding(Long itemSeq, ReqBiddingRegisterDto successBiddingDto) {
-        return null;
+        log.debug("successBidding - {}", successBiddingDto);
+        Member member = memberService.getMemberByAuthentication();
+
+        Item item = itemRepository.findBySeq(itemSeq)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 물품입니다."));
+
+        LocalDateTime successTime = null;
+        if (item.getEndTime().isAfter(LocalDateTime.now())) {
+            if (!item.getMember().equals(member)) {
+                throw new FailBiddingException("경매 종료전 낙찰은 본인만 가능합니다.");
+            }
+            successTime = LocalDateTime.now();
+        } else {
+            successTime = item.getEndTime();
+        }
+
+        Bidding bidding = biddingRepository.findTop1ByItemSeqOrderBySeqDesc(itemSeq).orElse(null);
+
+        if (bidding == null) {
+            throw new FailBiddingException("입찰되지 않고 경매가 종료되었습다.");
+        }
+
+        bidding.successBidding(successBiddingDto.getIsHammered());
+        item.updateBiddingItem(successTime, successBiddingDto.getIsHammered());
+
+        MemberSimpleInfoDto memberSimpleInfoDto = MemberSimpleInfoDto.builder()
+                .seq(bidding.getBuyer().getSeq())
+                .nickname(bidding.getBuyer().getNickname())
+                .profileImageUrl(bidding.getBuyer().getProfileImageUrl())
+                .build();
+
+        return BiddingSimpleInfoDto.builder()
+                .biddingPrice(bidding.getBiddingPrice())
+                .biddingDate(bidding.getCreatedDate())
+                .buyer(memberSimpleInfoDto)
+                .build();
     }
 }

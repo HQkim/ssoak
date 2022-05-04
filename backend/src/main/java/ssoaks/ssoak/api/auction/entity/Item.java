@@ -97,5 +97,9 @@ public class Item extends BaseModifiedEntity {
         this.auctionType = auctionType;
     }
 
+    public void updateBiddingItem(LocalDateTime endTime, Boolean isSold) {
+        this.endTime = endTime;
+        this.isSold = isSold;
+    }
 
 }

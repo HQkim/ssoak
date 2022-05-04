@@ -47,4 +47,10 @@ public class Bidding extends BaseCreatedEntity {
         this.item = item;
         this.buyer = buyer;
     }
+
+    public void successBidding(Boolean isHammered) {
+        this.isHammered = isHammered;
+    }
+
+
 }
