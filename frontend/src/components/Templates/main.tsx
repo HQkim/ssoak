@@ -20,12 +20,13 @@ import BellIcon from "../Atoms/Buttons/bellIcon";
 
 type Props = {
   onRefresh: () => any | undefined;
+  navigation: any;
 };
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
 const Main = (props: Props) => {
   const isLoading = useSelector(
-    (state: RootState) => state.mainLoader.isLoading,
+    (state: RootState) => state.mainLoader.isLoading
   );
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -71,7 +72,10 @@ const Main = (props: Props) => {
               }}
             >
               <View style={{ marginRight: 10 }}>
-                <SearchButton onPress={() => {}} size={24} />
+                <SearchButton
+                  onPress={() => props.navigation.navigate("searchNavigator")}
+                  size={24}
+                />
               </View>
 
               <View>
