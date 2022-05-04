@@ -243,14 +243,17 @@ public class AuctionServiceImpl implements AuctionService {
             }
             // image
             List<Image> imageList = imageRepository.findAllByItemSeq(itemSeq);
-            imageRepository.deleteAll(imageList);
+            for (Image image : imageList) {
+                List<String> imgList = itemChangeDto.getImageUrls();
+                if (!(imgList.contains(image.getImageUrl()))) {
+                    imageRepository.delete(image);
+                }
+            }
             uploadItemImages(item, itemChangeDto.getImages());
 
             ResItemSeqDto itemSeqDto = ResItemSeqDto.builder().itemSeq(itemSeq).auctionType(item.getAuctionType()).build();
             return itemSeqDto;
         }
-
-
     }
 
     @Transactional
