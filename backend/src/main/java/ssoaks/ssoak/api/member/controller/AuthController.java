@@ -41,7 +41,7 @@ public class AuthController {
             return ResponseEntity.status(400).body(new BaseDataResponseDTO<>(400, "잘못된 카카오 로그인 코드", null));
         } catch (Exception e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(404).body(new BaseDataResponseDTO<>(404, "카카오 로그인 실패", null));
+            return ResponseEntity.status(500).body(new BaseDataResponseDTO<>(500, "내부 서버 에러", null));
         }
 
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -57,16 +57,21 @@ public class AuthController {
         return ResponseEntity.status(200).body(token);
     }
 
-    @PostMapping("/google")
-    public ResponseEntity<BaseDataResponseDTO<ResSocialLoginDTO>> loginByGoogle(@RequestParam(value = "code") String code) {
-        Member member = authService.loginByGoogle(code);
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(member.getSeq(), member.getGoogleId());
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtAuthenticationProvider.createToken(authentication);
+    @PostMapping("/apple")
+    public ResponseEntity<BaseDataResponseDTO<ResSocialLoginDTO>> loginByApple(@RequestHeader("Social-Token") String socialToken) {
 
-        BaseDataResponseDTO<ResSocialLoginDTO> token = new BaseDataResponseDTO<ResSocialLoginDTO>(200, "구글 로그인 성공", new ResSocialLoginDTO(jwt));
+        String jwt;
+        try {
+            jwt = authService.loginByApple(socialToken);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(409).body(new BaseDataResponseDTO<>(409, "애플 로그인 실패", null));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(500).body(new BaseDataResponseDTO<>(500, "내부 서버 에러", null));
+        }
+
+        BaseDataResponseDTO<ResSocialLoginDTO> token = new BaseDataResponseDTO<>(200, "애플 로그인 성공", new ResSocialLoginDTO(jwt));
         return ResponseEntity.status(200).body(token);
     }
 
