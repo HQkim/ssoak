@@ -91,7 +91,10 @@ public class AuctionServiceImpl implements AuctionService {
         // image upload
         uploadItemImages(item, itemRegisterRequestDto.getImages());
 
-        ResItemSeqDto itemSeqDto = ResItemSeqDto.builder().itemSeq(item.getSeq()).build();
+        ResItemSeqDto itemSeqDto = ResItemSeqDto.builder()
+                .itemSeq(item.getSeq())
+                .auctionType(item.getAuctionType())
+                .build();
         return itemSeqDto;
     }
 
@@ -210,12 +213,12 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Transactional
     @Override
-    public void changeItem(Long itemSeq, ReqItemChangeDto itemChangeDto) {
+    public ResItemSeqDto changeItem(Long itemSeq, ReqItemChangeDto itemChangeDto) {
         log.debug("changeItem - {}", itemSeq);
         Member member = memberService.getMemberByAuthentication();
 
         Item item = itemRepository.findBySeq(itemSeq)
-                .orElseThrow(() -> new IllegalArgumentException("물품 조회 실패 "));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 물품입니다."));
         if (item.getMember().getSeq() != member.getSeq()) {
             throw new NotAllowedChangeItemException("본인의 경매만 수정이 가능합니다.");
         }
@@ -233,7 +236,7 @@ public class AuctionServiceImpl implements AuctionService {
 
             // category
             List<ItemCategory> categories = itemCategoryRepository.findByItem(item)
-                    .orElseThrow(()-> new IllegalArgumentException("카테고리 조회에 실패했습니다."));
+                    .orElseThrow(()-> new IllegalArgumentException("물품 카테고리 조회에 실패했습니다."));
             for (ItemCategory category : categories) {
                 Category cate = categoryRepository.findByCategoryName(itemChangeDto.getItemCategories().get(0)).orElse(null);
                 category.changeItemCategory(cate);
@@ -242,7 +245,11 @@ public class AuctionServiceImpl implements AuctionService {
             List<Image> imageList = imageRepository.findAllByItemSeq(itemSeq);
             imageRepository.deleteAll(imageList);
             uploadItemImages(item, itemChangeDto.getImages());
+
+            ResItemSeqDto itemSeqDto = ResItemSeqDto.builder().itemSeq(itemSeq).auctionType(item.getAuctionType()).build();
+            return itemSeqDto;
         }
+
 
     }
 

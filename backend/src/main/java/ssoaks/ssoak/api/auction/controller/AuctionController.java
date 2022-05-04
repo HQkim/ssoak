@@ -65,7 +65,10 @@ public class AuctionController {
         System.out.println("===물품수정=====> reqItemChangeDto : " + reqItemChangeDto);
         ResItemSeqDto resItemSeqDto = ResItemSeqDto.builder().itemSeq(itemSeq).build();
         try {
-            auctionService.changeItem(itemSeq, reqItemChangeDto);
+            resItemSeqDto = auctionService.changeItem(itemSeq, reqItemChangeDto);
+        }catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(404).body(new BaseDataResponseDTO(404, e.getMessage(), resItemSeqDto));
         } catch (NotAllowedChangeItemException e) {
             log.error(e.getMessage());
             return ResponseEntity.status(409).body(new BaseDataResponseDTO(409, e.getMessage(), resItemSeqDto));

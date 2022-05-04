@@ -18,7 +18,7 @@ public interface AuctionService {
 
     void uploadItemImages(Item item, List<MultipartFile> itemImages);
 
-    void changeItem(Long itemSeq, ReqItemChangeDto itemChangeDto);
+    ResItemSeqDto changeItem(Long itemSeq, ReqItemChangeDto itemChangeDto);
 
     Boolean deleteItem(Long itemSeq);
 
