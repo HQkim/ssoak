@@ -33,7 +33,7 @@ public class Member {
     private String kakaoId;
 
     @Column
-    private String googleId;
+    private String appleId;
 
     @Column(nullable = false)
     private String email;
@@ -61,11 +61,11 @@ public class Member {
     private String password;
 
     @Builder
-    public Member(String kakaoId, String googleId, String email, String nickname, String profileImageUrl,
+    public Member(String kakaoId, String appleId, String email, String nickname, String profileImageUrl,
                   Double grade, Boolean isDeleted, String password
                   ) {
         this.kakaoId = kakaoId;
-        this.googleId = googleId;
+        this.appleId = appleId;
         this.email = email;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
@@ -86,7 +86,7 @@ public class Member {
 
         // 회원 정보 날리는 건 나중에 구현하기. 한번 날아가면 DB에 데이터 새로 넣어야함..
 //        this.kakaoId = "";
-//        this.googleId = "";
+//        this.appleId = "";
 //        this.email = "";
 //        this.nickname = "anonymous user";
 //        this.profileImageUrl = "";

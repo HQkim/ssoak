@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ssoaks.ssoak.api.auction.dto.request.ReqItemChangeDto;
 import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
 import ssoaks.ssoak.api.member.dto.request.ReqMemberProfileChangeDto;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileDTO;

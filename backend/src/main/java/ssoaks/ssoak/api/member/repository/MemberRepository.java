@@ -12,8 +12,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select m from Member m where m.isDeleted=false and m.kakaoId=:kakaoId")
     Optional<Member> findByKakaoId(@Param("kakaoId") String kakaoId);
 
-    @Query("select m from Member m where m.isDeleted=false and m.googleId=:googleId")
-    Optional<Member> findByGoogleId(@Param("googleId") String googleId);
+    @Query("select m from Member m where m.isDeleted=false and m.appleId=:appleId")
+    Optional<Member> findByAppleId(@Param("appleId") String appleId);
 
     Optional<Member> findBySeq(Long memberSeq);
 

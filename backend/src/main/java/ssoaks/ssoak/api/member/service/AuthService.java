@@ -6,4 +6,5 @@ public interface AuthService {
 
     Member loginByKakao(String authCode);
 
+    String loginByApple(String socialToken);
 }
