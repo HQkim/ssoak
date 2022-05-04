@@ -136,7 +136,7 @@ const ItemCreationInput = (props: Props) => {
   };
 
   const inputForm = (imageForm) => {
-    console.warn(imageForm);
+    console.log(imageForm);
     const arr: string[] = [];
     for (let index = 0; index < imageForm.length; index++) {
       const element = imageForm[index];

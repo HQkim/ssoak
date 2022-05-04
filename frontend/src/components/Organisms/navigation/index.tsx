@@ -72,9 +72,6 @@ const index = ({ navigation, route }: any) => {
         //   },
         // })}
       />
-      <Tab.Screen name="Profile" component={ProfileContainer} />
-      <Tab.Screen name="Chat" component={FavoriteContainer} />
-      {/* <Tab.Screen name="Profile" component={ProfileContainer} /> */}
       <Tab.Screen name="Profile" component={ProfileStackNavigator} />
     </Tab.Navigator>
   );
