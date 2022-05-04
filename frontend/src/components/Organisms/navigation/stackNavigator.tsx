@@ -8,7 +8,7 @@ import AuctionDetailContainer from "../../Pages/auctionDetailContainer";
 import AuctionContainer from "../../Pages/auctionContainer";
 import NavigatorTitle from "../../Atoms/Typographies/navigatorTitle";
 import KakaoLoginContainer from "../../Pages/kakaoLoginContainer";
-import FavoriteContainer from "../../Pages/favoriteContainer";
+import SearchStackNavigator from "./searchStackNavigator";
 
 type Props = {};
 
@@ -91,6 +91,11 @@ const MainStackNavigator = (props: Props) => {
         name="kakaoLogin"
         component={KakaoLoginContainer}
         options={{ headerShown: false, title: "카카오 로그인 화면" }}
+      />
+      <Stack.Screen
+        name="searchNavigator"
+        component={SearchStackNavigator}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

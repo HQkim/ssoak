@@ -14,7 +14,7 @@ type Props = {
 
 const MainContainer = ({ navigation, route }: Props) => {
   const isLoading = useSelector(
-    (state: RootState) => state.mainLoader.isLoading,
+    (state: RootState) => state.mainLoader.isLoading
   );
 
   const dispatch = useDispatch();
@@ -28,7 +28,9 @@ const MainContainer = ({ navigation, route }: Props) => {
     });
   }, [navigation]);
 
-  return <Main onRefresh={() => onStartLoading(true)} />;
+  return (
+    <Main onRefresh={() => onStartLoading(true)} navigation={navigation} />
+  );
 };
 
 export default MainContainer;

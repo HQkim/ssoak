@@ -10,6 +10,7 @@ import {
   call,
 } from "redux-saga/effects";
 import { kakaoLogin } from "../../apis/auth";
+import { setApiHeaders } from "../../apis/instance";
 
 function loginAPI(access_code: string) {
   return kakaoLogin(access_code);
@@ -70,6 +71,7 @@ const login = (state = initialState, action) => {
     }
     case LOG_IN_SUCCESS: {
       console.log("reducer / 로그인 완료");
+      setApiHeaders();
       return {
         ...state,
         logInLoading: false,
