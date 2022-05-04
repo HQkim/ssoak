@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ssoaks.ssoak.api.auction.dto.request.ReqItemChangeDto;
 import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
+import ssoaks.ssoak.api.member.dto.request.ReqMemberProfileChangeDto;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileDTO;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileItemsDTO;
 import ssoaks.ssoak.api.member.dto.response.ResOtherMemberProfileDTO;
@@ -132,6 +134,27 @@ public class MemberController {
                 ResMemberProfileItemsDTO.builder().itemOverviewDtos(unsoldItems).build());
 
         return ResponseEntity.status(200).body(resMemberProfileUnsold);
+    }
+
+    // 프로필 수정
+    @PatchMapping("")
+    public ResponseEntity<BaseResponseDTO> changeProfile(ReqMemberProfileChangeDto reqProfileChangeDto) {   // @Valid 나중에 테스트 해보기
+        log.debug("MemberController changeProfile 호출됨");
+
+        try {
+            Integer statusCode = memberService.changeMember(reqProfileChangeDto);
+        } catch (NotAuthenticatedMemberException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(401).body(new BaseResponseDTO(401, "회원 권한 없음"));
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(409).body(new BaseResponseDTO(409, "프로필 수정 실패"));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(500).body(new BaseResponseDTO(500, "내부 서버 에러"));
+        }
+
+        return ResponseEntity.status(200).body(new BaseResponseDTO(200, "프로필 수정 성공"));
     }
 
     @DeleteMapping("")

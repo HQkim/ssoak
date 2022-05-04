@@ -10,6 +10,8 @@ import ssoaks.ssoak.api.auction.entity.Item;
 import ssoaks.ssoak.api.auction.repository.ImageRepository;
 import ssoaks.ssoak.api.auction.repository.ItemRepository;
 import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
+import ssoaks.ssoak.api.auction.service.AwsS3Service;
+import ssoaks.ssoak.api.member.dto.request.ReqMemberProfileChangeDto;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileDTO;
 import ssoaks.ssoak.api.member.dto.response.ResOtherMemberProfileDTO;
 import ssoaks.ssoak.api.member.entity.Member;
@@ -33,6 +35,8 @@ public class MemberServiceImpl implements MemberService{
     private final ItemRepository itemRepository;
 
     private final ImageRepository imageRepository;
+
+    private final AwsS3Service awsS3Service;
 
 
     @Override
@@ -144,6 +148,52 @@ public class MemberServiceImpl implements MemberService{
 
     @Transactional
     @Override
+    public Integer changeMember(ReqMemberProfileChangeDto reqMemberProfileChangeDto) {
+        Member member;
+        Long memberSeq;
+
+        try {
+            member = getMemberByAuthentication();
+            memberSeq = member.getSeq();
+        } catch (Exception e) {
+            throw new NotAuthenticatedMemberException("MemberServiceImpl changeMember() 회원 인증 실패");
+        }
+
+        // 이미지가 들어왔을 때 변경시키기
+
+        String newImageUrl;
+        String newNickname;
+
+        try {
+            if (reqMemberProfileChangeDto.getProfileImage() != null) {
+                newImageUrl = awsS3Service.uploadImage(reqMemberProfileChangeDto.getProfileImage());
+            } else {
+                newImageUrl = member.getProfileImageUrl();
+            }
+
+            if (reqMemberProfileChangeDto.getNickname() != null) {
+                newNickname = reqMemberProfileChangeDto.getNickname();
+                member.changeMember(reqMemberProfileChangeDto.getNickname(), newImageUrl);
+            } else {
+                newNickname = member.getNickname();
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new IllegalArgumentException("MemberServiceImpl changeMember() 프로필 수정 실패");
+        }
+
+        if (reqMemberProfileChangeDto.getNickname() == null && reqMemberProfileChangeDto.getProfileImage() == null) {
+            System.out.println("MemberServiceImpl changeMember() 변경된 내용이 없습니다.");
+        }
+
+        member.changeMember(newNickname, newImageUrl);
+
+        return 200;
+    }
+
+
+    @Transactional
+    @Override
     public Integer deleteMember() {
 
         Member member;
@@ -161,8 +211,6 @@ public class MemberServiceImpl implements MemberService{
         } catch (Exception e) {
             return 409;
         }
-
-        memberRepository.save(member);
 
         return 200;
     }
