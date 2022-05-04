@@ -74,6 +74,11 @@ public class Member {
         this.password = password;
     }
 
+    public void changeMember(String nickname, String profileImageUrl) {
+        this.nickname = nickname;
+        this.profileImageUrl = profileImageUrl;
+    }
+
     public void deleteMember() {
         if(!this.isDeleted) {
             this.isDeleted = true;
