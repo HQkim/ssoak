@@ -11,6 +11,7 @@ import ssoaks.ssoak.api.auction.dto.request.ReqItemRegisterDto;
 import ssoaks.ssoak.api.auction.dto.response.BiddingSimpleInfoDto;
 import ssoaks.ssoak.api.auction.dto.response.ResItemDto;
 import ssoaks.ssoak.api.auction.dto.response.ResItemSeqDto;
+import ssoaks.ssoak.api.auction.exception.FailBiddingException;
 import ssoaks.ssoak.api.auction.exception.NotAllowedChangeItemException;
 import ssoaks.ssoak.api.auction.service.AuctionService;
 import ssoaks.ssoak.api.auction.service.BiddingService;
@@ -166,13 +167,21 @@ public class AuctionController {
     }
 
     //낙찰
-//    @PostMapping("/{itemSeq}/hammered")
-//    public ResponseEntity<BaseDataResponseDTO> successBidding(@PathVariable("itemSeq") Long itemSeq,
-//                                                              ReqBiddingRegisterDto biddingDto) {
-//        log.debug("일반경매 낙찰 seq- {} , dto- {}", itemSeq, biddingDto);
-//
-//
-//        return ResponseEntity.status(201).body(new BaseDataResponseDTO(201, "낙찰 성공", ));
-//
-//    }
+    @PostMapping("/{itemSeq}/hammered")
+    public ResponseEntity<BaseDataResponseDTO> successBidding(@PathVariable("itemSeq") Long itemSeq,
+                                                              ReqBiddingRegisterDto biddingDto) {
+        log.debug("일반경매 낙찰 seq- {} , dto- {}", itemSeq, biddingDto);
+        BiddingSimpleInfoDto ResSuccessBidding = null;
+        try {
+            ResSuccessBidding = biddingService.successBidding(itemSeq, biddingDto);
+        } catch (FailBiddingException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(403).body(new BaseDataResponseDTO(403, e.getMessage(), itemSeq));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(409).body(new BaseDataResponseDTO(409, e.getMessage(), itemSeq));
+        }
+        return ResponseEntity.status(201).body(new BaseDataResponseDTO(201, "낙찰이 완료되었습니다.", ResSuccessBidding));
+
+    }
 }
