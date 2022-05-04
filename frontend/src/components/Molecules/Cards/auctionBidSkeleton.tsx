@@ -18,23 +18,21 @@ const AuctionBidSkeleton = () => {
         layout={[
           {
             width: ScreenWidth * 0.89,
-            height: ScreenHeight / 12,
-            marginLeft: Dimensions.get("window").height / 60,
-            marginTop: Dimensions.get("window").height / 9,
-            marginBottom: Dimensions.get("window").height / 200,
-          },
-          {
-            width: ScreenWidth * 0.89,
             height: ScreenHeight / 15,
             marginLeft: Dimensions.get("window").height / 60,
-            marginTop: Dimensions.get("window").height / 18,
-            marginBottom: Dimensions.get("window").height / 200,
+            marginTop: Dimensions.get("window").height / 15,
+            marginBottom: Dimensions.get("window").height / 30,
           },
           {
             width: ScreenWidth * 0.89,
             height: ScreenHeight / 20,
             marginLeft: Dimensions.get("window").height / 60,
             marginBottom: Dimensions.get("window").height / 200,
+          },
+          {
+            width: ScreenWidth * 0.89,
+            height: ScreenHeight / 30,
+            marginLeft: Dimensions.get("window").height / 60,
           },
         ]}
         isLoading={true}
@@ -51,14 +49,14 @@ const AuctionBidSkeleton = () => {
         layout={[
           {
             width: ScreenWidth * 0.89,
-            height: ScreenHeight / 10,
+            height: ScreenHeight / 9,
             marginLeft: Dimensions.get("window").height / 60,
-            marginTop: Dimensions.get("window").height / 60,
+            marginTop: Dimensions.get("window").height / 120,
             marginBottom: Dimensions.get("window").height / 200,
           },
           {
             width: ScreenWidth * 0.89,
-            height: ScreenHeight / 10,
+            height: ScreenHeight / 9,
             marginLeft: Dimensions.get("window").height / 60,
             marginTop: Dimensions.get("window").height / 60,
             marginBottom: Dimensions.get("window").height / 200,

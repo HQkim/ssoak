@@ -10,3 +10,11 @@ export const instance: AxiosInstance = axios.create({
     Authorization: `Bearer ${accessToken}`,
   },
 });
+
+export const fileInstance: AxiosInstance = axios.create({
+  baseURL: `${BaseURL}`,
+  headers: {
+    "Content-Type": "multipart/form-data",
+    Authorization: `Bearer ${accessToken}`,
+  },
+});
