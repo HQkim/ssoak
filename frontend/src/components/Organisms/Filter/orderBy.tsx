@@ -18,10 +18,10 @@ const { height: ScreenHeight } = Dimensions.get("window");
 const { width: ScreenWidth } = Dimensions.get("window");
 
 const OrderBy = (props: Props) => {
-  const [select, setSelect] = useState(true);
-  const onSelect = () => {
-    setSelect(!select);
-    props.getSelectInformation(select);
+  const [selectOrder, setSelectOrder] = useState(true);
+  const onSelectOrder = () => {
+    setSelectOrder(!selectOrder);
+    props.getSelectInformation(selectOrder);
   };
   return (
     <View>
@@ -30,20 +30,20 @@ const OrderBy = (props: Props) => {
       </View>
       <View style={{ flexDirection: "row" }}>
         <TouchableOpacity
-          onPress={onSelect}
+          onPress={onSelectOrder}
           style={{ flexDirection: "row", alignItems: "center", flex: 1 }}
         >
           <View style={styles.radioButton}>
-            {select ? <RadioButton /> : null}
+            {selectOrder ? <RadioButton /> : null}
           </View>
           <Typography title="최신순" style={styles.fontStyle} />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={onSelect}
+          onPress={onSelectOrder}
           style={{ flexDirection: "row", alignItems: "center", flex: 1 }}
         >
           <View style={styles.radioButton}>
-            {select ? null : <RadioButton />}
+            {selectOrder ? null : <RadioButton />}
           </View>
           <Typography title="인기순" style={styles.fontStyle} />
         </TouchableOpacity>

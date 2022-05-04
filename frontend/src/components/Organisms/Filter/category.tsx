@@ -36,7 +36,7 @@ const Category = (props: Props) => {
           <View style={styles.radioButton}>
             {select ? <RadioButton /> : null}
           </View>
-          <Typography title="실시간 경매" style={styles.fontStyle} />
+          <Typography title="디지털기기" style={styles.fontStyle} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={onSelect}
@@ -45,7 +45,7 @@ const Category = (props: Props) => {
           <View style={styles.radioButton}>
             {select ? null : <RadioButton />}
           </View>
-          <Typography title="일반 경매" style={styles.fontStyle} />
+          <Typography title="생활가전" style={styles.fontStyle} />
         </TouchableOpacity>
       </View>
       <View style={{ flexDirection: "row", marginTop: 30 }}>
@@ -56,7 +56,7 @@ const Category = (props: Props) => {
           <View style={styles.radioButton}>
             {select ? <RadioButton /> : null}
           </View>
-          <Typography title="실시간 경매" style={styles.fontStyle} />
+          <Typography title="가구/인테리어" style={styles.fontStyle} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={onSelect}
@@ -65,7 +65,7 @@ const Category = (props: Props) => {
           <View style={styles.radioButton}>
             {select ? null : <RadioButton />}
           </View>
-          <Typography title="일반 경매" style={styles.fontStyle} />
+          <Typography title="유아동" style={styles.fontStyle} />
         </TouchableOpacity>
       </View>
       <View style={{ flexDirection: "row", marginTop: 30 }}>
@@ -76,7 +76,7 @@ const Category = (props: Props) => {
           <View style={styles.radioButton}>
             {select ? <RadioButton /> : null}
           </View>
-          <Typography title="실시간 경매" style={styles.fontStyle} />
+          <Typography title="생활/가공식품" style={styles.fontStyle} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={onSelect}
@@ -85,7 +85,7 @@ const Category = (props: Props) => {
           <View style={styles.radioButton}>
             {select ? null : <RadioButton />}
           </View>
-          <Typography title="일반 경매" style={styles.fontStyle} />
+          <Typography title="유아도서" style={styles.fontStyle} />
         </TouchableOpacity>
       </View>
       <View style={{ flexDirection: "row", marginTop: 30 }}>
@@ -96,7 +96,7 @@ const Category = (props: Props) => {
           <View style={styles.radioButton}>
             {select ? <RadioButton /> : null}
           </View>
-          <Typography title="실시간 경매" style={styles.fontStyle} />
+          <Typography title="스포츠/레져" style={styles.fontStyle} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={onSelect}
@@ -105,7 +105,7 @@ const Category = (props: Props) => {
           <View style={styles.radioButton}>
             {select ? null : <RadioButton />}
           </View>
-          <Typography title="일반 경매" style={styles.fontStyle} />
+          <Typography title="여성잡화" style={styles.fontStyle} />
         </TouchableOpacity>
       </View>
       <View style={{ flexDirection: "row", marginTop: 30 }}>
@@ -116,7 +116,7 @@ const Category = (props: Props) => {
           <View style={styles.radioButton}>
             {select ? <RadioButton /> : null}
           </View>
-          <Typography title="실시간 경매" style={styles.fontStyle} />
+          <Typography title="여성의류" style={styles.fontStyle} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={onSelect}
@@ -125,7 +125,67 @@ const Category = (props: Props) => {
           <View style={styles.radioButton}>
             {select ? null : <RadioButton />}
           </View>
-          <Typography title="일반 경매" style={styles.fontStyle} />
+          <Typography title="남성패션/잡화" style={styles.fontStyle} />
+        </TouchableOpacity>
+      </View>
+      <View style={{ flexDirection: "row", marginTop: 30 }}>
+        <TouchableOpacity
+          onPress={onSelect}
+          style={{ flexDirection: "row", alignItems: "center", flex: 1 }}
+        >
+          <View style={styles.radioButton}>
+            {select ? <RadioButton /> : null}
+          </View>
+          <Typography title="게임/취미" style={styles.fontStyle} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={onSelect}
+          style={{ flexDirection: "row", alignItems: "center", flex: 1 }}
+        >
+          <View style={styles.radioButton}>
+            {select ? null : <RadioButton />}
+          </View>
+          <Typography title="뷰티/미용" style={styles.fontStyle} />
+        </TouchableOpacity>
+      </View>
+      <View style={{ flexDirection: "row", marginTop: 30 }}>
+        <TouchableOpacity
+          onPress={onSelect}
+          style={{ flexDirection: "row", alignItems: "center", flex: 1 }}
+        >
+          <View style={styles.radioButton}>
+            {select ? <RadioButton /> : null}
+          </View>
+          <Typography title="반려동물용품" style={styles.fontStyle} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={onSelect}
+          style={{ flexDirection: "row", alignItems: "center", flex: 1 }}
+        >
+          <View style={styles.radioButton}>
+            {select ? null : <RadioButton />}
+          </View>
+          <Typography title="도서/티켓/음반" style={styles.fontStyle} />
+        </TouchableOpacity>
+      </View>
+      <View style={{ flexDirection: "row", marginTop: 30 }}>
+        <TouchableOpacity
+          onPress={onSelect}
+          style={{ flexDirection: "row", alignItems: "center", flex: 1 }}
+        >
+          <View style={styles.radioButton}>
+            {select ? <RadioButton /> : null}
+          </View>
+          <Typography title="식물" style={styles.fontStyle} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={onSelect}
+          style={{ flexDirection: "row", alignItems: "center", flex: 1 }}
+        >
+          <View style={styles.radioButton}>
+            {select ? null : <RadioButton />}
+          </View>
+          <Typography title="기타" style={styles.fontStyle} />
         </TouchableOpacity>
       </View>
       <View

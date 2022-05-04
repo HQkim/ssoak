@@ -31,7 +31,7 @@ const { width: ScreenWidth } = Dimensions.get("window");
 interface Form {
   auctionType: string;
   categories: string;
-  order_by: string;
+  orderType: string;
   startPrice: number;
   endPrice: number;
   startTime: Date;
@@ -43,13 +43,14 @@ const Filter = (props: Props) => {
   const {
     auctionType,
     categories,
-    order_by,
+    orderType,
     startPrice,
     endPrice,
     startTime,
     endTime,
   } = form;
   const [select, setSelect] = useState(true);
+  const [selectOrder, setSelectOrder] = useState(true);
   const onSelect = (info: boolean | string) => {
     if (typeof info === "boolean") {
       setSelect(info);
@@ -69,13 +70,27 @@ const Filter = (props: Props) => {
       }));
     }
   };
+  const onSelectOrder = (info: boolean) => {
+    setSelectOrder(info);
+    if (info === true) {
+      setForm((prevState: any) => ({
+        form: { ...prevState.form, orderType: "RECENT" },
+      }));
+    } else {
+      setForm((prevState: any) => ({
+        form: { ...prevState.form, orderType: "POPULAR" },
+      }));
+    }
+  };
+
+  console.log(form);
 
   useEffect(() => {
     const unsubscribe = props.navigation.addListener("focus", () => {
       setForm({
-        auctionType: "",
+        auctionType: "LIVE_NORMAL",
         categories: "",
-        order_by: "",
+        orderType: "RECENT",
         startPrice: "",
         endPrice: "",
         startTime: "",
@@ -109,7 +124,7 @@ const Filter = (props: Props) => {
       </View>
       <View style={{ marginTop: 10 }}>
         <OrderBy
-          getSelectInformation={onSelect}
+          getSelectInformation={onSelectOrder}
           navigation={props.navigation}
           route={props.route}
         />
