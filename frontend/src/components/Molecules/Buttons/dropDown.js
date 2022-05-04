@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Dimensions } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 
 const { height: ScreenHeight } = Dimensions.get("window");
 
-const DropDown = ({ getSelectInformation }) => {
+const DropDown = ({ getSelectInformation, navigation }) => {
   const onClickCategory = (category) => {
     getSelectInformation(category);
   };
