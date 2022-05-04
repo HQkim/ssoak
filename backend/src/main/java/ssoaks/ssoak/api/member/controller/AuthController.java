@@ -57,17 +57,5 @@ public class AuthController {
         return ResponseEntity.status(200).body(token);
     }
 
-    @PostMapping("/google")
-    public ResponseEntity<BaseDataResponseDTO<ResSocialLoginDTO>> loginByGoogle(@RequestParam(value = "code") String code) {
-        Member member = authService.loginByGoogle(code);
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(member.getSeq(), member.getGoogleId());
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtAuthenticationProvider.createToken(authentication);
-
-        BaseDataResponseDTO<ResSocialLoginDTO> token = new BaseDataResponseDTO<ResSocialLoginDTO>(200, "구글 로그인 성공", new ResSocialLoginDTO(jwt));
-        return ResponseEntity.status(200).body(token);
-    }
 
 }
