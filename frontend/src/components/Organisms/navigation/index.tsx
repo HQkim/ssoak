@@ -3,7 +3,7 @@ import React, { ReactNode } from "react";
 
 import FavoriteContainer from "../../Pages/favoriteContainer";
 import ProfileContainer from "../../Pages/profileContainer";
-
+import ChatNavigator from "./chatNavigator";
 import { StyleSheet, GestureResponderEvent } from "react-native";
 import CustomTabBarButton from "../../Atoms/Buttons/customTabBarButton";
 import NavigateButton from "../../Atoms/Buttons/navigateButton";
@@ -19,7 +19,8 @@ type ButtonProps = {
 
 const Tab = createBottomTabNavigator();
 
-const index = ({ navigation }: any) => {
+const index = ({ navigation, route }: any) => {
+  console.log(route);
   return (
     <Tab.Navigator
       screenOptions={(props: any) => ({
@@ -33,6 +34,10 @@ const index = ({ navigation }: any) => {
               route={props.route.name}
             />
           );
+        },
+        tabBarStyle: {
+          position: "relative",
+          paddingTop: 10,
         },
         ...navigateOptions,
       })}
@@ -55,7 +60,15 @@ const index = ({ navigation }: any) => {
           ),
         })}
       />
-      <Tab.Screen name="Chat" component={FavoriteContainer} />
+      <Tab.Screen
+        name="Chat"
+        component={ChatNavigator}
+        // options={({ route }) => ({
+        //   tabBarStyle: {
+        //     display: "none",
+        //   },
+        // })}
+      />
       <Tab.Screen name="Profile" component={ProfileContainer} />
     </Tab.Navigator>
   );
@@ -86,10 +99,6 @@ const navigateOptions = {
   tabBarInactiveTintColor: "black",
   headerShown: false,
   tabBarHideOnKeyboard: true,
-  tabBarStyle: {
-    position: "relative",
-    paddingTop: 10,
-  },
 };
 
 export default index;
