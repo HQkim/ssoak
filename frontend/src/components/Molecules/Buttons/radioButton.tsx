@@ -13,16 +13,16 @@ type Props = {
 
 const RadioButton = (props: Props) => {
   const [select, setSelect] = useState(true);
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener("focus", () => {
+      props.getSelectInformation(true);
+    });
+    return unsubscribe;
+  }, [props.navigation]);
   const onSelect = () => {
     setSelect(!select);
     props.getSelectInformation(select);
   };
-  useEffect(() => {
-    const unsubscribe = props.navigation.addListener("focus", () => {
-      setSelect(true);
-    });
-    return unsubscribe;
-  }, [props.navigation]);
   return (
     <View
       style={{
