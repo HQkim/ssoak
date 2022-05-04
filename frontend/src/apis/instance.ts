@@ -11,16 +11,33 @@ export const instance: AxiosInstance = axios.create({
   },
 });
 
-// export const setApiHeaders = () => {
-instance.interceptors.request.use(
-  (config: any) => {
-    config.headers["Authorization"] = `Bearer ${AsyncStorage.getItem(
-      "accessToken"
-    )}`;
-    return config;
+export const setApiHeaders = async () => {
+  instance.interceptors.request.use(
+    async (config: any) => {
+      const token = await AsyncStorage.getItem("accessToken");
+      config.headers["Authorization"] = `Bearer ${token}`;
+      return config;
+    },
+    (err) => {
+      return Promise.reject(err);
+    }
+  );
+  fileInstance.interceptors.request.use(
+    async (config: any) => {
+      const token = await AsyncStorage.getItem("accessToken");
+      config.headers["Authorization"] = `Bearer ${token}`;
+      return config;
+    },
+    (err) => {
+      return Promise.reject(err);
+    }
+  );
+};
+
+export const fileInstance = axios.create({
+  baseURL: `${BaseURL}`,
+  headers: {
+    "Content-Type": "multipart/form-data",
+    Authorization: `Bearer ${AsyncStorage.getItem("accessToken")}`,
   },
-  (err) => {
-    return Promise.reject(err);
-  }
-);
-// };
+});
