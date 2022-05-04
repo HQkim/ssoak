@@ -25,5 +25,6 @@ public class ReqItemChangeDto {
     private LocalDateTime endTime;
     private AuctionType auctionType;
     private List<String> itemCategories;
-    private List<MultipartFile> images;
+    private List<String> imageUrls; // 수정안된 기존 등록된 이미지 uri
+    private List<MultipartFile> images; // 수정한 (추가된 이미지 uri) - null True 하기
 }
