@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -41,6 +42,12 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
+    @Value("${kakao.admin-key}")
+    private String kakaoAdminKey;
+
+    @Value("${kakao.client-id}")
+    private String kakaoClientId;
+
     private final PasswordEncoder passwordEncoder;
 
     private final MemberRepository memberRepository;
@@ -48,6 +55,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
 
     // Controller에서 호출하는 메서드
     @Override
@@ -119,9 +127,127 @@ public class AuthServiceImpl implements AuthService {
         return jwt;
     }
 
+    /**
+     * 여기는 카카오 로그인 함수
+     */
+    private String getAccessTokenByKakao(String authCode) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", kakaoClientId);
+        params.add("code", authCode);
+        params.add("redirect_uri", "https://auth.expo.io/@ssafy207/frontend");
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<MultiValueMap<String, String>> kakaoTokenReq = new HttpEntity<>(params, headers);
+
+        System.out.println("=========================1");
+
+        ResponseEntity<String> response = null;
+
+        try {
+            response = restTemplate.exchange(
+                    "https://kauth.kakao.com/oauth/token",
+                    HttpMethod.POST,
+                    kakaoTokenReq,
+                    String.class
+            );
+        } catch (Exception e) {
+            throw new BadRequestSoicalLoginException("잘못된 카카오 로그인 코드");
+        }
+
+        System.out.println("========================2");
+        String tokenJson = response.getBody();
+        JSONObject jsObject = new JSONObject(tokenJson);
+        String accessToken = jsObject.getString("access_token");
+
+        return accessToken;
+    }
+
+    private Member getMemberInfoByKakaoToken(String accessToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + accessToken);
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<MultiValueMap<String, String>> kakaoProfileReq = new HttpEntity<>(headers);
+        ResponseEntity<String> response = restTemplate.exchange(
+                "https://kapi.kakao.com/v2/user/me",
+                HttpMethod.POST,
+                kakaoProfileReq,
+                String.class
+        );
+
+        JSONObject body = new JSONObject(response.getBody());
+
+        Long id = body.getLong("id");
+        String socialId = String.valueOf(id);
+        String nickname = body.getJSONObject("properties").getString("nickname");
+        String profileImageUrl = body.getJSONObject("kakao_account").getJSONObject("profile").getString("profile_image_url");
+
+        String email = "";
+        if (body.getJSONObject("kakao_account").getBoolean("has_email")) {
+            if (!body.getJSONObject("kakao_account").getBoolean("email_needs_agreement")) {
+                email = body.getJSONObject("kakao_account").getString("email");
+            }
+        }
+
+        return Member.builder()
+                .kakaoId(socialId)
+                .appleId(null)
+                .email(email)
+                .nickname(nickname)
+                .profileImageUrl(profileImageUrl)
+                .grade(0.0)
+                .isDeleted(false)
+                .password(null)
+                .build();
+
+    }
+
+    public String disconnectKakao(String kakaoId) throws Exception {
+        String resKakaoId = "";
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "KakaoAK " + kakaoAdminKey);
+            headers.add("Content-type", "application/x-www-form-urlencoded");
+
+            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+            params.add("target_id_type", "user_id");
+            params.add("target_id", kakaoId);
+
+            RestTemplate restTemplate = new RestTemplate();
+            HttpEntity<MultiValueMap<String, String>> kakaoDisconnectReq = new HttpEntity<>(params, headers);
+
+            System.out.println("================================1");
+            ResponseEntity<String> response = restTemplate.exchange(
+                    "https://kapi.kakao.com/v1/user/unlink",
+                    HttpMethod.POST,
+                    kakaoDisconnectReq,
+                    String.class
+            );
+
+            System.out.println("================================2");
+            JSONObject body = new JSONObject(response.getBody());
+            System.out.println("================================3");
+            Long id = body.getLong("id");
+            System.out.println("================================4");
+            resKakaoId = String.valueOf(id);
+            System.out.println("================================5");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new Exception("AuthServiceImple disconnectKakao 카카오 연결 끊기 에러");
+        }
+
+        return resKakaoId;
+    }
+
+
 
     /**
-     * 여기는 애플 로그인
+     * 여기는 애플 로그인 함수
      * 1. apple로 부터 공개키 3개 가져옴
      * 2. 내가 클라에서 가져온 token String과 비교해서 써야할 공개키 확인 (kid,alg 값 같은 것)
      * 3. 그 공개키 재료들로 공개키 만들고, 이 공개키로 JWT토큰 부분의 바디 부분의 decode하면 유저 정보
@@ -141,7 +267,7 @@ public class AuthServiceImpl implements AuthService {
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            throw new Exception("error1");
+            throw new Exception("애플 로그인 인증 실패");
         }
 //        catch (IOException e) {
 //            throw new BusinessException(ErrorCode.FAILED_TO_VALIDATE_APPLE_LOGIN);
@@ -175,7 +301,7 @@ public class AuthServiceImpl implements AuthService {
 
         //일치하는 공개키 없음
         if (ObjectUtils.isEmpty(avaliableObject))
-            throw new Exception("error2");
+            throw new Exception("애플 로그인 일치하는 공개키 없음");
 //            throw new BusinessException(ErrorCode.FAILED_TO_FIND_AVALIABLE_RSA);
 
         PublicKey publicKey = this.getPublicKey(avaliableObject);
@@ -225,89 +351,6 @@ public class AuthServiceImpl implements AuthService {
             throw new Exception("error3");
 //            throw new BusinessException(ErrorCode.FAILED_TO_FIND_AVALIABLE_RSA);
         }
-    }
-
-
-    /**
-     * 여기는 카카오 로그인
-     * @param accessToken
-     * @return
-     */
-    private Member getMemberInfoByKakaoToken(String accessToken) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<MultiValueMap<String, String>> kakaoProfileReq = new HttpEntity<>(headers);
-        ResponseEntity<String> response = restTemplate.exchange(
-                "https://kapi.kakao.com/v2/user/me",
-                HttpMethod.POST,
-                kakaoProfileReq,
-                String.class
-        );
-
-        JSONObject body = new JSONObject(response.getBody());
-
-        Long id = body.getLong("id");
-        String socialId = String.valueOf(id);
-        String nickname = body.getJSONObject("properties").getString("nickname");
-        String profileImageUrl = body.getJSONObject("kakao_account").getJSONObject("profile").getString("profile_image_url");
-
-        String email = "";
-        if (body.getJSONObject("kakao_account").getBoolean("has_email")) {
-            if (!body.getJSONObject("kakao_account").getBoolean("email_needs_agreement")) {
-                email = body.getJSONObject("kakao_account").getString("email");
-            }
-        }
-
-        return Member.builder()
-                .kakaoId(socialId)
-                .appleId(null)
-                .email(email)
-                .nickname(nickname)
-                .profileImageUrl(profileImageUrl)
-                .grade(0.0)
-                .isDeleted(false)
-                .password(null)
-                .build();
-
-    }
-
-    private String getAccessTokenByKakao(String authCode) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("client_id", "06d2438acf1f84102b574a2ce97bcd10");
-        params.add("code", authCode);
-        params.add("redirect_uri", "https://auth.expo.io/@ssafy207/frontend");
-
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<MultiValueMap<String, String>> kakaoTokenReq = new HttpEntity<>(params, headers);
-
-        System.out.println("=========================1");
-
-        ResponseEntity<String> response = null;
-
-        try {
-            response = restTemplate.exchange(
-                    "https://kauth.kakao.com/oauth/token",
-                    HttpMethod.POST,
-                    kakaoTokenReq,
-                    String.class
-            );
-        } catch (Exception e) {
-            throw new BadRequestSoicalLoginException("잘못된 카카오 로그인 코드");
-        }
-
-        System.out.println("========================2");
-        String tokenJson = response.getBody();
-        JSONObject jsObject = new JSONObject(tokenJson);
-        String accessToken = jsObject.getString("access_token");
-
-        return accessToken;
     }
 
 

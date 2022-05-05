@@ -20,7 +20,7 @@ public interface MemberService {
 
     List<ItemOverviewDto> getMyUnsoldItems();
 
-    Integer deleteMember();
+    Integer deleteMember() throws Exception;
 
     ResOtherMemberProfileDTO getOtherMemberProfile(Long memberSeq);
 

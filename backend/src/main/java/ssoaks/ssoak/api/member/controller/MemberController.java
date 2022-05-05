@@ -2,6 +2,7 @@ package ssoaks.ssoak.api.member.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
@@ -162,8 +163,8 @@ public class MemberController {
 
         try {
             Integer statusCode = memberService.deleteMember();
-            if (statusCode == 409)
-                return ResponseEntity.status(409).body(new BaseResponseDTO(409, "계정 삭제 실패"));
+            if (statusCode == 503)
+                return ResponseEntity.status(503).body(new BaseResponseDTO(503, "카카오 연결 끊기 실패"));
         } catch (NotAuthenticatedMemberException e) {
             log.error(e.getMessage());
             return ResponseEntity.status(401).body(new BaseResponseDTO(401, "회원 권한 없음"));

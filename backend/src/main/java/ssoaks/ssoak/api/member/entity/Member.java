@@ -84,14 +84,13 @@ public class Member {
             this.isDeleted = true;
         }
 
-        // 회원 정보 날리는 건 나중에 구현하기. 한번 날아가면 DB에 데이터 새로 넣어야함..
-//        this.kakaoId = "";
-//        this.appleId = "";
-//        this.email = "";
-//        this.nickname = "anonymous user";
-//        this.profileImageUrl = "";
-//        this.grade = 0.0;
-//        this.password = "";
+        this.kakaoId = "";
+        this.appleId = "";
+        this.email = "";
+        this.nickname = "Deleted-User";
+        this.profileImageUrl = "";
+        this.grade = 0.0;
+        this.password = "";
 
     }
 }

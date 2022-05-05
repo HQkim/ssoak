@@ -7,4 +7,6 @@ public interface AuthService {
     Member loginByKakao(String authCode);
 
     String loginByApple(String socialToken);
+
+    String disconnectKakao(String kakaoId) throws Exception;
 }
