@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ssoaks.ssoak.api.auction.dto.response.ItemImageSimpleInfoDto;
-import ssoaks.ssoak.api.auction.entity.Image;
 import ssoaks.ssoak.api.auction.entity.Item;
 import ssoaks.ssoak.api.auction.repository.ImageRepository;
 import ssoaks.ssoak.api.auction.repository.ItemRepository;
@@ -20,7 +19,6 @@ import ssoaks.ssoak.api.member.exception.NotFoundMemberException;
 import ssoaks.ssoak.api.member.repository.MemberRepository;
 import ssoaks.ssoak.common.util.SecurityUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +35,8 @@ public class MemberServiceImpl implements MemberService{
     private final ImageRepository imageRepository;
 
     private final AwsS3Service awsS3Service;
+
+    private final AuthService authService;
 
 
     @Override
@@ -194,7 +194,7 @@ public class MemberServiceImpl implements MemberService{
 
     @Transactional
     @Override
-    public Integer deleteMember() {
+    public Integer deleteMember() throws Exception {
 
         Member member;
         Long memberSeq;
@@ -203,13 +203,27 @@ public class MemberServiceImpl implements MemberService{
             member = getMemberByAuthentication();
             memberSeq = member.getSeq();
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw new NotAuthenticatedMemberException("MemberServiceImpl deleteMember() 회원 인증 실패");
+        }
+
+        try {
+            String kakaoId = member.getKakaoId();
+            String resKakaoId = authService.disconnectKakao(kakaoId);
+
+            System.out.println("===기존 카카오 아이디: " + kakaoId);
+            System.out.println("===연결끊기후 카카오 아이디: " + resKakaoId);
+            System.out.println(kakaoId == resKakaoId);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return 503;
         }
 
         try {
             member.deleteMember();
         } catch (Exception e) {
-            return 409;
+            log.error(e.getMessage());
+            throw new Exception("멤버 익명화 처리 실패");
         }
 
         return 200;
@@ -275,17 +289,14 @@ public class MemberServiceImpl implements MemberService{
             throw new NotAuthenticatedMemberException("MemberServiceImpl getMyLikedItems() 회원 인증 실패");
         }
 
-        System.out.println("1====================");
         try {
             likedItems = itemRepository.getLikedItemOverviewsByMember(memberSeq);
-            System.out.println("2====================");
             List<ItemImageSimpleInfoDto> likedItemsImages = imageRepository.getLikedItemsImagesByMember(memberSeq);
-            System.out.println("3====================");
 
             for (int i = 0; i < likedItems.size(); i++) {
                 likedItems.get(i).setImageUrl(likedItemsImages.get(i).getImageUrl());
             }
-            System.out.println("4====================");
+
         } catch (Exception e) {
             throw new IllegalArgumentException("MemberServiceImpl getMyLikedItems() 찜한 물품 조회 실패");
         }
