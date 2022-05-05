@@ -20,7 +20,6 @@ import ssoaks.ssoak.api.member.service.MemberService;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -64,12 +63,14 @@ public class AuctionServiceImpl implements AuctionService {
             startTime = itemRegisterRequestDto.getStartTime();
             endTime = startTime.plusMinutes(30L);
         }
-        // item
+
         Item item = Item.builder()
                 .title(itemRegisterRequestDto.getTitle())
                 .content(itemRegisterRequestDto.getContent())
                 .startPrice(itemRegisterRequestDto.getStartPrice())
                 .biddingUnit((int) Math.round(itemRegisterRequestDto.getStartPrice()*0.1))
+                .biddingPrice(itemRegisterRequestDto.getStartPrice())
+                .biddingCount(0)
                 .startTime(startTime)
                 .endTime(endTime)
                 .auctionType(itemRegisterRequestDto.getAuctionType())
@@ -109,6 +110,8 @@ public class AuctionServiceImpl implements AuctionService {
                 .content("image upload Test")
                 .startPrice(1000)
                 .biddingUnit(100)
+                .biddingPrice(1000)
+                .biddingUnit(0)
                 .startTime(LocalDateTime.now())
                 .endTime(LocalDateTime.now())
                 .auctionType(AuctionType.NORMAL)
@@ -149,10 +152,10 @@ public class AuctionServiceImpl implements AuctionService {
                 .build();
 
         // images
-        List<Image> itemImages = imageRepository.findByItemSeqOrderBySeq(itemSeq)
-                .orElseThrow(() -> new IllegalArgumentException("해당 물품에 대한 이미지를 찾을 수 없습니다."));
+//        List<Image> itemImages = imageRepository.findByItemSeqOrderBySeq(itemSeq)
+//                .orElseThrow(() -> new IllegalArgumentException("해당 물품에 대한 이미지를 찾을 수 없습니다."));
 
-        List<String> images = itemImages.stream()
+        List<String> images = item.getImages().stream()
                 .map(Image::getImageUrl)
                 .collect(Collectors.toList());
 
@@ -170,6 +173,7 @@ public class AuctionServiceImpl implements AuctionService {
             biddingDto = BiddingSimpleInfoDto.builder()
                     .biddingPrice(bidding.getBiddingPrice())
                     .biddingDate(bidding.getCreatedDate())
+                    .biddingCount(item.getBiddingCount())
                     .buyer(buyer)
                     .build();
         }
@@ -275,8 +279,8 @@ public class AuctionServiceImpl implements AuctionService {
             throw new NotAllowedChangeItemException("이미 진행중인 경매는 삭제가 불가능합니다.");
         } else {
             // delete image
-            List<Image> imageList = imageRepository.findAllByItemSeq(itemSeq);
-            imageRepository.deleteAll(imageList);
+//            List<Image> imageList = imageRepository.findAllByItemSeq(itemSeq);
+//            imageRepository.deleteAll(imageList);
             // delete likes
             List<Like> likes = likeRepository.findAllByItemSeq(itemSeq);
             likeRepository.deleteAll(likes);

@@ -13,13 +13,14 @@ import ssoaks.ssoak.api.auction.dto.response.ResItemDto;
 import ssoaks.ssoak.api.auction.dto.response.ResItemSeqDto;
 import ssoaks.ssoak.api.auction.exception.FailBiddingException;
 import ssoaks.ssoak.api.auction.exception.NotAllowedChangeItemException;
+import ssoaks.ssoak.api.auction.service.AuctionListService;
 import ssoaks.ssoak.api.auction.service.AuctionService;
 import ssoaks.ssoak.api.auction.service.BiddingService;
 import ssoaks.ssoak.api.auction.service.LikeService;
-import ssoaks.ssoak.api.member.service.MemberService;
 import ssoaks.ssoak.common.dto.BaseDataResponseDTO;
 import ssoaks.ssoak.common.dto.BaseResponseDTO;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 @Slf4j
@@ -31,6 +32,7 @@ public class AuctionController {
     private final AuctionService auctionService;
     private final LikeService likeService;
     private final BiddingService biddingService;
+    private final AuctionListService auctionListService;
 
     @PostMapping
     public ResponseEntity<BaseDataResponseDTO> registerItem(ReqItemRegisterDto reqItemRegister) {
@@ -166,7 +168,7 @@ public class AuctionController {
         return ResponseEntity.status(201).body(new BaseDataResponseDTO(201, "입찰 성공", ResBidding));
     }
 
-    //낙찰
+
     @PostMapping("/{itemSeq}/hammered")
     public ResponseEntity<BaseDataResponseDTO> successBidding(@PathVariable("itemSeq") Long itemSeq,
                                                               ReqBiddingRegisterDto biddingDto) {
@@ -183,5 +185,13 @@ public class AuctionController {
         }
         return ResponseEntity.status(201).body(new BaseDataResponseDTO(201, "낙찰이 완료되었습니다.", ResSuccessBidding));
 
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<BaseResponseDTO> auctionList (Pageable pageable,
+                                                        @RequestParam String keyword) {
+        log.debug("경매 리스트 - {}", keyword);
+        auctionListService.getAuctionList(pageable, keyword);
+        return null;
     }
 }

@@ -3,13 +3,17 @@ package ssoaks.ssoak.api.auction.repository;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
+import ssoaks.ssoak.api.auction.dto.response.ItemSimpleOverviewDto;
 import ssoaks.ssoak.api.auction.dto.response.QItemOverviewDto;
+import ssoaks.ssoak.api.auction.dto.response.QItemSimpleOverviewDto;
 import ssoaks.ssoak.api.auction.entity.Item;
 
 
 import javax.persistence.EntityManager;
+import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static ssoaks.ssoak.api.auction.entity.QBidding.bidding;
 import static ssoaks.ssoak.api.auction.entity.QItem.item;
