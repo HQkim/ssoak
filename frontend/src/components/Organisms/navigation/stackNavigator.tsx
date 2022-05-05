@@ -1,5 +1,11 @@
-import { StyleSheet, Text, View, Dimensions } from "react-native";
-import React from "react";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+  View,
+} from "react-native";
+import React, { useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import AuctionChatContainer from "../../Pages/auctionChatContainer";
 import DetailContainer from "../../Pages/detailContainer";
@@ -9,12 +15,27 @@ import AuctionContainer from "../../Pages/auctionContainer";
 import NavigatorTitle from "../../Atoms/Typographies/navigatorTitle";
 import KakaoLoginContainer from "../../Pages/kakaoLoginContainer";
 import SearchStackNavigator from "./searchStackNavigator";
+import ItemModificationContainer from "../../Pages/itemModificationContainer";
+import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 type Props = {};
 
 const Stack = createStackNavigator();
 const { width: ScreenWidth } = Dimensions.get("window");
 const MainStackNavigator = (props: Props) => {
+  const navigation = useNavigation();
+  const [select, setSelect] = useState(false);
+
+  const onSelect = () => {
+    setSelect(!select);
+  };
+
+  const onUpdate = () => {
+    navigation.navigate("itemModification");
+  };
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -56,6 +77,46 @@ const MainStackNavigator = (props: Props) => {
           headerTitle: (props) => (
             <NavigatorTitle
               title={"물품 상세 정보"}
+              style={styles.navigatorTitle}
+            />
+          ),
+          headerRight: () => (
+            <View>
+              <TouchableOpacity
+                onPress={onSelect}
+                style={{ marginHorizontal: ScreenWidth / 16 }}
+              >
+                <AntDesign
+                  name="ellipsis1"
+                  size={24}
+                  color="black"
+                  style={styles.dropdown}
+                />
+              </TouchableOpacity>
+              {select ? (
+                <View style={styles.dropdownContainer}>
+                  <Text style={styles.dropdownStyle} onPress={onUpdate}>
+                    <Ionicons name="pencil" size={20} color="black" />
+                    수정하기
+                  </Text>
+                  <Text style={styles.dropdownStyle}>
+                    <Ionicons name="trash-outline" size={20} color="black" />
+                    삭제하기
+                  </Text>
+                </View>
+              ) : null}
+            </View>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="itemModification"
+        component={ItemModificationContainer}
+        options={{
+          headerTitleAlign: "center",
+          headerTitle: (props) => (
+            <NavigatorTitle
+              title={"물품 정보 수정"}
               style={styles.navigatorTitle}
             />
           ),
@@ -106,5 +167,22 @@ export default MainStackNavigator;
 const styles = StyleSheet.create({
   navigatorTitle: {
     fontSize: 20,
+  },
+  dropdown: {
+    position: "absolute",
+    top: -10,
+    right: -10,
+  },
+  dropdownContainer: {
+    position: "absolute",
+    right: 45,
+  },
+  dropdownStyle: {
+    backgroundColor: "#ffffffae",
+    width: 100,
+    height: 35,
+    padding: 5,
+    fontSize: 15,
+    textAlign: "center",
   },
 });

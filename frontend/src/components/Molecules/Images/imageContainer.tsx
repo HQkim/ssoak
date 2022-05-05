@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import { useFocusEffect } from "@react-navigation/native";
 
 const { height: ScreenHeight } = Dimensions.get("window");
 
@@ -30,12 +31,13 @@ const ImageContainer = (props: Props) => {
   const [image, setImage] = useState<Item | null | any>([]);
   const [file, setFile] = useState<File | null | any>([]);
 
-  useEffect(() => {
-    const unsubscribe = props.navigation.addListener("focus", () => {
-      setImage([]);
-    });
-    return unsubscribe;
-  }, [props.navigation]);
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        setImage([]);
+      };
+    }, [])
+  );
 
   useEffect(() => {
     props.inputForm(file);

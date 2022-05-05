@@ -10,13 +10,19 @@ import AuctionDetail from "../Templates/auctionDetail";
 import ImageSkeleton from "../Molecules/Cards/imageSkeleton";
 import DescriptionSkeleton from "../Molecules/Cards/autionDescriptionSkeleton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-type Props = {};
+import { detailAuction } from "../../apis/autcionApi";
+
+type Props = {
+  navigation: any;
+  route: object;
+};
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
 const AutionDetailContainer = (props: Props) => {
   const isLoading = useSelector((state: RootState) => state.detail.isLoading);
   const dispatch = useDispatch();
   const [showIndicator, setShowIndicator] = useState(false);
+  const reqItem = props.route.params.id;
 
   useEffect(() => {
     setShowIndicator(!isLoading);
@@ -48,7 +54,7 @@ const AutionDetailContainer = (props: Props) => {
     ],
   });
   useEffect(() => {
-    onStartLoadData(item.id);
+    onStartLoadData(props.route.params.id);
   }, []);
 
   let scrollRef: any = useRef();
@@ -79,7 +85,11 @@ const AutionDetailContainer = (props: Props) => {
           )}
         </PagerView>
       </View>
-      {isLoading ? <DescriptionSkeleton /> : <AuctionDetail item={item} />}
+      {isLoading ? (
+        <DescriptionSkeleton />
+      ) : (
+        <AuctionDetail item={item} reqItem={reqItem} />
+      )}
     </KeyboardAwareScrollView>
   );
 };
