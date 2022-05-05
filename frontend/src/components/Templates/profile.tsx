@@ -9,19 +9,16 @@ import {
   RefreshControl,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import { kakaoProfile } from "../../apis/auth";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import { useNavigation } from "@react-navigation/native";
-import NavigateButton from "../Atoms/Buttons/navigateButton";
+import * as ImagePicker from "expo-image-picker";
 
 type Props = {
   onRefresh: () => any | undefined;
@@ -34,7 +31,15 @@ type Props = {
     profileImageUrl: string;
     seq: number;
   };
+  setProfile: Function;
 };
+
+interface Item {
+  imgSource: string;
+}
+interface File {
+  imgFile: string;
+}
 
 const { height: ScreenHeight } = Dimensions.get("window");
 const { width: ScreenWidth } = Dimensions.get("window");
@@ -44,6 +49,25 @@ const Profile = (props: Props) => {
     (state: RootState) => state.mainLoader.isLoading
   );
   const navigation = useNavigation();
+
+  const [image, setImage] = useState<Item | null | any>("");
+  const [file, setFile] = useState<File | null | any>([]);
+  const [test, setTest] = useState(props.profile);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+    });
+    console.log(result);
+    if (!result.cancelled) {
+      setImage(result.uri); //이미지 uri
+      setFile([...file, result]); //
+      props.setProfile({ ...props.profile, profileImageUrl: image });
+      console.log(props.profile);
+    }
+  };
+
   return (
     <View>
       <ScrollView
@@ -111,28 +135,28 @@ const Profile = (props: Props) => {
             zIndex: 1,
           }}
         >
-          <Image
-            style={{
-              width: ScreenHeight / 6,
-              height: ScreenHeight / 6,
-              borderRadius: ScreenHeight / 12,
-              position: "relative",
-              marginTop: -ScreenHeight / 12,
-            }}
-            source={{ uri: props.profile.profileImageUrl }}
-            // source={require("../../../assets/temp.jpg")}
-          />
-          <Feather
-            name="camera"
-            size={24}
-            color="black"
-            style={{
-              position: "absolute",
-              right: ScreenWidth / 3,
-              marginTop: -ScreenHeight / 12,
-            }}
-            onPress={() => alert("clicked")}
-          />
+          <TouchableOpacity onPress={pickImage}>
+            <Image
+              style={{
+                width: ScreenHeight / 6,
+                height: ScreenHeight / 6,
+                borderRadius: ScreenHeight / 12,
+                position: "relative",
+                marginTop: -ScreenHeight / 12,
+              }}
+              source={{ uri: props.profile.profileImageUrl }}
+            />
+            <Feather
+              name="camera"
+              size={24}
+              color="black"
+              style={{
+                position: "absolute",
+                right: ScreenWidth / 30,
+                marginTop: -ScreenHeight / 12,
+              }}
+            />
+          </TouchableOpacity>
           <View style={{ alignItems: "center", marginTop: ScreenHeight / 50 }}>
             <Text style={{ fontSize: 20, padding: 10, fontWeight: "bold" }}>
               {props.profile.nickname}

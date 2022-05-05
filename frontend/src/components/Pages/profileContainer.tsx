@@ -98,6 +98,7 @@ const ProfileContainer = ({ navigation, route }: Props) => {
         <Profile
           onRefresh={() => onStartLoading(true)}
           profile={profile}
+          setProfile={setProfile}
           navigation={navigation}
           route={route}
         />
