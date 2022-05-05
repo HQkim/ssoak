@@ -14,7 +14,7 @@ import DropDown from "../../Molecules/Buttons/dropDown";
 import ImageContainer from "../../Molecules/Images/imageContainer";
 import DateTime from "../../Molecules/Times/dateTime";
 import { createAuction } from "../../../apis/autcionApi";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 const { height: ScreenHeight } = Dimensions.get("window");
 
@@ -48,33 +48,40 @@ const ItemCreationInput = (props: Props) => {
   const [imgForm, setImgForm] = useState<ImageForm | null | any>([]);
   const [image, setImage] = useState<Image | null | any>([]);
   const [value, setValue] = useState<Form | null | any>([]);
+  const [select, setSelect] = useState(true);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const unsubscribe = props.navigation.addListener("focus", () => {
-      setForm({});
-      setForm((prevState: any) => ({
-        form: {
-          ...prevState.form,
-          auctionType: "LIVE",
-          itemCategories: "디지털기기",
-        },
-      }));
-      setValue({
-        title: "",
-        startPrice: "",
-        content: "",
-      });
-    });
-    return unsubscribe;
-  }, [props.navigation]);
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        setImgForm([]);
+        setImage([]);
+        setForm((prevState: any) => ({
+          form: {
+            title: "",
+            content: "",
+            startPrice: "",
+            startTime: "",
+            endTime: "",
+            auctionType: "LIVE",
+            itemCategories: "디지털기기",
+          },
+        }));
+        setValue({
+          title: "",
+          startPrice: "",
+          content: "",
+        });
+      };
+    }, [])
+  );
+
   const { title, content, startPrice } = value;
 
-  const [select, setSelect] = useState(true);
   const onSelect = (info: boolean | string) => {
     if (typeof info === "boolean") {
       setSelect(info);
-      if (info === true) {
+      if (info === false) {
         setForm((prevState: any) => ({
           form: { ...prevState.form, auctionType: "NORMAL" },
         }));
@@ -145,21 +152,6 @@ const ItemCreationInput = (props: Props) => {
   }, [imgForm]);
 
   const onSubmit = async () => {
-    if (imgForm.length <= 1) {
-      Alert.alert("이미지를 업로드해주세요.");
-    } else if (
-      form.form.title === undefined ||
-      form.form.content === undefined ||
-      form.form.startPrice === undefined
-    ) {
-      Alert.alert("모든 정보를 입력해주세요.");
-    } else if (
-      form.form.startTime === undefined ||
-      form.form.endTime === undefined
-    ) {
-      Alert.alert("경매 시간을 설정해주세요.");
-    }
-
     const formData = new FormData();
     for (var i = 0; i < imgForm.length; i++) {
       const trimmedURI = imgForm[i].uri.replace("file://", "");
@@ -171,9 +163,9 @@ const ItemCreationInput = (props: Props) => {
         uri: trimmedURI,
         name: fileName,
       });
+      formData.append("images", image);
     }
 
-    formData.append("images", image);
     formData.append("title", form.form.title);
     formData.append("content", form.form.content);
     formData.append("startPrice", form.form.startPrice);
@@ -182,17 +174,34 @@ const ItemCreationInput = (props: Props) => {
     formData.append("auctionType", form.form.auctionType);
     formData.append("itemCategories", form.form.itemCategories);
     console.warn(formData);
-    const result = await createAuction(formData);
-    if (result.statusCode === 201) {
-      if (result.data.auctionType === "NORMAL") {
-        navigation.navigate("auctionDetail");
-      } else {
-        navigation.navigate("detail");
-      }
+
+    if (imgForm.length < 1) {
+      Alert.alert("이미지를 업로드해주세요.");
+    } else if (
+      form.form.title === "" ||
+      form.form.content === "" ||
+      form.form.startPrice === ""
+    ) {
+      Alert.alert("모든 정보를 입력해주세요.");
+    } else if (form.form.startTime === "" && form.form.endTime === "") {
+      Alert.alert("경매 시간을 설정해주세요.");
     } else {
-      Alert.alert("경매 물품 등록에 실패하였습니다.");
+      const result = await createAuction(formData);
+      if (result.statusCode === 201) {
+        if (result.data.auctionType === "NORMAL") {
+          navigation.navigate("auctionDetail", {
+            id: result.data.itemSeq,
+          });
+        } else {
+          navigation.navigate("detail", {
+            id: result.data.itemSeq,
+          });
+        }
+      } else {
+        Alert.alert("경매 물품 등록에 실패하였습니다.");
+      }
+      console.warn(result);
     }
-    console.warn(result);
   };
   return (
     <View>

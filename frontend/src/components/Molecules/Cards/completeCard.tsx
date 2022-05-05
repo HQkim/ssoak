@@ -14,7 +14,7 @@ type Props = {
 const CompleteCard = (props: Props) => {
   const navigation = useNavigation();
   const handleCardClick = () => {
-    navigation.navigate("detail", {
+    navigation.navigate("auctionDetail", {
       id: props.item.id,
     });
   };
