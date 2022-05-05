@@ -5,6 +5,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Button,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import AuctionType from "../Organisms/Filter/auctionType";
@@ -32,8 +33,7 @@ interface Form {
   auctionType: string;
   categories: string;
   orderType: string;
-  startPrice: number;
-  endPrice: number;
+  priceRange: Array<number>;
   startTime: Date;
   endTime: Date;
 }
@@ -44,13 +44,14 @@ const Filter = (props: Props) => {
     auctionType,
     categories,
     orderType,
-    startPrice,
-    endPrice,
+    priceRange,
     startTime,
     endTime,
+    timeRange,
   } = form;
   const [select, setSelect] = useState(true);
   const [selectOrder, setSelectOrder] = useState(true);
+  // 경매유형, 카테고리 필터 함수
   const onSelect = (info: boolean | string) => {
     if (typeof info === "boolean") {
       setSelect(info);
@@ -70,6 +71,7 @@ const Filter = (props: Props) => {
       }));
     }
   };
+  // 정렬 필터 함수
   const onSelectOrder = (info: boolean) => {
     setSelectOrder(info);
     if (info === true) {
@@ -83,11 +85,42 @@ const Filter = (props: Props) => {
     }
   };
 
-  console.log(form);
+  // 가격 범위 필터 함수
+  const onSelectPrice = (info: Array<object>) => {
+    setForm((prevState: any) => ({
+      form: { ...prevState.form, priceRange: info },
+    }));
+  };
 
-  useEffect(() => {
-    const unsubscribe = props.navigation.addListener("focus", () => {
-      setForm({
+  // 시작 시간 필터 함수
+  const onSelectTime = (info: Array<object>) => {
+    setForm((prevState: any) => ({
+      form: { ...prevState.form, timeRange: info },
+    }));
+  };
+
+  // 필터 적용 함수
+  const applyFilters = () => {
+    console.log(form);
+    console.log(form.form.timeRange);
+
+    if (form.form.priceRange.startPrice > form.form.priceRange.endPrice) {
+      Alert.alert("가격범위를 확인해주세요");
+    }
+
+    const formData = new FormData();
+    formData.append("auctionType", form.form.auctionType);
+    formData.append("categories", form.form.categories);
+    formData.append("orderType", form.form.orderType);
+    formData.append("priceRange", form.form.priceRange);
+    formData.append("timeRange", form.form.timeRange);
+    console.log(formData);
+  };
+
+  // 필터 초기화 함수 ==> 수정해야함
+  const resetFilters = () => {
+    setForm((prev: any) => ({
+      form: {
         auctionType: "LIVE_NORMAL",
         categories: "",
         orderType: "RECENT",
@@ -95,7 +128,23 @@ const Filter = (props: Props) => {
         endPrice: "",
         startTime: "",
         endTime: "",
-      });
+      },
+    }));
+  };
+
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener("focus", () => {
+      setForm((prev: any) => ({
+        form: {
+          auctionType: "LIVE_NORMAL",
+          categories: "",
+          orderType: "RECENT",
+          startPrice: "",
+          endPrice: "",
+          startTime: "",
+          endTime: "",
+        },
+      }));
     });
     return unsubscribe;
   }, [props.navigation]);
@@ -131,14 +180,14 @@ const Filter = (props: Props) => {
       </View>
       <View style={{ marginTop: 10 }}>
         <PriceRange
-          getSelectInformation={onSelect}
+          getSelectInformation={onSelectPrice}
           navigation={props.navigation}
           route={props.route}
         />
       </View>
       <View style={{ marginTop: 10 }}>
         <TimeRange
-          getSelectInformation={onSelect}
+          getSelectInformation={onSelectTime}
           navigation={props.navigation}
           route={props.route}
         />
@@ -146,13 +195,13 @@ const Filter = (props: Props) => {
       <View style={{ marginTop: 30, height: ScreenHeight / 10 }}>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <TouchableOpacity
-            onPress={() => console.warn("초기화")}
+            onPress={resetFilters}
             style={props.styles.resetContainer}
           >
             <Text style={props.styles.resetText}>초기화</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => console.warn("필터적용")}
+            onPress={applyFilters}
             style={props.styles.applyContainer}
           >
             <Text style={props.styles.applyText}>필터 적용</Text>
