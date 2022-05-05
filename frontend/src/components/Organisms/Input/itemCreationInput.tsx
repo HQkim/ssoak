@@ -37,16 +37,9 @@ const ItemCreationInput = (props: Props) => {
   interface ImageForm {
     source: string;
   }
-  interface Image {
-    name: any;
-    height: any;
-    size: any;
-    type: any;
-    uri: any;
-  }
+
   const [form, setForm] = useState<Form | null | any>([]);
   const [imgForm, setImgForm] = useState<ImageForm | null | any>([]);
-  const [image, setImage] = useState<Image | null | any>([]);
   const [value, setValue] = useState<Form | null | any>([]);
   const [select, setSelect] = useState(true);
   const navigation = useNavigation();
@@ -55,7 +48,6 @@ const ItemCreationInput = (props: Props) => {
     React.useCallback(() => {
       return () => {
         setImgForm([]);
-        setImage([]);
         setForm((prevState: any) => ({
           form: {
             title: "",
@@ -156,14 +148,14 @@ const ItemCreationInput = (props: Props) => {
     for (var i = 0; i < imgForm.length; i++) {
       const trimmedURI = imgForm[i].uri.replace("file://", "");
       const fileName = trimmedURI.split("/").pop();
-      setImage({
+      const item: any = {
         height: imgForm[i].height,
         type: imgForm[i].type,
         width: imgForm[i].width,
         uri: trimmedURI,
         name: fileName,
-      });
-      formData.append("images", image);
+      };
+      formData.append("images", item);
     }
 
     formData.append("title", form.form.title);

@@ -35,6 +35,7 @@ const ImageContainer = (props: Props) => {
     React.useCallback(() => {
       return () => {
         setImage([]);
+        setFile([]);
       };
     }, [])
   );
