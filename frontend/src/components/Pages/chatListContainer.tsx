@@ -19,9 +19,7 @@ const ChatListContainer = ({ navigation }) => {
   const handleChatClick = () => {
     navigation.navigate("chat");
   };
-  useEffect(() => {
-    console.log(AsyncStorage.getItem("accessToken"));
-  }, []);
+  useEffect(() => {}, []);
   return (
     <SafeAreaView>
       <ScrollView style={{ height: "100%" }}>
