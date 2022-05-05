@@ -51,12 +51,12 @@ public class BiddingServiceImpl implements BiddingService {
             throw new NotAllowedBiddingItemException("이건 일반 경매 api >.<");
         }
 
-        Bidding lastBidding = biddingRepository.findTop1ByItemSeqOrderBySeqDesc(itemSeq).orElse(null);
+//        Bidding lastBidding = biddingRepository.findTop1ByItemSeqOrderBySeqDesc(itemSeq).orElse(null);
 
-        if (lastBidding != null) {
-            if (lastBidding.getBuyer().equals(member)) {
+        if (item.getBuyer() != null) {
+            if (item.getBuyer().equals(member)) {
                 throw new NotAllowedBiddingItemException("직전에 입찰한 경매입니다.");
-            } else if (lastBidding.getBiddingPrice() > biddingDto.getBiddingPrice()) {
+            } else if (item.getBiddingPrice() > biddingDto.getBiddingPrice()) {
                 throw new NotAllowedBiddingItemException("금액이 직전 입찰 금액보다 작습니다.");
             }
         } else if (biddingDto.getBiddingPrice() < item.getStartPrice()) {
@@ -71,6 +71,8 @@ public class BiddingServiceImpl implements BiddingService {
                 .build();
         biddingRepository.save(bidding);
 
+        item.updateBiddingItem(biddingDto.getBiddingPrice(),member);
+
         MemberSimpleInfoDto memberSimpleInfoDto = MemberSimpleInfoDto.builder()
                 .seq(member.getSeq())
                 .nickname(member.getNickname())
@@ -80,6 +82,7 @@ public class BiddingServiceImpl implements BiddingService {
         return BiddingSimpleInfoDto.builder()
                 .biddingPrice(bidding.getBiddingPrice())
                 .biddingDate(bidding.getCreatedDate())
+                .biddingCount(item.getBiddingCount())
                 .buyer(memberSimpleInfoDto)
                 .build();
     }
@@ -105,12 +108,12 @@ public class BiddingServiceImpl implements BiddingService {
 
         Bidding bidding = biddingRepository.findTop1ByItemSeqOrderBySeqDesc(itemSeq).orElse(null);
 
-        if (bidding == null) {
+        if (item.getBiddingCount() == 0) {
             throw new FailBiddingException("입찰되지 않고 경매가 종료되었습다.");
         }
 
         bidding.successBidding(successBiddingDto.getIsHammered());
-        item.updateBiddingItem(successTime, successBiddingDto.getIsHammered());
+        item.successBiddingItem(successTime, successBiddingDto.getIsHammered(), bidding.getBuyer());
 
         MemberSimpleInfoDto memberSimpleInfoDto = MemberSimpleInfoDto.builder()
                 .seq(bidding.getBuyer().getSeq())
@@ -121,6 +124,7 @@ public class BiddingServiceImpl implements BiddingService {
         return BiddingSimpleInfoDto.builder()
                 .biddingPrice(bidding.getBiddingPrice())
                 .biddingDate(bidding.getCreatedDate())
+                .biddingCount(item.getBiddingCount())
                 .buyer(memberSimpleInfoDto)
                 .build();
     }

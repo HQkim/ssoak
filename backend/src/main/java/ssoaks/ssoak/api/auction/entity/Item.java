@@ -15,7 +15,7 @@ import static javax.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.*;
 
 @Getter
-@ToString(of = {"seq", "title", "content", "startPrice", "biddingUnit", "startTime", "endTime", "auctionType", "isSold"})
+@ToString(of = {"seq", "title", "content", "startPrice", "biddingUnit", "biddingPrice", "biddingCount","startTime", "endTime", "auctionType", "isSold"})
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "tb_item")
 @Entity
@@ -37,6 +37,12 @@ public class Item extends BaseModifiedEntity {
 
     @Column(nullable = false, columnDefinition = "INT UNSIGNED")
     private Integer biddingUnit;
+
+    @Column(columnDefinition = "INT UNSIGNED")
+    private Integer biddingPrice;
+
+    @Column(columnDefinition = "INT UNSIGNED")
+    private Integer biddingCount;
 
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime startTime;
@@ -60,30 +66,37 @@ public class Item extends BaseModifiedEntity {
     private List<Like> likes = new ArrayList<>();
 
     // 물품 사진들(added by Hyunkyu - querydsl에서 필요)
-//    @OneToMany(mappedBy = "item", cascade = ALL)
-//    private List<Image> images = new ArrayList<>();
+    @OneToMany(mappedBy = "item", cascade = ALL)
+    private List<Image> images = new ArrayList<>();
 
     // 물품의 판매자
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_seq", columnDefinition = "BIGINT UNSIGNED")
+    @JoinColumn(name = "seller_seq", columnDefinition = "BIGINT UNSIGNED")
     private Member member;
+
+    // 물품 입찰자
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "buyer_seq", columnDefinition = "BIGINT UNSIGNED")
+    private Member buyer;
 
     @Builder
     public Item(String title, String content, Integer startPrice, Integer biddingUnit,
-                LocalDateTime startTime, LocalDateTime endTime, AuctionType auctionType,
-                Boolean isSold, Member member
-    ) {
+                Integer biddingPrice, Integer biddingCount, LocalDateTime startTime,
+                LocalDateTime endTime, AuctionType auctionType, Boolean isSold, Member member) {
         this.title = title;
         this.content = content;
-        this.isSold = isSold;
         this.startPrice = startPrice;
         this.biddingUnit = biddingUnit;
+        this.biddingPrice = biddingPrice;
+        this.biddingCount = biddingCount;
         this.startTime = startTime;
         this.endTime = endTime;
         this.auctionType = auctionType;
+        this.isSold = isSold;
         this.member = member;
-
+        this.buyer = null;
     }
+
 
     public void changeItem(String title, String content, Integer startPrice,
                            Integer biddingUnit, LocalDateTime startTime, LocalDateTime endTime,
@@ -97,9 +110,16 @@ public class Item extends BaseModifiedEntity {
         this.auctionType = auctionType;
     }
 
-    public void updateBiddingItem(LocalDateTime endTime, Boolean isSold) {
+    public void updateBiddingItem(Integer biddingPrice, Member buyer) {
+        this.biddingPrice = biddingPrice;
+        this.biddingCount += 1;
+        this.buyer = buyer;
+    }
+
+    public void successBiddingItem(LocalDateTime endTime, Boolean isSold, Member buyer) {
         this.endTime = endTime;
         this.isSold = isSold;
+        this.buyer = buyer;
     }
 
 }

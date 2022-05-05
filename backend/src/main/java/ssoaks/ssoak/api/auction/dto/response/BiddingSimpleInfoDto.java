@@ -14,13 +14,15 @@ public class BiddingSimpleInfoDto {
 
     private Integer biddingPrice;
     private LocalDateTime biddingDate;
+    private Integer biddingCount;
     private MemberSimpleInfoDto buyer;
 
     @Builder
     @QueryProjection
-    public BiddingSimpleInfoDto(Integer biddingPrice, LocalDateTime biddingDate, MemberSimpleInfoDto buyer) {
+    public BiddingSimpleInfoDto(Integer biddingPrice, LocalDateTime biddingDate,Integer biddingCount, MemberSimpleInfoDto buyer) {
         this.biddingPrice = biddingPrice;
         this.biddingDate = biddingDate;
+        this.biddingCount = biddingCount;
         this.buyer = buyer;
     }
 }
