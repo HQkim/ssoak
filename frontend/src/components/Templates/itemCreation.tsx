@@ -9,7 +9,7 @@ import {
   Dimensions,
   Text,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import ItemCreationInput from "../Organisms/Input/itemCreationInput";
 
 const { height: ScreenHeight } = Dimensions.get("window");

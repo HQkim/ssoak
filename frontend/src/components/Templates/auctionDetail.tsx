@@ -1,8 +1,8 @@
 import React from "react";
 import AuctionDescription from "../Molecules/Description/auctionDescription";
 
-const AuctionDetail = ({ item }) => {
-  return <AuctionDescription item={item} />;
+const AuctionDetail = ({ item, reqItem }) => {
+  return <AuctionDescription item={item} reqItem={reqItem} />;
 };
 
 export default AuctionDetail;
