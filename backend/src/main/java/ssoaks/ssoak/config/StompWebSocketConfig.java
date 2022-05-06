@@ -22,8 +22,6 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setAllowedOriginPatterns("*")
 //                .setAllowedOriginPatterns("http://localhost:8080")
                 .withSockJS();
-        System.out.println("registry -> string" + registry.toString());
-
 
     }
 
@@ -31,7 +29,7 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.setApplicationDestinationPrefixes("/pub");
-        registry.enableSimpleBroker("/topic", "/queue");
+        registry.enableSimpleBroker("/topic", "/queue", "/user");
     }
 
 }

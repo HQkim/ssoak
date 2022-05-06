@@ -1,4 +1,4 @@
-package ssoaks.ssoak.api.chat.dto;
+package ssoaks.ssoak.api.chat.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

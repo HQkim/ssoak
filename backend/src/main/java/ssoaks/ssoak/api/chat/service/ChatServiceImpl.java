@@ -1,11 +1,10 @@
 package ssoaks.ssoak.api.chat.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ssoaks.ssoak.api.auction.repository.ItemRepository;
-import ssoaks.ssoak.api.chat.dto.ReqChatDto;
-import ssoaks.ssoak.api.chat.dto.ResChatDto;
+import ssoaks.ssoak.api.chat.dto.request.ReqChatDto;
+import ssoaks.ssoak.api.chat.dto.response.ResChatDto;
 import ssoaks.ssoak.api.chat.entity.Chat;
 import ssoaks.ssoak.api.chat.repository.ChatRepository;
 import ssoaks.ssoak.api.member.repository.MemberRepository;
