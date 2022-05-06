@@ -8,6 +8,7 @@ type Props = {
   navigation: any;
   route: object;
   getSelectInformation: Function;
+  item: any;
 };
 
 const DateTime = (props: Props) => {
@@ -35,8 +36,18 @@ const DateTime = (props: Props) => {
 
   useEffect(() => {
     const unsubscribe = props.navigation.addListener("focus", () => {
+      if (props.item === 0) {
+        setDate(new Date());
+      } else if (props.item != 0) {
+        const startDateTime = props.item.startTime;
+        const endDateTime = props.item.endTime;
+        if (startDateTime != null) {
+          setDate(new Date(startDateTime));
+        } else if (startDateTime === null) {
+          setDate(new Date(endDateTime));
+        }
+      }
       setMinimumDate(new Date());
-      setDate(new Date());
     });
     return unsubscribe;
   }, [props.navigation]);
