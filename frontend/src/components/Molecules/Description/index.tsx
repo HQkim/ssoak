@@ -56,7 +56,7 @@ const index = ({ item, descStyle, titleStyle }) => {
     Alert.alert("이건 또 왜 눌렀슈?" + bidAssignValue);
   };
   return (
-    <View>
+    <View style={{ paddingBottom: Dimensions.get("window").height / 20 }}>
       <Text style={styles.type}>
         {item.type === "normal" ? "일반 경매" : "실시간 경매"}
       </Text>
@@ -128,7 +128,7 @@ const index = ({ item, descStyle, titleStyle }) => {
             value={bidRightNow}
             thousandSeparator={true}
             displayType={"text"}
-            renderText={(value, props) => <Text>{value}</Text>}
+            renderText={(value: number, props: any) => <Text>{value}</Text>}
             onValueChange={(values) => {
               const { formattedValue, value } = values;
               setBidRightNow(value);
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     marginBottom: Dimensions.get("window").height / 100,
   },
   textArea: {
-    flex: 1,
+    flex: 1.5,
     borderRadius: 20,
     borderWidth: 0.5,
     height: 24,
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#0176B7",
-    height: Dimensions.get("window").height / 30,
+    height: Dimensions.get("window").height / 20,
     marginTop: Dimensions.get("window").height / 50,
     borderRadius: 9999,
     borderWidth: 0.5,

@@ -6,14 +6,14 @@ import { loadDataAsync } from "../../store/modules/detail";
 import PagerView from "react-native-pager-view";
 // import ReactNativeZoomableView from "@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView";
 import Carousel from "../Organisms/Carousel";
-import Detail from "../Templates/detail";
+import AuctionDetail from "../Templates/auctionDetail";
 import ImageSkeleton from "../Molecules/Cards/imageSkeleton";
-import DescriptionSkeleton from "../Molecules/Cards/descriptionSkeleton";
+import DescriptionSkeleton from "../Molecules/Cards/autionDescriptionSkeleton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 type Props = {};
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
-const DetailContainer = (props: Props) => {
+const AutionDetailContainer = (props: Props) => {
   const isLoading = useSelector((state: RootState) => state.detail.isLoading);
   const dispatch = useDispatch();
   const [showIndicator, setShowIndicator] = useState(false);
@@ -27,15 +27,18 @@ const DetailContainer = (props: Props) => {
 
   const [item, setItem] = useState({
     id: 1,
-    title: "나는 뭔가를 팔고있어요",
+    title: "아이폰 13 미니 핑크",
     user: {
-      name: "강민수",
+      name: "둥이",
       exp: 100,
+      profileImageUrl:
+        "https://s3.ap-northeast-2.amazonaws.com/elasticbeanstalk-ap-northeast-2-176213403491/media/magazine_img/magazine_311/3-2-%EC%8D%B8%EB%84%A4%EC%9D%BC.jpg",
     },
-    type: "normal",
+    auctionType: "NORMAL",
     minbid: 1000,
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam temporibus vero provident fugit praesentium quos in velit recusandae repellat beatae est, dicta adipisci, hic omnis nam animi iure nihil. Id.",
+      "아이폰 13 미니 핑크 판매합니다. 2022년 4월 17일에 구매했습니다. 얼마 전에 산 새 제품! 128GB입니다. 빨리 빨리 가져가세요~~ 아이폰 13 미니 핑크 판매합니다. 2022년 4월 17일에 구매했습니다. 얼마 전에 산 새 제품! 128GB입니다. 빨리 빨리 가져가세요~~",
+    category: "도서/티켓/음반",
     urls: [
       "https://picsum.photos/400",
       "https://picsum.photos/400",
@@ -68,7 +71,6 @@ const DetailContainer = (props: Props) => {
           showPageIndicator={showIndicator}
           keyboardDismissMode={"on-drag"}
           overdrag={true}
-          layoutDirection="ltr"
         >
           {isLoading ? (
             <ImageSkeleton />
@@ -77,12 +79,12 @@ const DetailContainer = (props: Props) => {
           )}
         </PagerView>
       </View>
-      {isLoading ? <DescriptionSkeleton /> : <Detail item={item} />}
+      {isLoading ? <DescriptionSkeleton /> : <AuctionDetail item={item} />}
     </KeyboardAwareScrollView>
   );
 };
 
-export default DetailContainer;
+export default AutionDetailContainer;
 
 const styles = StyleSheet.create({
   box: {

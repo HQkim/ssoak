@@ -16,14 +16,19 @@ const { height: ScreenHeight } = Dimensions.get("window");
 type Props = {
   navigation: any;
   route: object;
+  inputForm: Function;
 };
 
 const ImageContainer = (props: Props) => {
   interface Item {
     imgSource: string;
   }
+  interface File {
+    imgFile: string;
+  }
 
   const [image, setImage] = useState<Item | null | any>([]);
+  const [file, setFile] = useState<File | null | any>([]);
 
   useEffect(() => {
     const unsubscribe = props.navigation.addListener("focus", () => {
@@ -32,18 +37,25 @@ const ImageContainer = (props: Props) => {
     return unsubscribe;
   }, [props.navigation]);
 
+  useEffect(() => {
+    props.inputForm(file);
+  }, [file]);
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
     });
+
     if (!result.cancelled) {
       setImage([...image, { imgSource: result.uri }]);
+      setFile([...file, result]);
     }
   };
 
   const deleteImage = (imageSource: string) => {
     setImage(image.filter((item: any) => item.imgSource !== imageSource));
+    setFile(file.filter((item: any) => item.uri !== imageSource));
   };
 
   return (

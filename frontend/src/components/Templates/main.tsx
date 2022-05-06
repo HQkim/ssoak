@@ -131,6 +131,23 @@ const Main = (props: Props) => {
             </View>
           </TouchableOpacity>
         </ItemSlider>
+        <ItemSlider>
+          <TouchableOpacity onPress={() => {}}>
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                // justifyContent: "space-between",
+                alignItems: "flex-end",
+                margin: 10,
+                marginLeft: 20,
+              }}
+            >
+              <Text style={{ fontSize: 18 }}>진행중인 경매</Text>
+              <Text style={{ color: "red" }}> 바로가기 {">"}</Text>
+            </View>
+          </TouchableOpacity>
+        </ItemSlider>
         <StatusBar style="auto" />
       </ScrollView>
     </SafeAreaView>

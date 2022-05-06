@@ -3,12 +3,14 @@ import React, { ReactNode } from "react";
 
 import FavoriteContainer from "../../Pages/favoriteContainer";
 import ProfileContainer from "../../Pages/profileContainer";
-
+import ChatNavigator from "./chatNavigator";
 import { StyleSheet, GestureResponderEvent } from "react-native";
 import CustomTabBarButton from "../../Atoms/Buttons/customTabBarButton";
 import NavigateButton from "../../Atoms/Buttons/navigateButton";
 import itemCreationContainer from "../../Pages/itemCreationContainer";
 import MainStackNavigator from "./stackNavigator";
+import ProfileStackNavigator from "./profileStackNavigator";
+import FavoriteStackNavigator from "./favoriteStackNavigator";
 
 type Props = {};
 
@@ -19,7 +21,8 @@ type ButtonProps = {
 
 const Tab = createBottomTabNavigator();
 
-const index = ({ navigation }: any) => {
+const index = ({ navigation, route }: any) => {
+  console.log(route);
   return (
     <Tab.Navigator
       screenOptions={(props: any) => ({
@@ -34,11 +37,16 @@ const index = ({ navigation }: any) => {
             />
           );
         },
+        tabBarStyle: {
+          position: "relative",
+          paddingTop: 10,
+        },
         ...navigateOptions,
       })}
     >
       <Tab.Screen name="Home" component={MainStackNavigator} />
-      <Tab.Screen name="Favorite" component={FavoriteContainer} />
+      {/* <Tab.Screen name="Favorite" component={FavoriteContainer} /> */}
+      <Tab.Screen name="Favorite" component={FavoriteStackNavigator} />
       <Tab.Screen
         name="+"
         component={itemCreationContainer}
@@ -55,8 +63,16 @@ const index = ({ navigation }: any) => {
           ),
         })}
       />
-      <Tab.Screen name="Chat" component={FavoriteContainer} />
-      <Tab.Screen name="Profile" component={ProfileContainer} />
+      <Tab.Screen
+        name="Chat"
+        component={ChatNavigator}
+        // options={({ route }) => ({
+        //   tabBarStyle: {
+        //     display: "none",
+        //   },
+        // })}
+      />
+      <Tab.Screen name="Profile" component={ProfileStackNavigator} />
     </Tab.Navigator>
   );
 };
@@ -86,10 +102,6 @@ const navigateOptions = {
   tabBarInactiveTintColor: "black",
   headerShown: false,
   tabBarHideOnKeyboard: true,
-  tabBarStyle: {
-    position: "relative",
-    paddingTop: 10,
-  },
 };
 
 export default index;

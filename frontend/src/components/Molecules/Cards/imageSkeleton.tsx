@@ -5,9 +5,15 @@ import SkeletonContent from "react-native-skeleton-content";
 type Props = {};
 
 const ImageSkeleton = (props: Props) => {
-  const { height: ScreenHeight } = Dimensions.get("window");
+  const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
   return (
-    <View style={{ justifyContent: "center", alignItems: "center" }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <SkeletonContent
         containerStyle={{
           width: ScreenHeight / 3,
@@ -18,8 +24,8 @@ const ImageSkeleton = (props: Props) => {
         // animationDirection="horizontalLeft"
         layout={[
           {
-            width: ScreenHeight / 3,
-            height: ScreenHeight / 3,
+            width: ScreenHeight / 1,
+            height: ScreenHeight / 1,
           },
         ]}
         isLoading={true}
