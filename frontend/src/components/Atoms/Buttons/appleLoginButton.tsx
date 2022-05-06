@@ -24,7 +24,7 @@ const AppleLoginButton = (props: Props) => {
           });
 
           // signed in
-        } catch (e) {
+        } catch (e: any) {
           if (e.code === "ERR_CANCELED") {
             console.log(e);
           } else {

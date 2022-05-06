@@ -1,10 +1,12 @@
 // ducks 패턴
-import { delay, put, take, takeEvery, takeLatest } from "redux-saga/effects";
-
+import { delay, put, call, takeEvery, takeLatest } from "redux-saga/effects";
+import { detailAuction } from "../../apis/auctionApi";
+import axios from "axios";
+const BASE_URL = "http://k6a207.p.ssafy.io:5000/api/v1";
 // actions
 const LOAD_DATA = "detail/LOAD_DATA" as const;
 const LOAD_DATA_ASYNC = "detail/LOAD_DATA_ASYNC" as const;
-
+const LOAD_SUCCESS = "detail/LOAD_SUCCESS" as const;
 //Action 생성자
 export const loadData = (payload: any) => ({
   type: LOAD_DATA,
@@ -16,12 +18,23 @@ export const loadDataAsync = (payload: any) => ({
   payload: payload,
 });
 
+export const loadSuccess = (payload: any) => ({
+  type: LOAD_SUCCESS,
+  payload,
+});
+
 //middleware
 function* loadDataSaga(action: any) {
-  // console.log(action);
   yield put(loadData(true));
-  yield delay(1000);
-  yield put(loadData(false));
+  try {
+    const result = yield call(detailAuction, action.payload);
+    yield delay(3000);
+    yield put(loadSuccess(result));
+  } catch (error) {
+    // yield put(loadError(error.response))
+  } finally {
+    yield put(loadData(false));
+  }
 }
 
 export function* detailSaga() {
@@ -35,7 +48,9 @@ function detail(
 ): DetailState {
   switch (action.type) {
     case LOAD_DATA:
-      return { isLoading: action.payload };
+      return { ...state, isLoading: action.payload };
+    case LOAD_SUCCESS:
+      return { ...state, item: action.payload };
     default:
       return state;
   }
@@ -44,13 +59,17 @@ function detail(
 export default detail;
 
 //Types for typescript
-type DetailAction = ReturnType<typeof loadData>;
+type DetailAction =
+  | ReturnType<typeof loadData>
+  | ReturnType<typeof loadSuccess>;
 
 type DetailState = {
   isLoading: boolean;
+  item: any;
 };
 
 //initial state
 const initialState: DetailState = {
   isLoading: true,
+  item: {},
 };

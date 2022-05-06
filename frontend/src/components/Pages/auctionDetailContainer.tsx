@@ -10,13 +10,19 @@ import AuctionDetail from "../Templates/auctionDetail";
 import ImageSkeleton from "../Molecules/Cards/imageSkeleton";
 import DescriptionSkeleton from "../Molecules/Cards/autionDescriptionSkeleton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-type Props = {};
+import { detailAuction } from "../../apis/auctionApi";
+
+type Props = {
+  navigation: any;
+  route: object;
+};
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
 const AutionDetailContainer = (props: Props) => {
   const isLoading = useSelector((state: RootState) => state.detail.isLoading);
   const dispatch = useDispatch();
   const [showIndicator, setShowIndicator] = useState(false);
+  const reqItem = props.route.params.id;
 
   useEffect(() => {
     setShowIndicator(!isLoading);
@@ -34,7 +40,7 @@ const AutionDetailContainer = (props: Props) => {
       profileImageUrl:
         "https://s3.ap-northeast-2.amazonaws.com/elasticbeanstalk-ap-northeast-2-176213403491/media/magazine_img/magazine_311/3-2-%EC%8D%B8%EB%84%A4%EC%9D%BC.jpg",
     },
-    auctionType: "NORMAL",
+    auctionType: "LIVE",
     minbid: 1000,
     description:
       "아이폰 13 미니 핑크 판매합니다. 2022년 4월 17일에 구매했습니다. 얼마 전에 산 새 제품! 128GB입니다. 빨리 빨리 가져가세요~~ 아이폰 13 미니 핑크 판매합니다. 2022년 4월 17일에 구매했습니다. 얼마 전에 산 새 제품! 128GB입니다. 빨리 빨리 가져가세요~~",
@@ -48,7 +54,7 @@ const AutionDetailContainer = (props: Props) => {
     ],
   });
   useEffect(() => {
-    onStartLoadData(item.id);
+    onStartLoadData(props.route.params.id);
   }, []);
 
   let scrollRef: any = useRef();
@@ -79,7 +85,11 @@ const AutionDetailContainer = (props: Props) => {
           )}
         </PagerView>
       </View>
-      {isLoading ? <DescriptionSkeleton /> : <AuctionDetail item={item} />}
+      {isLoading ? (
+        <DescriptionSkeleton />
+      ) : (
+        <AuctionDetail item={item} reqItem={reqItem} />
+      )}
     </KeyboardAwareScrollView>
   );
 };

@@ -21,12 +21,22 @@ const DateTime = (props: Props) => {
     Device.osName === "Android" && setDateOpen(false);
     Device.osName === "Android" && setTimeOpen(false);
     selectedDate !== undefined && setDate(currentDate);
-    props.getSelectInformation(selectedDate);
+    const now = new Date(selectedDate);
+    now.setHours(now.getHours() + 9);
+    let timeInformation = JSON.stringify(now);
+    let tmp = timeInformation.replace(".000Z", "");
+    let time = JSON.parse(tmp);
+    now.setMinutes(now.getMinutes() + 30);
+    let timeInfo = JSON.stringify(now);
+    let temp = timeInfo.replace(".000Z", "");
+    let dateTime = JSON.parse(temp);
+    props.getSelectInformation(time, dateTime);
   };
 
   useEffect(() => {
     const unsubscribe = props.navigation.addListener("focus", () => {
       setMinimumDate(new Date());
+      setDate(new Date());
     });
     return unsubscribe;
   }, [props.navigation]);

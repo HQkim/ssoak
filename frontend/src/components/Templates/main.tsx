@@ -8,152 +8,90 @@ import {
   ImageBackground,
   Dimensions,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 
 import React, { ReactNode, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import ItemSlider from "../Organisms/ItemSlider";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import SearchButton from "../Atoms/Buttons/searchButton";
 import BellIcon from "../Atoms/Buttons/bellIcon";
-
+import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 type Props = {
   onRefresh: () => any | undefined;
+  navigation: any;
 };
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
+const FirstRoute = () => <View style={{ flex: 1 }} />;
+const SecondRoute = () => <View style={{ flex: 1 }} />;
 
+const renderScene = SceneMap({
+  first: FirstRoute,
+  second: SecondRoute,
+});
 const Main = (props: Props) => {
-  const isLoading = useSelector(
-    (state: RootState) => state.mainLoader.isLoading,
-  );
+  const layout = useWindowDimensions();
+
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: "first", title: "일반 경매" },
+    { key: "second", title: "실시간 경매" },
+  ]);
+  const { isLoading } = useSelector((state: RootState) => state.mainLoader);
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={props.onRefresh} />
-        }
-      >
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            height: (ScreenWidth * 9) / 16,
-            backgroundColor: "#719DD7",
-            marginBottom: 20,
-          }}
-        >
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              // alignItems: "center",
-              marginTop: 20,
-            }}
-          >
-            <View style={{ flex: 1 }} />
-            <View style={{ flex: 1, alignItems: "center" }}>
-              <Text
-                style={{
-                  fontSize: 30,
-                  fontWeight: "bold",
+      <View style={styles.mainContainer}>
+        <Text style={styles.main}>쏙</Text>
+      </View>
+      <View style={styles.scrollView}>
+        <ScrollView contentContainerStyle={styles.scrollView}>
+          <TabView
+            renderTabBar={(props) => (
+              <TabBar
+                {...props}
+                style={{ backgroundColor: "transparent" }}
+                contentContainerStyle={{
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
-              >
-                쏙
-              </Text>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                marginEnd: 10,
-              }}
-            >
-              <View style={{ marginRight: 10 }}>
-                <SearchButton onPress={() => {}} size={24} />
-              </View>
-
-              <View>
-                <BellIcon onPress={() => {}} size={24} />
-              </View>
-            </View>
-          </View>
-        </View>
-        <ItemSlider>
-          <TouchableOpacity onPress={() => {}}>
-            <View
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                // justifyContent: "space-between",
-                alignItems: "flex-end",
-                margin: 10,
-                marginLeft: 20,
-              }}
-            >
-              <Text style={{ fontSize: 18 }}>마감임박 경매</Text>
-              <Text style={{ color: "red" }}> 바로가기 {">"}</Text>
-            </View>
-          </TouchableOpacity>
-        </ItemSlider>
-        <ItemSlider>
-          <TouchableOpacity onPress={() => {}}>
-            <View
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                // justifyContent: "space-between",
-                alignItems: "flex-end",
-                margin: 10,
-                marginLeft: 20,
-              }}
-            >
-              <Text style={{ fontSize: 18 }}>예정중인 경매</Text>
-              <Text style={{ color: "red" }}> 바로가기 {">"}</Text>
-            </View>
-          </TouchableOpacity>
-        </ItemSlider>
-        <ItemSlider>
-          <TouchableOpacity onPress={() => {}}>
-            <View
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                // justifyContent: "space-between",
-                alignItems: "flex-end",
-                margin: 10,
-                marginLeft: 20,
-              }}
-            >
-              <Text style={{ fontSize: 18 }}>진행중인 경매</Text>
-              <Text style={{ color: "red" }}> 바로가기 {">"}</Text>
-            </View>
-          </TouchableOpacity>
-        </ItemSlider>
-        <ItemSlider>
-          <TouchableOpacity onPress={() => {}}>
-            <View
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                // justifyContent: "space-between",
-                alignItems: "flex-end",
-                margin: 10,
-                marginLeft: 20,
-              }}
-            >
-              <Text style={{ fontSize: 18 }}>진행중인 경매</Text>
-              <Text style={{ color: "red" }}> 바로가기 {">"}</Text>
-            </View>
-          </TouchableOpacity>
-        </ItemSlider>
-        <StatusBar style="auto" />
-      </ScrollView>
+                indicatorStyle={{
+                  backgroundColor: "#719dd7",
+                  width: Dimensions.get("window").width / 4,
+                  alignSelf: "center",
+                }}
+                indicatorContainerStyle={{
+                  marginHorizontal: Dimensions.get("window").width / 8,
+                }}
+                labelStyle={{ color: "black" }}
+              />
+            )}
+            navigationState={{ index, routes }}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            initialLayout={{ width: layout.width }}
+          />
+        </ScrollView>
+      </View>
+      <StatusBar style="auto" />
     </SafeAreaView>
   );
 };
 
 export default Main;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  main: {
+    fontSize: Dimensions.get("window").width / 15,
+    fontWeight: "bold",
+  },
+  scrollView: {
+    flex: 8,
+  },
+});

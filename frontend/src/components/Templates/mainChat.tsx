@@ -102,6 +102,7 @@ const MainChat = (props: Props) => {
           name: "React Native",
           avatar: "https://placeimg.com/140/140/any",
         },
+        type: 1,
       },
     ]);
   }, []);

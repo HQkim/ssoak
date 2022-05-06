@@ -2,6 +2,7 @@ import { StyleSheet, View, TouchableOpacity, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import SubRadioButton from "../../Atoms/Buttons/radioButton";
 import Typography from "../../Atoms/Typographies/typography";
+import { useFocusEffect } from "@react-navigation/native";
 
 const { height: ScreenHeight } = Dimensions.get("window");
 
@@ -13,16 +14,24 @@ type Props = {
 
 const RadioButton = (props: Props) => {
   const [select, setSelect] = useState(true);
-  const onSelect = () => {
-    setSelect(!select);
-    props.getSelectInformation(select);
-  };
-  useEffect(() => {
-    const unsubscribe = props.navigation.addListener("focus", () => {
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        setSelect(true);
+      };
+    }, [])
+  );
+
+  const onSelect = (type: string) => {
+    if (type === "LIVE") {
       setSelect(true);
-    });
-    return unsubscribe;
-  }, [props.navigation]);
+      props.getSelectInformation(true);
+    } else {
+      setSelect(false);
+      props.getSelectInformation(false);
+    }
+  };
   return (
     <View
       style={{
@@ -33,7 +42,7 @@ const RadioButton = (props: Props) => {
       }}
     >
       <TouchableOpacity
-        onPress={onSelect}
+        onPress={() => onSelect("LIVE")}
         style={{ flexDirection: "row", alignItems: "center" }}
       >
         <View style={styles.radioButton}>
@@ -42,7 +51,7 @@ const RadioButton = (props: Props) => {
         <Typography title="실시간 경매" style={styles.fontStyle} />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={onSelect}
+        onPress={() => onSelect("NORMAL")}
         style={{ flexDirection: "row", alignItems: "center" }}
       >
         <View style={styles.radioButton}>

@@ -6,6 +6,7 @@ import { RootState } from "../../store/modules";
 import { useDispatch } from "react-redux";
 import { showLoaderAsync } from "../../store/modules/mainLoader";
 import { withNavigation } from "react-navigation";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = {
   navigation: any;
@@ -28,7 +29,9 @@ const MainContainer = ({ navigation, route }: Props) => {
     });
   }, [navigation]);
 
-  return <Main onRefresh={() => onStartLoading(true)} />;
+  return (
+    <Main onRefresh={() => onStartLoading(true)} navigation={navigation} />
+  );
 };
 
 export default MainContainer;

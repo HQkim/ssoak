@@ -13,14 +13,16 @@ import Border from "../../Atoms/Borders/border";
 import MoreButton from "../../Atoms/Buttons/moreButton";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
+import { likeItem, cancelLikeItem } from "../../../apis/auctionApi";
 
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
-const AuctionDescription = ({ item }) => {
+const AuctionDescription = ({ item, reqItem }) => {
   const [showMore, setShowMore] = useState(false);
   const [showDivider, setShowDivier] = useState<boolean>(true);
-
+  const [isLiked, setIsLiked] = useState(false);
   const navigation = useNavigation();
+
   const onTextLayout = useCallback((e) => {
     setShowDivier(e.nativeEvent.lines.length < 2);
   }, []);
@@ -28,14 +30,24 @@ const AuctionDescription = ({ item }) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setShowMore(!showMore);
   };
-  const onClickHeart = () => {
-    console.warn("찜");
+
+  const onClickHeart = async (reqItemNumber: number) => {
+    setIsLiked(!isLiked);
+    if (isLiked === true) {
+      const result = await cancelLikeItem(reqItemNumber);
+      console.warn(result);
+    } else {
+      const result = await likeItem(reqItemNumber);
+      console.warn(result);
+    }
   };
+
   const onBid = () => {
     navigation.navigate("auction", {
       item: item,
     });
   };
+
   return (
     <View>
       <View style={styles.box}>
@@ -51,12 +63,21 @@ const AuctionDescription = ({ item }) => {
             <Text style={styles.typography}>{item.user.name}</Text>
           </View>
         </View>
-        <Ionicons
-          name={"heart-outline"}
-          size={ScreenWidth / 9}
-          color={"#EA759A"}
-          onPress={onClickHeart}
-        />
+        {isLiked ? (
+          <Ionicons
+            name={"heart"}
+            size={ScreenWidth / 9}
+            color={"#EA759A"}
+            onPress={() => onClickHeart(reqItem)}
+          />
+        ) : (
+          <Ionicons
+            name={"heart-outline"}
+            size={ScreenWidth / 9}
+            color={"#EA759A"}
+            onPress={() => onClickHeart(reqItem)}
+          />
+        )}
       </View>
       <View style={styles.box}>
         <Text style={styles.title}>{item.title}</Text>
