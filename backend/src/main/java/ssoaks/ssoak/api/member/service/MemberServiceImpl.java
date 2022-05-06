@@ -231,6 +231,8 @@ public class MemberServiceImpl implements MemberService{
         return 200;
     }
 
+
+
     @Override
     public ResOtherMemberProfileDTO getOtherMemberProfile(Long memberSeq) {
 
@@ -305,5 +307,8 @@ public class MemberServiceImpl implements MemberService{
 
         return likedItems;
     }
+
+
+
 }
 
