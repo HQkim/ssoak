@@ -8,7 +8,7 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import MoreButton from "../../Atoms/Buttons/moreButton";
 import CountDown from "../../Atoms/Typographies/countDown";
 import GeneralButton from "../../Atoms/Buttons/generalButton";
@@ -23,8 +23,23 @@ const index = ({ item, descStyle, titleStyle }) => {
   const [currentCost, setCurrentCost] = useState<string>("15000");
   const [bidRightNow, setBidRightNow] = useState<string>("15000");
   const [bidAssignValue, setBidAssignValue] = useState<string>("15000");
+  const [biddingBuyer, setBiddingBuyer] = useState<any>({});
 
   const navigation = useNavigation();
+
+  useEffect(() => {
+    if (item.bidding !== null) {
+      setCurrentCost(item.bidding.biddingPrice);
+      setBiddingBuyer(item.bidding.buyer);
+    } else {
+      setCurrentCost(item.startPrice);
+    }
+  }, []);
+
+  useEffect(() => {
+    setBidRightNow(String((Number(currentCost) * 1.1).toFixed()));
+    setBidAssignValue(String(Number(currentCost) + Number(item.biddingUnit)));
+  }, [currentCost]);
   const handleMoreClick = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setShowMore(!showMore);
@@ -56,18 +71,18 @@ const index = ({ item, descStyle, titleStyle }) => {
     Alert.alert("이건 또 왜 눌렀슈?" + bidAssignValue);
   };
   return (
-    <View>
+    <View style={{ paddingBottom: Dimensions.get("window").height / 20 }}>
       <Text style={styles.type}>
-        {item.type === "normal" ? "일반 경매" : "실시간 경매"}
+        {item.auctionType === "NORMAL" ? "일반 경매" : "실시간 경매"}
       </Text>
       <Text style={titleStyle} numberOfLines={2}>
         {item.title}
       </Text>
       <View style={styles.badges}>
-        <Text style={styles.typography}>{item.user.name}</Text>
+        <Text style={styles.typography}>{item.seller.nickname}</Text>
         <Text style={styles.typography}>
           최소 입찰가 :{" "}
-          {item.minbid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
+          {item.biddingUnit.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
         </Text>
       </View>
       <View
@@ -81,18 +96,25 @@ const index = ({ item, descStyle, titleStyle }) => {
         numberOfLines={showMore ? 100 : 2}
         onTextLayout={onTextLayout}
       >
-        {item.description}
+        {item.content}
       </Text>
-      {!showDivider && (
+      {!showDivider ? (
         <MoreButton
           handleMoreClick={handleMoreClick}
           style={styles.dividerContainer}
           showMore={showMore}
         />
+      ) : (
+        <View
+          style={{
+            ...styles.divider,
+            ...styles.dividerContainer,
+          }}
+        />
       )}
       <View style={styles.itemInformationContainer}>
         <Text style={styles.information}>종료까지 남은 시간 : </Text>
-        <CountDown style={styles.information} />
+        <CountDown style={styles.information} endTime={item.endTime} />
       </View>
       <View style={styles.itemInformationContainer}>
         <Text style={styles.information}>현재 입찰가 : </Text>
@@ -121,7 +143,6 @@ const index = ({ item, descStyle, titleStyle }) => {
           value={""}
           style={styles.textArea}
           textAlign="center"
-          editable={false}
           keyboardType="numeric"
           onChange={handleOnchangebidRightNow}
         >
@@ -129,7 +150,7 @@ const index = ({ item, descStyle, titleStyle }) => {
             value={bidRightNow}
             thousandSeparator={true}
             displayType={"text"}
-            renderText={(value, props) => <Text>{value}</Text>}
+            renderText={(value: number, props: any) => <Text>{value}</Text>}
             onValueChange={(values) => {
               const { formattedValue, value } = values;
               setBidRightNow(value);
@@ -248,7 +269,7 @@ const styles = StyleSheet.create({
     marginBottom: Dimensions.get("window").height / 100,
   },
   textArea: {
-    flex: 1,
+    flex: 1.5,
     borderRadius: 20,
     borderWidth: 0.5,
     height: 24,
@@ -272,7 +293,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#0176B7",
-    height: Dimensions.get("window").height / 30,
+    height: Dimensions.get("window").height / 20,
     marginTop: Dimensions.get("window").height / 50,
     borderRadius: 9999,
     borderWidth: 0.5,

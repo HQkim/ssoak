@@ -13,7 +13,7 @@ import Border from "../../Atoms/Borders/border";
 import MoreButton from "../../Atoms/Buttons/moreButton";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
-import { likeItem, cancelLikeItem } from "../../../apis/autcionApi";
+import { likeItem, cancelLikeItem } from "../../../apis/auctionApi";
 
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 

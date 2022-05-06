@@ -37,7 +37,7 @@ const ImageContainer = (props: Props) => {
         setImage([]);
         setFile([]);
       };
-    }, [])
+    }, []),
   );
 
   useEffect(() => {

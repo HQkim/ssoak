@@ -19,13 +19,18 @@ const index = ({ imageUrls, style }: any) => {
             pinchToZoomInSensitivity={9}
             pinchToZoomOutSensitivity={9}
             zoomCenteringLevelDistance={1.5}
+            style={{ alignItems: "center", justifyContent: "center" }}
           >
             <Image
               source={{
                 uri: url,
               }}
               resizeMode="contain"
-              style={{ width: Dimensions.get("window").width / 1, flex: 1 }}
+              style={{
+                width: Dimensions.get("window").height / 3,
+                flex: 1,
+                alignSelf: "center",
+              }}
             />
           </ReactNativeZoomableView>
         </View>

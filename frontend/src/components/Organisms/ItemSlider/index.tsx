@@ -15,14 +15,16 @@ import SpinnerCard from "../../Molecules/Cards/spinnerCard";
 const items: any[] = [
   {
     item: 1,
-    id: 2,
+    id: 56,
+    auctionType: "NORMAL",
     name: "아이폰 팜아이폰 팜아이폰 팜아이폰 팜아이폰 팜아이폰 팜아이폰 팜아이폰 팜아이폰 팜아이폰 팜아이폰 팜아이폰 팜",
     description: "아이폰을 판매합니다. 판매 합니 다 판 매 하 ㅂ니 디ㅏ",
   },
   {
     item: 1,
-    id: 2,
+    id: 56,
     name: "아이폰 팜",
+    auctionType: "LIVE",
     description: "아이폰을 판매합니다. 판매 합니 다 판 매 하 ㅂ니 디ㅏ",
   },
   {
@@ -95,7 +97,7 @@ type Props = {
 
 const index = (props: Props) => {
   const isLoading = useSelector(
-    (state: RootState) => state.mainLoader.isLoading
+    (state: RootState) => state.mainLoader.isLoading,
   );
   return (
     <>

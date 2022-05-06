@@ -13,7 +13,7 @@ import RadioButton from "../../Molecules/Buttons/radioButton";
 import DropDown from "../../Molecules/Buttons/dropDown";
 import ImageContainer from "../../Molecules/Images/imageContainer";
 import DateTime from "../../Molecules/Times/dateTime";
-import { createAuction } from "../../../apis/autcionApi";
+import { createAuction } from "../../../apis/auctionApi";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 const { height: ScreenHeight } = Dimensions.get("window");
@@ -65,7 +65,7 @@ const ItemCreationInput = (props: Props) => {
           content: "",
         });
       };
-    }, [])
+    }, []),
   );
 
   const { title, content, startPrice } = value;
@@ -131,6 +131,7 @@ const ItemCreationInput = (props: Props) => {
   };
 
   const inputForm = (imageForm) => {
+    console.log(imageForm);
     const arr: string[] = [];
     for (let index = 0; index < imageForm.length; index++) {
       const element = imageForm[index];
