@@ -173,7 +173,6 @@ public class MemberServiceImpl implements MemberService{
 
             if (reqMemberProfileChangeDto.getNickname() != null) {
                 newNickname = reqMemberProfileChangeDto.getNickname();
-                member.changeMember(reqMemberProfileChangeDto.getNickname(), newImageUrl);
             } else {
                 newNickname = member.getNickname();
             }
@@ -182,9 +181,12 @@ public class MemberServiceImpl implements MemberService{
             throw new IllegalArgumentException("MemberServiceImpl changeMember() 프로필 수정 실패");
         }
 
+        // 둘다 들어오지 않은 경우
         if (reqMemberProfileChangeDto.getNickname() == null && reqMemberProfileChangeDto.getProfileImage() == null) {
             System.out.println("MemberServiceImpl changeMember() 변경된 내용이 없습니다.");
+            return 202;
         }
+
 
         member.changeMember(newNickname, newImageUrl);
 
