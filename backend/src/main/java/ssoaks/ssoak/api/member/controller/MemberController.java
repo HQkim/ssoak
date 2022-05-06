@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
 import ssoaks.ssoak.api.member.dto.request.ReqMemberProfileChangeDto;
+import ssoaks.ssoak.api.member.dto.request.ReqMemberProfileWrapperDto;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileDTO;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileItemsDTO;
 import ssoaks.ssoak.api.member.dto.response.ResOtherMemberProfileDTO;
@@ -164,7 +165,7 @@ public class MemberController {
         return ResponseEntity.status(200).body(new BaseResponseDTO(200, "프로필 수정 성공"));
     }
 
-    // 프로필 수정
+    // 프로필 수정 v2
     @PostMapping("")
     public ResponseEntity<BaseResponseDTO> changeProfileV2 (ReqMemberProfileChangeDto reqProfileChangeDto) {   // @Valid 나중에 테스트 해보기
         log.debug("MemberController changeProfileV2 호출됨");
@@ -177,6 +178,35 @@ public class MemberController {
             if (statusCode == 202) {
                 return ResponseEntity.status(202).body(new BaseResponseDTO(202, "변경된 내용이 없습니다."));
             }
+        } catch (NotAuthenticatedMemberException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(401).body(new BaseResponseDTO(401, "회원 권한 없음"));
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(409).body(new BaseResponseDTO(409, "프로필 수정 실패"));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(500).body(new BaseResponseDTO(500, "내부 서버 에러"));
+        }
+
+        return ResponseEntity.status(200).body(new BaseResponseDTO(200, "프로필 수정 성공"));
+    }
+
+    // 프로필 수정 v3
+    @PostMapping("/test")
+    public ResponseEntity<BaseResponseDTO> changeProfileV3 (ReqMemberProfileWrapperDto reqProfileDto) {   // @Valid 나중에 테스트 해보기
+        log.debug("MemberController changeProfileV2 호출됨");
+        System.out.println("reqProfileChangeDto: " + reqProfileDto);
+        System.out.println("reqProfileChangeDto.getNickname(): " + reqProfileDto.getContent());
+        System.out.println("reqProfileChangeDto.getProfileImage(): " + reqProfileDto.getContent().getNickname());
+        System.out.println("reqProfileChangeDto.getProfileImage(): " + reqProfileDto.getContent().getProfileImage());
+
+        try {
+            System.out.println("try문 안에 들어왔음.");
+//            Integer statusCode = memberService.changeMember(reqProfileDto.);
+//            if (statusCode == 202) {
+//                return ResponseEntity.status(202).body(new BaseResponseDTO(202, "변경된 내용이 없습니다."));
+//            }
         } catch (NotAuthenticatedMemberException e) {
             log.error(e.getMessage());
             return ResponseEntity.status(401).body(new BaseResponseDTO(401, "회원 권한 없음"));
