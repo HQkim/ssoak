@@ -5,6 +5,7 @@ export const kakaoLogin = async (access_code: string) => {
   const response = await instance.post("/members/login/kakao", {
     code: access_code,
   });
+  console.log(response, "!!");
   if (response.data.statusCode === 200) {
     AsyncStorage.setItem("accessToken", response.data.data.accessToken);
   }

@@ -15,7 +15,8 @@ import Profile from "../Templates/profile";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import { useDispatch } from "react-redux";
-import { showLoaderAsync } from "../../store/modules/mainLoader";
+import { dataFetchAsync } from "../../store/modules/mainLoader";
+import AppleLoginButton from "../Atoms/Buttons/appleLoginButton";
 
 const LogoImage = require("../../../assets/loading/loadingImg.jpg");
 const { height: ScreenHeight } = Dimensions.get("window");
@@ -40,13 +41,13 @@ const ProfileContainer = ({ navigation, route }: Props) => {
   const [font, setFont] = useState(false);
   const [profile, setProfile] = useState<Profile | null | any>([]);
   const isLoading = useSelector(
-    (state: RootState) => state.mainLoader.isLoading
+    (state: RootState) => state.mainLoader.isLoading,
   );
 
   const dispatch = useDispatch();
 
   const onStartLoading = (state: boolean) => {
-    dispatch(showLoaderAsync(state));
+    dispatch(dataFetchAsync(state));
   };
 
   const getAccessToken = async () => {
@@ -70,7 +71,7 @@ const ProfileContainer = ({ navigation, route }: Props) => {
     } catch (e) {
       console.log(
         "5----------------------------------------------------------------",
-        e
+        e,
       );
     }
   };
@@ -107,6 +108,7 @@ const ProfileContainer = ({ navigation, route }: Props) => {
           {font ? <Text style={styles.title}>내 손 안에 경매장</Text> : null}
           {font ? <Text style={styles.mainTitle}>쏙</Text> : null}
           <KakaoLoginButton loadKakaoLogin={loadKakaoLogin} />
+          <AppleLoginButton />
         </View>
       )}
     </View>

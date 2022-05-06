@@ -10,7 +10,7 @@ import AuctionDetail from "../Templates/auctionDetail";
 import ImageSkeleton from "../Molecules/Cards/imageSkeleton";
 import DescriptionSkeleton from "../Molecules/Cards/autionDescriptionSkeleton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { detailAuction } from "../../apis/autcionApi";
+import { detailAuction } from "../../apis/auctionApi";
 
 type Props = {
   navigation: any;
@@ -42,7 +42,7 @@ const AutionDetailContainer = (props: Props) => {
       profileImageUrl:
         "https://s3.ap-northeast-2.amazonaws.com/elasticbeanstalk-ap-northeast-2-176213403491/media/magazine_img/magazine_311/3-2-%EC%8D%B8%EB%84%A4%EC%9D%BC.jpg",
     },
-    auctionType: "NORMAL",
+    auctionType: "LIVE",
     minbid: 1000,
     startTime: null,
     endTime: "2022-05-10T21:48:40",

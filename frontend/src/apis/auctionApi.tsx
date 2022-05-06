@@ -27,5 +27,5 @@ export const likeItem = async (itemSeq) => {
 
 export const cancelLikeItem = async (itemSeq) => {
   const response = await instance.delete(`/auctions/${itemSeq}/like`);
-  return response;
+  return response.data;
 };
