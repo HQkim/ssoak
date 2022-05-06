@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import { useDispatch } from "react-redux";
 import { showLoaderAsync } from "../../store/modules/mainLoader";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 const LogoImage = require("../../../assets/loading/loadingImg.jpg");
 const { height: ScreenHeight } = Dimensions.get("window");
@@ -39,6 +40,7 @@ const ProfileContainer = ({ navigation, route }: Props) => {
   const [accessToken, setAccessToken] = useState("");
   const [font, setFont] = useState(false);
   const [profile, setProfile] = useState<Profile | null | any>([]);
+  const [editStatus, setEditStatus] = useState(false);
   const isLoading = useSelector(
     (state: RootState) => state.mainLoader.isLoading
   );
@@ -79,6 +81,15 @@ const ProfileContainer = ({ navigation, route }: Props) => {
     navigation.navigate("kakaoLogin");
   };
 
+  // 이름 수정중 화면 이동할때 초기화하는 코드
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        setEditStatus(false);
+      };
+    }, [])
+  );
+
   useEffect(() => {
     navigation.addListener("focus", () => {
       onStartLoading(false);
@@ -101,6 +112,8 @@ const ProfileContainer = ({ navigation, route }: Props) => {
           setProfile={setProfile}
           navigation={navigation}
           route={route}
+          setEditStatus={setEditStatus}
+          editStatus={editStatus}
         />
       ) : (
         <View style={styles.container}>
