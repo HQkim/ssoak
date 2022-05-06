@@ -28,6 +28,10 @@ const AuctionChat = (props: Props) => {
   const [bidRightNow, setBidRightNow] = useState<string>("15000");
   const [bidAssignValue, setBidAssignValue] = useState<string>("15000");
   const [chatText, setChatText] = useState<string>("");
+  const [offset, setOffset] = useState(0);
+  useEffect(() => {
+    Platform.OS === "ios" && setOffset(60);
+  }, []);
   const [iskeyboardUp, setIsKeyboardUp] = useState(false);
   const handleOnChangeText = (e: string) => {
     setChatText(e);
@@ -57,7 +61,7 @@ const AuctionChat = (props: Props) => {
           text: "아니오",
           onPress: () => {},
         },
-      ]
+      ],
     );
   };
 
@@ -84,6 +88,7 @@ const AuctionChat = (props: Props) => {
       <GiftedChat
         // messages={chatText}
         // onSend={(messages) => onSend(messages)}
+        bottomOffset={offset}
         onInputTextChanged={handleOnChangeText}
         messagesContainerStyle={{
           backgroundColor: "#0176B7",

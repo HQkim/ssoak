@@ -29,6 +29,8 @@ export const fileInstance = axios.create({
   baseURL: `${BaseURL}`,
   headers: {
     "Content-Type": "multipart/form-data",
+    Authorization:
+      "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUzNTMwMzkyfQ.MtzbBjQmlU1najLsVwxTbUmFPD3aOPv0MhUDTKoC5RvZ2HuLooClTgrQdqfo0uNDgXk6m4yUAqsXpWzjGmrCkQ",
   },
 });
 

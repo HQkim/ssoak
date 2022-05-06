@@ -15,7 +15,7 @@ import Profile from "../Templates/profile";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import { useDispatch } from "react-redux";
-import { showLoaderAsync } from "../../store/modules/mainLoader";
+import { dataFetchAsync } from "../../store/modules/mainLoader";
 import AppleLoginButton from "../Atoms/Buttons/appleLoginButton";
 
 const LogoImage = require("../../../assets/loading/loadingImg.jpg");
@@ -47,7 +47,7 @@ const ProfileContainer = ({ navigation, route }: Props) => {
   const dispatch = useDispatch();
 
   const onStartLoading = (state: boolean) => {
-    dispatch(showLoaderAsync(state));
+    dispatch(dataFetchAsync(state));
   };
 
   const getAccessToken = async () => {

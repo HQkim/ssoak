@@ -28,7 +28,7 @@ function* loadDataSaga(action: any) {
   yield put(loadData(true));
   try {
     const result = yield call(detailAuction, action.payload);
-    yield delay(3000);
+    yield delay(1000);
     yield put(loadSuccess(result));
   } catch (error) {
     // yield put(loadError(error.response))
