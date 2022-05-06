@@ -64,8 +64,9 @@ public class AuctionController {
     @PatchMapping("/{itemSeq}")
     public ResponseEntity<BaseDataResponseDTO> changeItem(@PathVariable("itemSeq") Long itemSeq,
                                                       ReqItemChangeDto reqItemChangeDto) {
-        log.debug("물품수정  seq- {} dto-{}", itemSeq,reqItemChangeDto);
+        log.debug("물품수정  seq- {} dto-{}", itemSeq, reqItemChangeDto);
         System.out.println("===물품수정=====> reqItemChangeDto : " + reqItemChangeDto);
+
         ResItemSeqDto resItemSeqDto = ResItemSeqDto.builder().itemSeq(itemSeq).build();
         try {
             resItemSeqDto = auctionService.changeItem(itemSeq, reqItemChangeDto);
@@ -188,10 +189,10 @@ public class AuctionController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<BaseResponseDTO> auctionList (Pageable pageable,
+    public ResponseEntity<BaseResponseDTO> auctionList (
                                                         @RequestParam String keyword) {
         log.debug("경매 리스트 - {}", keyword);
-        auctionListService.getAuctionList(pageable, keyword);
+        auctionListService.getAuctionList(keyword);
         return null;
     }
 }

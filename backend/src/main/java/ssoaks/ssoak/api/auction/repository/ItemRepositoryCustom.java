@@ -13,4 +13,6 @@ public interface ItemRepositoryCustom {
     List<Item> getSoldItemsByMember(Long memberSeq);
     List<ItemOverviewDto> getBoughtItemOverviewsByMember(Long memberSeq);
     List<ItemOverviewDto> getLikedItemOverviewsByMember(Long memberSeq);
+
+//    List<ItemOverviewDto>
 }

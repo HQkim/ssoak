@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ssoaks.ssoak.api.auction.dto.request.ReqItemChangeDto;
 import ssoaks.ssoak.api.auction.dto.request.ReqItemRegisterDto;
@@ -19,6 +20,7 @@ import ssoaks.ssoak.api.member.entity.Member;
 import ssoaks.ssoak.api.member.service.MemberService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -133,9 +135,8 @@ public class AuctionServiceImpl implements AuctionService {
         List<ItemCategory> itemCategories = itemCategoryRepository.findByItem(item)
                 .orElseThrow(() -> new IllegalArgumentException("해당 물품에 대한 카테고리를 찾을 수 없습니다."));
 
-        List<String> categories = itemCategories.stream()
-                .map(itemCategory -> itemCategory.getCategory().getCategoryName())
-                .collect(Collectors.toList());
+        String categoryName = itemCategories.get(0).getCategory().getCategoryName();
+        Integer categorySeq = itemCategories.get(0).getCategory().getSeq().intValue();
 
         // member
         MemberSimpleInfoDto memberDto = MemberSimpleInfoDto.builder()
@@ -152,9 +153,6 @@ public class AuctionServiceImpl implements AuctionService {
                 .build();
 
         // images
-//        List<Image> itemImages = imageRepository.findByItemSeqOrderBySeq(itemSeq)
-//                .orElseThrow(() -> new IllegalArgumentException("해당 물품에 대한 이미지를 찾을 수 없습니다."));
-
         List<String> images = item.getImages().stream()
                 .map(Image::getImageUrl)
                 .collect(Collectors.toList());
@@ -177,6 +175,7 @@ public class AuctionServiceImpl implements AuctionService {
                     .buyer(buyer)
                     .build();
         }
+
         // like
         Boolean like = likeService.isLike(member.getSeq(), itemSeq);
         Integer cntLike = likeRepository.countLikeByItemSeq(itemSeq);
@@ -193,12 +192,12 @@ public class AuctionServiceImpl implements AuctionService {
                 .member(memberDto)
                 .isLike(like)
                 .likeCount(cntLike)
-                .itemCategories(categories)
+                .itemCtegoryName(categoryName)
+                .itemCategorySeq(categorySeq)
                 .itemImages(images)
                 .bidding(biddingDto)
                 .seller(seller)
                 .build();
-
         return resItemDto;
     }
 
@@ -207,6 +206,7 @@ public class AuctionServiceImpl implements AuctionService {
 
         itemImages.forEach(image -> {
             String imageUrl = awsS3Service.uploadImage(image);
+            System.out.println("AWS -- imageUrl : " + imageUrl);
             Image imageBuild = Image.builder()
                     .imageUrl(imageUrl)
                     .item(item)
@@ -220,42 +220,54 @@ public class AuctionServiceImpl implements AuctionService {
     public ResItemSeqDto changeItem(Long itemSeq, ReqItemChangeDto itemChangeDto) {
         log.debug("changeItem - {}", itemSeq);
         Member member = memberService.getMemberByAuthentication();
-
+        System.out.println("item--" + itemChangeDto.getItemCategories());
         Item item = itemRepository.findBySeq(itemSeq)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 물품입니다."));
         if (item.getMember().getSeq() != member.getSeq()) {
             throw new NotAllowedChangeItemException("본인의 경매만 수정이 가능합니다.");
         }
-
+        System.out.println("item - " + item);
         Bidding bidding = biddingRepository.findTop1ByItemSeqOrderBySeqDesc(itemSeq).orElse(null);
         if (item.getAuctionType().equals(AuctionType.NORMAL) && !(bidding == null)) {
             throw new NotAllowedChangeItemException("이미 진행중인 경매는 수정이 불가능합니다.");
         } else if (item.getAuctionType().equals(AuctionType.LIVE) && item.getStartTime().isBefore(LocalDateTime.now())) {
             throw new NotAllowedChangeItemException("이미 진행중인 경매는 수정이 불가능합니다.");
         } else {
+            System.out.println("itemChangeDto - " + itemChangeDto);
             // item
             item.changeItem(itemChangeDto.getTitle(), itemChangeDto.getContent(),
                     itemChangeDto.getStartPrice(), (int) Math.round(itemChangeDto.getStartPrice()*0.1),
                     itemChangeDto.getStartTime(), itemChangeDto.getEndTime(), itemChangeDto.getAuctionType());
 
             // category
+
             List<ItemCategory> categories = itemCategoryRepository.findByItem(item)
                     .orElseThrow(()-> new IllegalArgumentException("물품 카테고리 조회에 실패했습니다."));
             for (ItemCategory category : categories) {
                 Category cate = categoryRepository.findByCategoryName(itemChangeDto.getItemCategories().get(0)).orElse(null);
                 category.changeItemCategory(cate);
+
             }
+
             // image
-            List<Image> imageList = imageRepository.findAllByItemSeq(itemSeq);
-            for (Image image : imageList) {
-                List<String> imgList = itemChangeDto.getImageUrls();
-                if (!(imgList.contains(image.getImageUrl()))) {
+            List<Image> originImageList = imageRepository.findAllByItemSeq(itemSeq);
+            for (Image image : originImageList) {
+                if (!CollectionUtils.isEmpty(itemChangeDto.getImageUrls())){
+                    List<String> imageStringList = itemChangeDto.getImageUrls();
+                    if (!(imageStringList.contains(image.getImageUrl()))) {
+                        imageRepository.delete(image);
+                    }
+                } else {
                     imageRepository.delete(image);
                 }
-            }
-            uploadItemImages(item, itemChangeDto.getImages());
 
-            ResItemSeqDto itemSeqDto = ResItemSeqDto.builder().itemSeq(itemSeq).auctionType(item.getAuctionType()).build();
+            }
+            System.out.println(itemChangeDto.getImages());
+            uploadItemImages(item, itemChangeDto.getImages());
+            System.out.println("changeitemFinish : " + item);
+            ResItemSeqDto itemSeqDto = ResItemSeqDto.builder()
+                    .itemSeq(itemSeq)
+                    .auctionType(item.getAuctionType()).build();
             return itemSeqDto;
         }
     }

@@ -25,7 +25,8 @@ public class ResItemDto {
     private Boolean isSold;
     private Boolean isLike;
     private Integer likeCount;
-    private List<String> itemCategories;
+    private String itemCtegoryName;
+    private Integer itemCategorySeq;
     private List<String> itemImages;
     private MemberSimpleInfoDto member;
     private BiddingSimpleInfoDto bidding;
@@ -33,7 +34,11 @@ public class ResItemDto {
 
     @QueryProjection
     @Builder
-    public ResItemDto(String title, String content, Integer startPrice, Integer biddingUnit, LocalDateTime startTime, LocalDateTime endTime, AuctionType auctionType, Boolean isSold, Boolean isLike, Integer likeCount, List<String> itemCategories, List<String> itemImages, MemberSimpleInfoDto member, BiddingSimpleInfoDto bidding, MemberSimpleInfoDto seller) {
+    public ResItemDto(String title, String content, Integer startPrice, Integer biddingUnit,
+                      LocalDateTime startTime, LocalDateTime endTime, AuctionType auctionType,
+                      Boolean isSold, Boolean isLike, Integer likeCount, String itemCtegoryName,
+                      Integer itemCategorySeq, List<String> itemImages, MemberSimpleInfoDto member, BiddingSimpleInfoDto bidding,
+                      MemberSimpleInfoDto seller) {
         this.title = title;
         this.content = content;
         this.startPrice = startPrice;
@@ -44,7 +49,8 @@ public class ResItemDto {
         this.isSold = isSold;
         this.isLike = isLike;
         this.likeCount = likeCount;
-        this.itemCategories = itemCategories;
+        this.itemCtegoryName = itemCtegoryName;
+        this.itemCategorySeq = itemCategorySeq;
         this.itemImages = itemImages;
         this.member = member;
         this.bidding = bidding;
