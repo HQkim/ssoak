@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface AuctionListService {
 
-    List<ItemSimpleOverviewDto> getAuctionList(Pageable pageable, String keyword);
+    List<ItemSimpleOverviewDto> getAuctionList(String keyword);
 
 }
