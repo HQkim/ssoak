@@ -143,7 +143,6 @@ const index = ({ item, descStyle, titleStyle }) => {
           value={""}
           style={styles.textArea}
           textAlign="center"
-          editable={false}
           keyboardType="numeric"
           onChange={handleOnchangebidRightNow}
         >
