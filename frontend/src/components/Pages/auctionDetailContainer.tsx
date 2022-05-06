@@ -27,6 +27,7 @@ const AutionDetailContainer = (props: Props) => {
   useEffect(() => {
     setShowIndicator(!isLoading);
   }, [isLoading]);
+
   const onStartLoadData = (id: number) => {
     dispatch(loadDataAsync(id));
   };
@@ -37,15 +38,18 @@ const AutionDetailContainer = (props: Props) => {
     user: {
       name: "둥이",
       exp: 100,
+      startPrice: "10000",
       profileImageUrl:
         "https://s3.ap-northeast-2.amazonaws.com/elasticbeanstalk-ap-northeast-2-176213403491/media/magazine_img/magazine_311/3-2-%EC%8D%B8%EB%84%A4%EC%9D%BC.jpg",
     },
     auctionType: "NORMAL",
     minbid: 1000,
+    startTime: null,
+    endTime: "2022-05-10T21:48:40",
     description:
       "아이폰 13 미니 핑크 판매합니다. 2022년 4월 17일에 구매했습니다. 얼마 전에 산 새 제품! 128GB입니다. 빨리 빨리 가져가세요~~ 아이폰 13 미니 핑크 판매합니다. 2022년 4월 17일에 구매했습니다. 얼마 전에 산 새 제품! 128GB입니다. 빨리 빨리 가져가세요~~",
     category: "도서/티켓/음반",
-    urls: [
+    itemImages: [
       "https://picsum.photos/400",
       "https://picsum.photos/400",
       "https://picsum.photos/400",
@@ -53,6 +57,7 @@ const AutionDetailContainer = (props: Props) => {
       "https://picsum.photos/400",
     ],
   });
+
   useEffect(() => {
     onStartLoadData(props.route.params.id);
   }, []);
@@ -81,7 +86,7 @@ const AutionDetailContainer = (props: Props) => {
           {isLoading ? (
             <ImageSkeleton />
           ) : (
-            <Carousel imageUrls={item.urls} style={styles.page} />
+            <Carousel imageUrls={item.itemImages} style={styles.page} />
           )}
         </PagerView>
       </View>
