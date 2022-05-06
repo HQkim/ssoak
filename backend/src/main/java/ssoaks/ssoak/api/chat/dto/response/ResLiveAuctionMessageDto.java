@@ -1,6 +1,5 @@
-package ssoaks.ssoak.api.chat.dto;
+package ssoaks.ssoak.api.chat.dto.response;
 
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
