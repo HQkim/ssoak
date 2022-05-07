@@ -1,22 +1,20 @@
 package ssoaks.ssoak.api.auction.repository;
 
-import com.querydsl.core.types.OrderSpecifier;
+
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
-import ssoaks.ssoak.api.auction.dto.response.ItemSimpleOverviewDto;
-import ssoaks.ssoak.api.auction.dto.response.QItemOverviewDto;
-import ssoaks.ssoak.api.auction.dto.response.QItemSimpleOverviewDto;
+import org.springframework.data.domain.Pageable;
+import ssoaks.ssoak.api.auction.dto.response.*;
 import ssoaks.ssoak.api.auction.entity.Item;
 
-
 import javax.persistence.EntityManager;
-import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+
 
 import static ssoaks.ssoak.api.auction.entity.QBidding.bidding;
+import static ssoaks.ssoak.api.auction.entity.QCategory.category;
 import static ssoaks.ssoak.api.auction.entity.QItem.item;
+import static ssoaks.ssoak.api.auction.entity.QItemCategory.itemCategory;
 import static ssoaks.ssoak.api.auction.entity.QLike.like;
 import static ssoaks.ssoak.api.auction.entity.QImage.image;
 
@@ -174,5 +172,52 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                 .fetch();
 
         return list_liked;
+    }
+
+    @Override
+    public Integer countItemListByAuctionType(String keyword) {
+
+        return queryFactory
+                .select(item.count().intValue())
+                .from(item)
+                .where(item.auctionType.stringValue().eq(keyword)
+                        .and(item.endTime.after(LocalDateTime.now())))
+                .fetchOne();
+
+    }
+
+
+    @Override
+    public List<AuctionListDto> getItemListByAuctionType(String keyword, Pageable pageable) {
+
+        List<AuctionListDto> itemList = queryFactory
+                .select(new QAuctionListDto(
+                        item.seq,
+                        item.title,
+                        item.startPrice,
+                        item.startTime,
+                        item.endTime,
+                        item.auctionType,
+                        item.biddingCount,
+                        item.biddingPrice,
+                        image.imageUrl,
+                        item.member.seq,
+                        item.member.nickname,
+                        item.member.profileImageUrl,
+                        category.categoryName
+                        ))
+                        .from(item)
+                        .join(image).on(image.item.eq(item))
+                        .join(itemCategory).on(itemCategory.item.eq(item))
+                        .join(category).on(category.seq.eq(itemCategory.category.seq))
+                        .where(item.auctionType.stringValue().eq(keyword)
+                                .and(item.endTime.after(LocalDateTime.now())))
+                        .groupBy(item)
+                        .offset((long) (pageable.getPageNumber() - 1) * pageable.getPageSize())
+                        .limit(pageable.getPageSize())
+                        .orderBy(item.createdDate.desc())
+                        .fetch();
+
+        return itemList;
     }
 }

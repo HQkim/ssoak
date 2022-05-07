@@ -2,15 +2,14 @@ package ssoaks.ssoak.api.auction.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ssoaks.ssoak.api.auction.dto.request.ReqBiddingRegisterDto;
 import ssoaks.ssoak.api.auction.dto.request.ReqItemChangeDto;
 import ssoaks.ssoak.api.auction.dto.request.ReqItemRegisterDto;
-import ssoaks.ssoak.api.auction.dto.response.BiddingSimpleInfoDto;
-import ssoaks.ssoak.api.auction.dto.response.ResItemDto;
-import ssoaks.ssoak.api.auction.dto.response.ResItemSeqDto;
+import ssoaks.ssoak.api.auction.dto.response.*;
 import ssoaks.ssoak.api.auction.exception.FailBiddingException;
 import ssoaks.ssoak.api.auction.exception.NotAllowedChangeItemException;
 import ssoaks.ssoak.api.auction.service.AuctionListService;
@@ -20,7 +19,6 @@ import ssoaks.ssoak.api.auction.service.LikeService;
 import ssoaks.ssoak.common.dto.BaseDataResponseDTO;
 import ssoaks.ssoak.common.dto.BaseResponseDTO;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 @Slf4j
@@ -177,6 +175,9 @@ public class AuctionController {
         BiddingSimpleInfoDto ResSuccessBidding = null;
         try {
             ResSuccessBidding = biddingService.successBidding(itemSeq, biddingDto);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(403).body(new BaseDataResponseDTO(403, e.getMessage(), itemSeq));
         } catch (FailBiddingException e) {
             log.error(e.getMessage());
             return ResponseEntity.status(403).body(new BaseDataResponseDTO(403, e.getMessage(), itemSeq));
@@ -189,10 +190,18 @@ public class AuctionController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<BaseResponseDTO> auctionList (
+    public ResponseEntity<BaseDataResponseDTO> auctionList (Pageable pageable,
                                                         @RequestParam String keyword) {
-        log.debug("경매 리스트 - {}", keyword);
-        auctionListService.getAuctionList(keyword);
-        return null;
+        log.debug("경매 리스트 keyword- {} page- {}", keyword, pageable);
+
+        ResAuctionListDto auctionListDto;
+        try {
+            auctionListDto = auctionListService.getAuctionList(keyword, pageable);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(409).body(new BaseDataResponseDTO<>(409, e.getMessage(), null));
+        }
+        return ResponseEntity.status(200).body(new BaseDataResponseDTO<>(200, "물품 조회 성공", auctionListDto));
+
     }
 }

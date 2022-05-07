@@ -2,15 +2,15 @@ package ssoaks.ssoak.api.auction.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
+import ssoaks.ssoak.api.auction.dto.response.AuctionListDto;
 import ssoaks.ssoak.api.auction.dto.response.ItemSimpleOverviewDto;
+import ssoaks.ssoak.api.auction.dto.response.ResAuctionListDto;
 import ssoaks.ssoak.api.auction.repository.ItemRepository;
 import ssoaks.ssoak.api.member.service.MemberService;
 
-import java.awt.print.Pageable;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -24,12 +24,17 @@ public class AuctionListServiceImpl implements AuctionListService {
 
 
     @Override
-    public List<ItemSimpleOverviewDto> getAuctionList(String keyword) {
+    public ResAuctionListDto getAuctionList(String keyword, Pageable pageable) {
 
-        if (keyword == "NORMAL") {
-//            List<ItemOverviewDto> itemList = itemRepository.(keyword, LocalDateTime.now());
-//            System.out.println("itemOverviewDto" + itemList);
-        }
-        return null;
+        Integer totalCount = itemRepository.countItemListByAuctionType(keyword);
+        List<AuctionListDto> itemList = itemRepository.getItemListByAuctionType(keyword, pageable);
+
+        ResAuctionListDto auctionListDto = ResAuctionListDto.builder()
+                .totalCount(totalCount)
+                .auctionList(itemList)
+                .build();
+
+        return auctionListDto;
+
     }
 }
