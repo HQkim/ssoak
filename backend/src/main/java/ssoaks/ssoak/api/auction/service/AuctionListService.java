@@ -1,12 +1,11 @@
 package ssoaks.ssoak.api.auction.service;
 
-import ssoaks.ssoak.api.auction.dto.response.ItemSimpleOverviewDto;
+import org.springframework.data.domain.Pageable;
+import ssoaks.ssoak.api.auction.dto.response.ResAuctionListDto;
 
-import java.awt.print.Pageable;
-import java.util.List;
 
 public interface AuctionListService {
 
-    List<ItemSimpleOverviewDto> getAuctionList(String keyword);
+    ResAuctionListDto getAuctionList(String keyword, Pageable page);
 
 }

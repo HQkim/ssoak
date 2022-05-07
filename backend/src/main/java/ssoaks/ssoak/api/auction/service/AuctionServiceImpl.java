@@ -20,7 +20,6 @@ import ssoaks.ssoak.api.member.entity.Member;
 import ssoaks.ssoak.api.member.service.MemberService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -192,7 +191,7 @@ public class AuctionServiceImpl implements AuctionService {
                 .member(memberDto)
                 .isLike(like)
                 .likeCount(cntLike)
-                .itemCtegoryName(categoryName)
+                .itemCategoryName(categoryName)
                 .itemCategorySeq(categorySeq)
                 .itemImages(images)
                 .bidding(biddingDto)
@@ -218,12 +217,12 @@ public class AuctionServiceImpl implements AuctionService {
     @Transactional
     @Override
     public ResItemSeqDto changeItem(Long itemSeq, ReqItemChangeDto itemChangeDto) {
-        log.debug("changeItem - {}", itemSeq);
+        log.debug("changeItem seq - {} itemChangeDto - {}", itemSeq, itemChangeDto);
         Member member = memberService.getMemberByAuthentication();
-        System.out.println("item--" + itemChangeDto.getItemCategories());
+
         Item item = itemRepository.findBySeq(itemSeq)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 물품입니다."));
-        if (item.getMember().getSeq() != member.getSeq()) {
+        if (item.getMember().equals(member)) {
             throw new NotAllowedChangeItemException("본인의 경매만 수정이 가능합니다.");
         }
         System.out.println("item - " + item);
@@ -233,20 +232,17 @@ public class AuctionServiceImpl implements AuctionService {
         } else if (item.getAuctionType().equals(AuctionType.LIVE) && item.getStartTime().isBefore(LocalDateTime.now())) {
             throw new NotAllowedChangeItemException("이미 진행중인 경매는 수정이 불가능합니다.");
         } else {
-            System.out.println("itemChangeDto - " + itemChangeDto);
             // item
             item.changeItem(itemChangeDto.getTitle(), itemChangeDto.getContent(),
                     itemChangeDto.getStartPrice(), (int) Math.round(itemChangeDto.getStartPrice()*0.1),
                     itemChangeDto.getStartTime(), itemChangeDto.getEndTime(), itemChangeDto.getAuctionType());
 
             // category
-
             List<ItemCategory> categories = itemCategoryRepository.findByItem(item)
                     .orElseThrow(()-> new IllegalArgumentException("물품 카테고리 조회에 실패했습니다."));
             for (ItemCategory category : categories) {
                 Category cate = categoryRepository.findByCategoryName(itemChangeDto.getItemCategories().get(0)).orElse(null);
                 category.changeItemCategory(cate);
-
             }
 
             // image
@@ -260,11 +256,11 @@ public class AuctionServiceImpl implements AuctionService {
                 } else {
                     imageRepository.delete(image);
                 }
-
             }
-            System.out.println(itemChangeDto.getImages());
-            uploadItemImages(item, itemChangeDto.getImages());
-            System.out.println("changeitemFinish : " + item);
+            if(!CollectionUtils.isEmpty(itemChangeDto.getImages())) {
+                uploadItemImages(item, itemChangeDto.getImages());
+            }
+
             ResItemSeqDto itemSeqDto = ResItemSeqDto.builder()
                     .itemSeq(itemSeq)
                     .auctionType(item.getAuctionType()).build();
@@ -303,7 +299,5 @@ public class AuctionServiceImpl implements AuctionService {
             itemRepository.delete(item);
             return true;
         }
-
     }
-
 }

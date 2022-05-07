@@ -5,13 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import ssoaks.ssoak.api.auction.enums.AuctionType;
-import ssoaks.ssoak.api.member.dto.response.MemberSimpleInfoDto;
 
 import java.time.LocalDateTime;
 
 @Getter
 @ToString
-public class ItemListDto {
+public class AuctionListDto {
     private Long itemSeq;
     private String title;
     private Integer startPrice;
@@ -32,7 +31,7 @@ public class ItemListDto {
     @Builder
     @QueryProjection
 
-    public ItemListDto(Long itemSeq, String title, Integer startPrice, LocalDateTime startTime, LocalDateTime endTime, AuctionType auctionType, Integer biddingCount, Integer biddingPrice, String imageUrl, Long sellerSeq, String sellerNickname, String sellerprofile, String category) {
+    public AuctionListDto(Long itemSeq, String title, Integer startPrice, LocalDateTime startTime, LocalDateTime endTime, AuctionType auctionType, Integer biddingCount, Integer biddingPrice, String imageUrl, Long sellerSeq, String sellerNickname, String sellerprofile, String category) {
         this.itemSeq = itemSeq;
         this.title = title;
         this.startPrice = startPrice;
