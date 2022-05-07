@@ -9,6 +9,7 @@ import {
   RefreshControl,
   TextInput,
   Alert,
+  Platform,
 } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -76,12 +77,11 @@ const Profile = (props: Props) => {
       setFile(result);
       const formData = new FormData();
       const trimmedURI = file.uri.replace("file://", "");
+      const trimmedURI_android = file.uri;
       const fileName = trimmedURI.split("/").pop();
       const item: any = {
-        height: file.height,
         type: "image/jpeg",
-        width: file.width,
-        uri: trimmedURI,
+        uri: Platform.OS === "ios" ? trimmedURI : trimmedURI_android,
         name: fileName,
       };
       formData.append("profileImage", item);
@@ -117,8 +117,11 @@ const Profile = (props: Props) => {
   };
 
   const editName = async () => {
-    props.setEditStatus(!props.editStatus);
-    if (props.editStatus == true && name) {
+    if (props.editStatus == false) {
+      props.setEditStatus(!props.editStatus);
+    } else if (props.editStatus == true && !name) {
+      Alert.alert("닉네임을 입력해주세요");
+    } else if (props.editStatus == true && name) {
       const formData = new FormData();
       formData.append("nickname", name);
       let request = new XMLHttpRequest();
@@ -139,6 +142,8 @@ const Profile = (props: Props) => {
           "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUzNTI3Nzg5fQ.duH53tFMehKn8sB8X7q2pLj9hT7_-4NVYHpLWtf0qTf3dZ6LQqKbo89fuxEu6eQRgq2dx1gZYrIE2Q9NYbsvqA"
       );
       request.send(formData);
+
+      props.setEditStatus(!props.editStatus);
     }
   };
 
@@ -245,6 +250,7 @@ const Profile = (props: Props) => {
                   editable={false}
                   textAlign="center"
                   value={props.profile.nickname}
+                  maxLength={5}
                 />
                 <AntDesign
                   name="edit"
@@ -262,10 +268,12 @@ const Profile = (props: Props) => {
                     fontWeight: "bold",
                     position: "relative",
                     color: "black",
+                    borderBottomWidth: 1,
                   }}
                   editable={true}
                   textAlign="center"
                   value={name}
+                  maxLength={5}
                   onChangeText={setName}
                   defaultValue={props.profile.nickname}
                 />
