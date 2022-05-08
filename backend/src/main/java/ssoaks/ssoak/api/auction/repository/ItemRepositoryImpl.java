@@ -1,8 +1,9 @@
 package ssoaks.ssoak.api.auction.repository;
 
-
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import ssoaks.ssoak.api.auction.dto.response.*;
 import ssoaks.ssoak.api.auction.entity.Item;
 
@@ -186,11 +187,10 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
 
     }
 
-
     @Override
     public List<AuctionListDto> getItemListByAuctionType(String keyword, Pageable pageable) {
 
-        List<AuctionListDto> itemList = queryFactory
+        JPAQuery<AuctionListDto> query = queryFactory
                 .select(new QAuctionListDto(
                         item.seq,
                         item.title,
@@ -214,10 +214,63 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                                 .and(item.endTime.after(LocalDateTime.now())))
                         .groupBy(item)
                         .offset((long) (pageable.getPageNumber() - 1) * pageable.getPageSize())
-                        .limit(pageable.getPageSize())
-                        .orderBy(item.createdDate.desc())
-                        .fetch();
+                        .limit(pageable.getPageSize());
 
-        return itemList;
+        for (Sort.Order order : pageable.getSort()) {
+            if(order.getProperty().equals("createdDate")) { // 최신순
+                query.orderBy(item.createdDate.desc());
+            }
+            else if(order.getProperty().equals("biddingCount")) { // 입찰 횟수순
+                query.orderBy(item.biddingCount.desc());
+            }
+            else if(order.getProperty().equals("endTime")) { // 마감임박순
+                query.orderBy(item.endTime.asc());
+            }
+        }
+
+        return query.fetch();
+    }
+
+    @Override
+    public Integer countLiveAuctionBeforeStart(String keyword) {
+        return queryFactory
+                .select(item.count().intValue())
+                .from(item)
+                .where(item.auctionType.stringValue().eq(keyword)
+                        .and(item.startTime.after(LocalDateTime.now())))
+                .fetchOne();
+    }
+
+    @Override
+    public List<AuctionListDto> getLiveItemListBeforeStart(String keyword, Pageable pageable) {
+        List<AuctionListDto> auctionListDtos = queryFactory
+                .select(new QAuctionListDto(
+                        item.seq,
+                        item.title,
+                        item.startPrice,
+                        item.startTime,
+                        item.endTime,
+                        item.auctionType,
+                        item.biddingCount,
+                        item.biddingPrice,
+                        image.imageUrl,
+                        item.member.seq,
+                        item.member.nickname,
+                        item.member.profileImageUrl,
+                        category.categoryName
+                ))
+                .from(item)
+                .join(image).on(image.item.eq(item))
+                .join(itemCategory).on(itemCategory.item.eq(item))
+                .join(category).on(category.seq.eq(itemCategory.category.seq))
+                .where(item.auctionType.stringValue().eq(keyword)
+                        .and(item.startTime.after(LocalDateTime.now())))
+                .groupBy(item)
+                .offset((long) (pageable.getPageNumber() - 1) * pageable.getPageSize())
+                .limit(pageable.getPageSize())
+                .orderBy(item.startTime.asc())
+                .fetch();
+
+        return auctionListDtos;
     }
 }

@@ -3,6 +3,7 @@ package ssoaks.ssoak.api.auction.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +20,10 @@ import ssoaks.ssoak.api.auction.service.LikeService;
 import ssoaks.ssoak.common.dto.BaseDataResponseDTO;
 import ssoaks.ssoak.common.dto.BaseResponseDTO;
 
+import javax.swing.*;
 import java.util.List;
+
+import static ssoaks.ssoak.api.auction.entity.QItem.item;
 
 @Slf4j
 @RestController
@@ -202,6 +206,5 @@ public class AuctionController {
             return ResponseEntity.status(409).body(new BaseDataResponseDTO<>(409, e.getMessage(), null));
         }
         return ResponseEntity.status(200).body(new BaseDataResponseDTO<>(200, "물품 조회 성공", auctionListDto));
-
     }
 }
