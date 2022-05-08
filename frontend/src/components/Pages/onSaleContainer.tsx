@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import OnSale from "../Templates/onSale";
 
@@ -8,13 +8,14 @@ type Props = {
   route: object;
 };
 
+type Items = {
+  items: Array<object>;
+};
+
 const OnSaleContainer = ({ navigation, route }: Props) => {
-  useEffect(() => {
-    navigation.addListener("focus", () => {
-      console.warn("onSale");
-    });
-  }, [navigation]);
-  return <OnSale />;
+  const [items, setItems] = useState<Items | null | any>([]);
+
+  return <OnSale navigation={navigation} route={route} />;
 };
 
 export default OnSaleContainer;
