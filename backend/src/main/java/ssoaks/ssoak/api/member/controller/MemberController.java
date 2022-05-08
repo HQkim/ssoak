@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
+import ssoaks.ssoak.api.auction.dto.response.ItemOverviewLikedDto;
 import ssoaks.ssoak.api.member.dto.request.ReqMemberProfileChangeDto;
 import ssoaks.ssoak.api.member.dto.request.ReqMemberProfileWrapperDto;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileDTO;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileItemsDTO;
+import ssoaks.ssoak.api.member.dto.response.ResMemberProfileLikedItemsDTO;
 import ssoaks.ssoak.api.member.dto.response.ResOtherMemberProfileDTO;
 import ssoaks.ssoak.api.member.exception.NotAuthenticatedMemberException;
 import ssoaks.ssoak.api.member.exception.NotFoundMemberException;
@@ -74,7 +76,7 @@ public class MemberController {
         }
 
         resMemberProfileSelling = new BaseDataResponseDTO<ResMemberProfileItemsDTO>(200, "판매중 물품 조회 성공",
-                ResMemberProfileItemsDTO.builder().itemOverviewDtos(sellingItems).build());
+                ResMemberProfileItemsDTO.builder().items(sellingItems).build());
 
         return ResponseEntity.status(200).body(resMemberProfileSelling);
     }
@@ -103,7 +105,7 @@ public class MemberController {
         }
 
         resMemberProfileSold = new BaseDataResponseDTO<ResMemberProfileItemsDTO>(200, "판매완료 물품 조회 성공",
-                ResMemberProfileItemsDTO.builder().itemOverviewDtos(soldItems).build());
+                ResMemberProfileItemsDTO.builder().items(soldItems).build());
 
         return ResponseEntity.status(200).body(resMemberProfileSold);
     }
@@ -132,7 +134,7 @@ public class MemberController {
         }
 
         resMemberProfileUnsold = new BaseDataResponseDTO<ResMemberProfileItemsDTO>(200, "판매가 안된 물품 조회 성공",
-                ResMemberProfileItemsDTO.builder().itemOverviewDtos(unsoldItems).build());
+                ResMemberProfileItemsDTO.builder().items(unsoldItems).build());
 
         return ResponseEntity.status(200).body(resMemberProfileUnsold);
     }
@@ -293,17 +295,17 @@ public class MemberController {
         }
 
         resMemberProfileBought = new BaseDataResponseDTO<>(200, "구매한 물품 조회 성공",
-                ResMemberProfileItemsDTO.builder().itemOverviewDtos(boughtItems).build());
+                ResMemberProfileItemsDTO.builder().items(boughtItems).build());
 
         return ResponseEntity.status(200).body(resMemberProfileBought);
     }
 
     @GetMapping("/likes")
-    public ResponseEntity<BaseDataResponseDTO<ResMemberProfileItemsDTO>> getMyLikedItems () {
+    public ResponseEntity<BaseDataResponseDTO<ResMemberProfileLikedItemsDTO>> getMyLikedItems () {
         log.debug("MemberController getMyLikedItems 호출됨");
 
-        BaseDataResponseDTO<ResMemberProfileItemsDTO> resMemberProfileLikes;
-        List<ItemOverviewDto> LikedItems;
+        BaseDataResponseDTO<ResMemberProfileLikedItemsDTO> resMemberProfileLikes;
+        List<ItemOverviewLikedDto> LikedItems;
 
         try {
             LikedItems = memberService.getMyLikedItems();
@@ -322,7 +324,7 @@ public class MemberController {
         }
 
         resMemberProfileLikes = new BaseDataResponseDTO<>(200, "찜한 물품 조회 성공",
-                ResMemberProfileItemsDTO.builder().itemOverviewDtos(LikedItems).build());
+                ResMemberProfileLikedItemsDTO.builder().items(LikedItems).build());
 
         return ResponseEntity.status(200).body(resMemberProfileLikes);
     }

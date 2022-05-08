@@ -11,10 +11,10 @@ import java.util.List;
 @ToString
 public class ResMemberProfileItemsDTO {
 
-    private List<ItemOverviewDto> itemOverviewDtos;
+    private List<ItemOverviewDto> items;
 
     @Builder
-    public ResMemberProfileItemsDTO(List<ItemOverviewDto> itemOverviewDtos) {
-        this.itemOverviewDtos = itemOverviewDtos;
+    public ResMemberProfileItemsDTO(List<ItemOverviewDto> items) {
+        this.items = items;
     }
 }

@@ -39,16 +39,16 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                         item.endTime,
                         item.auctionType,
                         item.isSold,
-                        bidding.biddingPrice.count().intValue().coalesce(0),
-                        bidding.biddingPrice.max().coalesce(0)
-//                        image.imageUrl
+                        item.biddingCount,
+                        item.biddingPrice,
+                        image.imageUrl
                 ))
                 .from(item)
-//                .leftJoin(item.biddings, bidding)
-                .leftJoin(bidding).on(bidding.item.eq(item))
+                .join(image).on(image.item.eq(item))
                 .where(item.member.seq.eq(memberSeq).and(item.endTime.after(LocalDateTime.now()))
                         .and(item.isSold.eq(false)))
                 .groupBy(item)
+                .orderBy(item.endTime.asc())    // 마감 임박순
                 .fetch();
 
         return list;
@@ -66,16 +66,16 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                         item.endTime,
                         item.auctionType,
                         item.isSold,
-                        bidding.biddingPrice.count().intValue().coalesce(0),
-                        bidding.biddingPrice.max().coalesce(0)
-//                        item.title
+                        item.biddingCount,
+                        item.biddingPrice,
+                        image.imageUrl
                 ))
                 .from(item)
-//                .leftJoin(item.biddings, bidding)
-                .leftJoin(bidding).on(bidding.item.eq(item))    // OneToMany 안쓰기 위해서 바꿈. .leftJoin(item.biddings, bidding)과 같은 결과
+                .join(image).on(image.item.eq(item))
                 .where(item.member.seq.eq(memberSeq).and(item.endTime.before(LocalDateTime.now()))
                         .and(item.isSold.eq(true)))
                 .groupBy(item)
+                .orderBy(item.endTime.desc())    // 가장 최근에 끝난 경매가 위로 오도록
                 .fetch();
 
         return list;
@@ -93,16 +93,16 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                         item.endTime,
                         item.auctionType,
                         item.isSold,
-                        bidding.biddingPrice.count().intValue().coalesce(0),
-                        bidding.biddingPrice.max().coalesce(0)
-//                        item.title
+                        item.biddingCount,
+                        item.biddingPrice,
+                        image.imageUrl
                 ))
                 .from(item)
-//                .leftJoin(item.biddings, bidding)
-                .leftJoin(bidding).on(bidding.item.eq(item))
+                .join(image).on(image.item.eq(item))
                 .where(item.member.seq.eq(memberSeq).and(item.endTime.before(LocalDateTime.now()))
                         .and(item.isSold.eq(false)))
                 .groupBy(item)
+                .orderBy(item.endTime.desc())
                 .fetch();
 
         return list;
@@ -132,26 +132,25 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                         item.endTime,
                         item.auctionType,
                         item.isSold,
-                        item.biddings.size(),
-//                        bidding.biddingPrice.count().intValue().coalesce(0), // bidding에 대한 조건을 걸었기 때문에 이렇게 하지말고 위처럼 새로 sub쿼리 날려야함
-                        bidding.biddingPrice.max().coalesce(0)    // groupby하면 어차피 1개가 되므로 바로 불러와도 된다.
-//                        item.title
+                        item.biddingCount,
+                        item.biddingPrice,
+                        image.imageUrl
                 ))
                 .from(item)
-//                .join(item.biddings, bidding)
-                .join(bidding).on(bidding.item.eq(item))
-                .where(bidding.buyer.seq.eq(memberSeq).and(bidding.isHammered.eq(true)))
+                .join(image).on(image.item.eq(item))
+                .where(item.buyer.seq.eq(memberSeq))
                 .groupBy(item)
+                .orderBy(item.modifiedDate.desc())
                 .fetch();
 
         return list;
     }
 
     @Override
-    public List<ItemOverviewDto> getLikedItemOverviewsByMember(Long memberSeq) {
+    public List<ItemOverviewLikedDto> getLikedItemOverviewsByMember(Long memberSeq) {
 
-        List<ItemOverviewDto> list_liked = queryFactory
-                .select(new QItemOverviewDto(
+        List<ItemOverviewLikedDto> list_liked = queryFactory
+                .select(new QItemOverviewLikedDto(
                         item.seq,
                         item.title,
                         item.startPrice,
@@ -159,15 +158,15 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                         item.endTime,
                         item.auctionType,
                         item.isSold,
-                        item.biddings.size(),
-                        bidding.biddingPrice.max().coalesce(0)
-//                        item.title
+                        item.biddingCount,
+                        item.biddingPrice,
+                        image.imageUrl,
+                        item.seq.isNotNull()
+
                 ))
                 .from(item)
-//                .join(item.likes, like)
+                .join(image).on(image.item.eq(item))
                 .join(like).on(like.item.eq(item))
-//                .leftJoin(item.biddings, bidding)
-                .leftJoin(bidding).on(bidding.item.eq(item))
                 .where(like.member.seq.eq(memberSeq))
                 .groupBy(item)
                 .fetch();
