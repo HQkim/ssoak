@@ -6,19 +6,16 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ReqChatDto {
+public class ReqChatLogDto {
+
     private Long itemSeq;
     private Long sellerSeq;
     private Long buyerSeq;
-    private String content;
-    private Long senderSeq;
 
     @Builder
-    public ReqChatDto(Long itemSeq, Long sellerSeq, Long buyerSeq, String content, Long senderSeq) {
+    public ReqChatLogDto(Long itemSeq, Long sellerSeq, Long buyerSeq) {
         this.itemSeq = itemSeq;
         this.sellerSeq = sellerSeq;
         this.buyerSeq = buyerSeq;
-        this.content = content;
-        this.senderSeq = senderSeq;
     }
 }

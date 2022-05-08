@@ -38,11 +38,14 @@ public class Chat extends BaseCreatedEntity {
     @ManyToOne(fetch = LAZY)
     private Member buyer;
 
+    private Long senderSeq;
+
     @Builder
-    public Chat(Item item, String content, Member seller, Member buyer) {
+    public Chat(Item item, String content, Member seller, Member buyer, Long senderSeq) {
         this.item = item;
         this.content = content;
         this.seller = seller;
         this.buyer = buyer;
+        this.senderSeq = senderSeq;
     }
 }
