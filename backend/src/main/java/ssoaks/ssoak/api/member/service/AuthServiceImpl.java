@@ -33,6 +33,7 @@ import java.net.URL;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.RSAPublicKeySpec;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Objects;
 
@@ -75,12 +76,15 @@ public class AuthServiceImpl implements AuthService {
                     .nickname(kakaoUser.getNickname())
                     .profileImageUrl(kakaoUser.getProfileImageUrl())
                     .grade(0.0)
+                    .loginTime(LocalDateTime.now())
                     .isDeleted(false)
                     .password(passwordEncoder.encode(kakaoUser.getKakaoId()))
                     .build();
 
             memberRepository.save(member);
         }
+
+        member.changeLoginTime(LocalDateTime.now());
 
         return member;
     }
@@ -103,12 +107,16 @@ public class AuthServiceImpl implements AuthService {
                         .nickname(appleMember.getNickname())
                         .profileImageUrl(appleMember.getProfileImageUrl())
                         .grade(0.0)
+                        .loginTime(LocalDateTime.now())
                         .isDeleted(false)
                         .password(passwordEncoder.encode(appleMember.getAppleId()))
                         .build();
 
                 memberRepository.save(member);
             }
+
+            member.changeLoginTime(LocalDateTime.now());
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new IllegalArgumentException("애플 로그인 실패");
@@ -201,6 +209,7 @@ public class AuthServiceImpl implements AuthService {
                 .nickname(nickname)
                 .profileImageUrl(profileImageUrl)
                 .grade(0.0)
+                .loginTime(LocalDateTime.now())
                 .isDeleted(false)
                 .password(null)
                 .build();
@@ -326,6 +335,7 @@ public class AuthServiceImpl implements AuthService {
                 .nickname(nickname[0])
                 .profileImageUrl(profileImageUrl)
                 .grade(0.0)
+                .loginTime(LocalDateTime.now())
                 .isDeleted(false)
                 .password(null)
                 .build();
