@@ -7,6 +7,7 @@ const { height: ScreenHeight } = Dimensions.get("window");
 
 const DropDown = ({ getSelectInformation, navigation, itemCategory }) => {
   const [defaultValue, setDefaultValue] = useState(itemCategory);
+  console.warn(defaultValue);
 
   const onClickCategory = (category) => {
     getSelectInformation(category);
@@ -41,7 +42,7 @@ const DropDown = ({ getSelectInformation, navigation, itemCategory }) => {
         height: ScreenHeight / 15,
         marginTop: ScreenHeight / 100,
       }}
-      defaultIndex={0}
+      defaultIndex={defaultValue}
       placeholder="카테고리"
       onChangeItem={(item) => onClickCategory(item.value)}
     />

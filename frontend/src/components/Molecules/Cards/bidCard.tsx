@@ -5,18 +5,25 @@ import {
   Dimensions,
   Image,
   TextInput,
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
-import BidButton from "../../Atoms/Buttons/bidButton";
+import { biddingAuction } from "../../../apis/auctionApi";
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
 
-const BidCard = ({ item, title, button, edit }) => {
-  const currentCost = 550000;
+const BidCard = ({ item, title, button, edit, biddingUnit, reqItem }) => {
+  const bidding = async () => {
+    const result = await biddingAuction(reqItem, biddingUnit, false);
+    console.warn(result);
+  };
+
   return (
     <View style={styles.CardContainer}>
       <Image
-        source={require("../../../../assets/초코.jpg")}
+        source={{
+          uri: item.member.profileImageUrl,
+        }}
         style={styles.imgContainer}
       ></Image>
       <View style={{ alignItems: "center" }}>
@@ -24,13 +31,17 @@ const BidCard = ({ item, title, button, edit }) => {
           editable={edit}
           maxLength={15}
           keyboardType="numeric"
-          value={currentCost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+          value={biddingUnit.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
           style={styles.textArea}
           textAlign="center"
         />
         <Text style={styles.textStyle}>{title}</Text>
       </View>
-      <BidButton button={button} />
+      <TouchableOpacity style={styles.buttonContainer}>
+        <Text style={styles.textStyle2} onPress={bidding}>
+          {button}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -66,9 +77,21 @@ const styles = StyleSheet.create({
   textArea: {
     borderRadius: 55,
     borderWidth: 0.7,
-    width: ScreenWidth / 4.5,
+    width: ScreenWidth / 4,
     height: ScreenWidth / 13,
     marginBottom: 10,
     color: "#4A4C4E",
+  },
+  buttonContainer: {
+    backgroundColor: "#0176B7",
+    width: ScreenWidth / 5,
+    height: ScreenWidth / 13,
+    borderRadius: 100,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  textStyle2: {
+    color: "#ffffff",
+    fontSize: ScreenWidth / 28,
   },
 });

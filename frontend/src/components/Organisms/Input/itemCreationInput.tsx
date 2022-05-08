@@ -11,7 +11,6 @@ import React, { useState, useEffect } from "react";
 import Border from "../../Atoms/Borders/border";
 import RadioButton from "../../Molecules/Buttons/radioButton";
 import DropDown from "../../Molecules/Buttons/dropDown";
-import ImageContainer from "../../Molecules/Images/imageContainer";
 import DateTime from "../../Molecules/Times/dateTime";
 import { createAuction } from "../../../apis/auctionApi";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
@@ -21,6 +20,8 @@ const { height: ScreenHeight } = Dimensions.get("window");
 type Props = {
   navigation: any;
   route: object;
+  images: any;
+  resetImage: Function;
 };
 
 const ItemCreationInput = (props: Props) => {
@@ -39,35 +40,46 @@ const ItemCreationInput = (props: Props) => {
   }
 
   const [form, setForm] = useState<Form | null | any>([]);
-  const [imgForm, setImgForm] = useState<ImageForm | null | any>([]);
+  const [imgForm, setImgForm] = useState<ImageForm | null | any>(props.images);
   const [value, setValue] = useState<Form | null | any>([]);
   const [select, setSelect] = useState(true);
   const navigation = useNavigation();
 
-  useFocusEffect(
-    React.useCallback(() => {
-      return () => {
-        setImgForm([]);
-        setForm((prevState: any) => ({
-          form: {
-            title: "",
-            content: "",
-            startPrice: "",
-            startTime: "",
-            endTime: "",
-            auctionType: "LIVE",
-            itemCategories: "디지털기기",
-          },
-        }));
-        setValue({
-          title: "",
-          startPrice: "",
-          content: "",
-        });
-        setSelect(true);
-      };
-    }, []),
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     setForm((prevState: any) => ({
+  //       form: {
+  //         title: "",
+  //         content: "",
+  //         startPrice: "",
+  //         startTime: "",
+  //         endTime: "",
+  //         auctionType: "LIVE",
+  //         itemCategories: "디지털기기",
+  //       },
+  //     }));
+  //     return () => {
+  //       setImgForm([]);
+  //       setForm((prevState: any) => ({
+  //         form: {
+  //           title: "",
+  //           content: "",
+  //           startPrice: "",
+  //           startTime: "",
+  //           endTime: "",
+  //           auctionType: "LIVE",
+  //           itemCategories: "디지털기기",
+  //         },
+  //       }));
+  //       setValue({
+  //         title: "",
+  //         startPrice: "",
+  //         content: "",
+  //       });
+  //       setSelect(true);
+  //     };
+  //   }, [])
+  // );
 
   const { title, content, startPrice } = value;
 
@@ -132,31 +144,51 @@ const ItemCreationInput = (props: Props) => {
     }
   };
 
-  const inputForm = (imageForm) => {
-    console.log(imageForm);
-    const arr: string[] = [];
-    for (let index = 0; index < imageForm.length; index++) {
-      const element = imageForm[index];
-      arr.push(element);
-    }
-    setImgForm(arr);
+  const resetData = () => {
+    setForm((prevState: any) => ({
+      form: {
+        title: "",
+        content: "",
+        startPrice: "",
+        startTime: "",
+        endTime: "",
+        auctionType: "LIVE",
+        itemCategories: "디지털기기",
+      },
+    }));
+    return () => {
+      setImgForm([]);
+      setForm((prevState: any) => ({
+        form: {
+          title: "",
+          content: "",
+          startPrice: "",
+          startTime: "",
+          endTime: "",
+          auctionType: "LIVE",
+          itemCategories: "디지털기기",
+        },
+      }));
+      setValue({
+        title: "",
+        startPrice: "",
+        content: "",
+      });
+      setSelect(true);
+    };
   };
 
   useEffect(() => {
-    setImgForm(imgForm);
+    setImgForm(props.images);
   }, [imgForm]);
 
   const onSubmit = async () => {
     const formData = new FormData();
     for (var i = 0; i < imgForm.length; i++) {
-      const trimmedURI = imgForm[i].uri.replace("file://", "");
-      const fileName = trimmedURI.split("/").pop();
       const item: any = {
-        height: imgForm[i].height,
         type: imgForm[i].type,
-        width: imgForm[i].width,
-        uri: trimmedURI,
-        name: fileName,
+        uri: imgForm[i].uri,
+        name: imgForm[i].name,
       };
       formData.append("images", item);
     }
@@ -183,6 +215,8 @@ const ItemCreationInput = (props: Props) => {
     } else {
       const result = await createAuction(formData);
       if (result.statusCode === 201) {
+        props.resetImage();
+        resetData();
         if (result.data.auctionType === "NORMAL") {
           navigation.navigate("auctionDetail", {
             id: result.data.itemSeq,
@@ -200,11 +234,6 @@ const ItemCreationInput = (props: Props) => {
   };
   return (
     <View>
-      <ImageContainer
-        navigation={props.navigation}
-        route={props.route}
-        inputForm={inputForm}
-      />
       <RadioButton
         getSelectInformation={onSelect}
         navigation={props.navigation}
