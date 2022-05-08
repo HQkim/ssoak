@@ -41,10 +41,10 @@ const DateTime = (props: Props) => {
       } else if (props.item != 0) {
         const startDateTime = props.item.startTime;
         const endDateTime = props.item.endTime;
-        if (startDateTime != null) {
-          setDate(new Date(startDateTime));
-        } else if (startDateTime === null) {
+        if (props.item.auctionType === "NORMAL") {
           setDate(new Date(endDateTime));
+        } else if (props.item.auctionType === "LIVE") {
+          setDate(new Date(startDateTime));
         }
       }
       setMinimumDate(new Date());

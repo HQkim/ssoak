@@ -6,13 +6,26 @@ import {
   Dimensions,
 } from "react-native";
 import React from "react";
+import { biddingAuction } from "../../../apis/auctionApi";
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
 
-const BidButton = ({ button }) => {
+const BidButton = ({ button, reqItem }) => {
+  const bidding = async () => {
+    const formData = new FormData();
+    const item: any = 1300;
+    const hammer: any = true;
+    formData.append("biddingPrice", item);
+    formData.append("isHammered", hammer);
+
+    const result = await biddingAuction(reqItem, formData);
+    console.warn(result);
+  };
   return (
     <TouchableOpacity style={styles.buttonContainer}>
-      <Text style={styles.textStyle}>{button}</Text>
+      <Text style={styles.textStyle} onPress={bidding}>
+        {button}
+      </Text>
     </TouchableOpacity>
   );
 };

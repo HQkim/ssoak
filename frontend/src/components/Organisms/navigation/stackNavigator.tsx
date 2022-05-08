@@ -80,33 +80,6 @@ const MainStackNavigator = (props: Props) => {
               style={styles.navigatorTitle}
             />
           ),
-          headerRight: () => (
-            <View>
-              <TouchableOpacity
-                onPress={onSelect}
-                style={{ marginHorizontal: ScreenWidth / 16 }}
-              >
-                <AntDesign
-                  name="ellipsis1"
-                  size={24}
-                  color="black"
-                  style={styles.dropdown}
-                />
-              </TouchableOpacity>
-              {select ? (
-                <View style={styles.dropdownContainer}>
-                  <Text style={styles.dropdownStyle} onPress={onUpdate}>
-                    <Ionicons name="pencil" size={20} color="black" />
-                    수정하기
-                  </Text>
-                  <Text style={styles.dropdownStyle}>
-                    <Ionicons name="trash-outline" size={20} color="black" />
-                    삭제하기
-                  </Text>
-                </View>
-              ) : null}
-            </View>
-          ),
         }}
       />
       <Stack.Screen

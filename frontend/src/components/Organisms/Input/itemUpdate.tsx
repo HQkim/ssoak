@@ -13,7 +13,7 @@ import RadioButton from "../../Molecules/Buttons/radioButton";
 import DropDown from "../../Molecules/Buttons/dropDown";
 import ImageUpdateContainer from "../../Molecules/Images/imageUpdateContainer";
 import DateTime from "../../Molecules/Times/dateTime";
-import { updateAuction } from "../../../apis/autcionApi";
+import { updateAuction } from "../../../apis/auctionApi";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 const { height: ScreenHeight } = Dimensions.get("window");
@@ -48,7 +48,7 @@ const ItemUpdate = (props: Props) => {
   const [value, setValue] = useState<Form | null | any>({
     value: {
       title: item.title,
-      startPrice: item.user.startPrice,
+      startPrice: item.startPrice,
       content: item.description,
     },
   });
@@ -60,19 +60,19 @@ const ItemUpdate = (props: Props) => {
       setForm((prevState: any) => ({
         form: {
           title: item.title,
-          content: item.description,
-          startPrice: item.user.startPrice,
+          content: item.content,
+          startPrice: item.startPrice,
           startTime: item.startTime,
           endTime: item.endTime,
           auctionType: item.auctionType,
-          itemCategories: item.category,
+          itemCategories: item.itemCtegoryName,
         },
       }));
       setValue({
         value: {
           title: item.title,
-          startPrice: item.user.startPrice,
-          content: item.description,
+          startPrice: String(item.startPrice),
+          content: item.content,
         },
       });
       setImages(props.item.itemImages);
@@ -85,7 +85,6 @@ const ItemUpdate = (props: Props) => {
   );
 
   const { title, content, startPrice } = value.value;
-  console.warn(item.itemImages);
 
   const onSelect = (info: boolean | string) => {
     if (typeof info === "boolean") {
@@ -166,11 +165,10 @@ const ItemUpdate = (props: Props) => {
   }, [imgForm]);
 
   const onSubmit = async () => {
-    console.warn(images, 333);
     const formData = new FormData();
 
-    if (imgForm.length === 0) {
-      formData.append("images", imgForm);
+    if (images.length > 0) {
+      formData.append("imageUrls", images);
     }
 
     for (var i = 0; i < imgForm.length; i++) {
@@ -186,7 +184,6 @@ const ItemUpdate = (props: Props) => {
       formData.append("images", item);
     }
 
-    formData.append("imageUrls", images);
     formData.append("title", form.form.title);
     formData.append("content", form.form.content);
     formData.append("startPrice", form.form.startPrice);
@@ -242,7 +239,7 @@ const ItemUpdate = (props: Props) => {
       <DropDown
         getSelectInformation={onSelect}
         navigation={props.navigation}
-        itemCategory={0}
+        itemCategory={item.itemCategorySeq}
       />
       <TextInput
         placeholder={"글 제목"}

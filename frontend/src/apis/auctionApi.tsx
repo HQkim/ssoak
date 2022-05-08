@@ -29,3 +29,11 @@ export const cancelLikeItem = async (itemSeq) => {
   const response = await instance.delete(`/auctions/${itemSeq}/like`);
   return response.data;
 };
+
+export const biddingAuction = async (itemSeq, formData) => {
+  const response = await instance.post(
+    `/auctions/${itemSeq}/bidding`,
+    formData
+  );
+  console.warn(response);
+};
