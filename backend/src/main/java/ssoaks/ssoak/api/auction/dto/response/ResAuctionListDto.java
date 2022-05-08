@@ -4,15 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-import ssoaks.ssoak.api.auction.enums.AuctionType;
+
+import java.util.List;
 
 @Getter
 @ToString
 @Builder
 @AllArgsConstructor
-public class ResItemSeqDto {
+public class ResAuctionListDto {
 
-    private Long itemSeq;
-    private AuctionType auctionType;
+    private Integer totalCount;
+    private List<AuctionListDto> auctionList;
 
 }
