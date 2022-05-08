@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ssoaks.ssoak.api.auction.dto.response.ItemImageSimpleInfoDto;
+import ssoaks.ssoak.api.auction.dto.response.ItemOverviewLikedDto;
 import ssoaks.ssoak.api.auction.entity.Item;
 import ssoaks.ssoak.api.auction.repository.ImageRepository;
 import ssoaks.ssoak.api.auction.repository.ItemRepository;
@@ -69,83 +70,6 @@ public class MemberServiceImpl implements MemberService{
         return memberProfile;
     }
 
-    @Override
-    public List<ItemOverviewDto> getMySellingItems() {
-
-        Long memberSeq;
-        List<ItemOverviewDto> sellingItems;
-
-        try {
-            memberSeq = getMemberByAuthentication().getSeq();
-        } catch (Exception e) {
-            throw new NotAuthenticatedMemberException("MemberServiceImpl getMySellingItems() 회원 인증 실패");
-        }
-
-        try {
-            sellingItems = itemRepository.getSellingItemOverviewsByMember(memberSeq);
-            List<ItemImageSimpleInfoDto> sellingItemsImages = imageRepository.getSellingItemsImagesByMember(memberSeq);
-
-            for (int i = 0; i < sellingItems.size(); i++) {
-                sellingItems.get(i).setImageUrl(sellingItemsImages.get(i).getImageUrl());
-            }
-        } catch (Exception e) {
-            throw new IllegalArgumentException("MemberServiceImpl getMySellingItems() 판매중 물품 조회 실패");
-        }
-
-        return sellingItems;
-    }
-
-    @Override
-    public List<ItemOverviewDto> getMySoldItems() {
-        Long memberSeq;
-        List<ItemOverviewDto> soldItems;
-
-        try {
-            memberSeq = getMemberByAuthentication().getSeq();
-        } catch (Exception e) {
-            throw new NotAuthenticatedMemberException("MemberServiceImpl getMySoldItems() 회원정보 인증 실패");
-        }
-
-        try {
-            soldItems = itemRepository.getSoldItemOverviewsByMember(memberSeq);
-            List<ItemImageSimpleInfoDto> soldItemsImages = imageRepository.getSoldItemsImagesByMember(memberSeq);
-
-            for (int i = 0; i < soldItems.size(); i++) {
-                soldItems.get(i).setImageUrl(soldItemsImages.get(i).getImageUrl());
-            }
-        } catch (Exception e) {
-            throw new IllegalArgumentException("MemberServiceImpl getMySoldItems() 판매완료 물품 조회 실패");
-        }
-
-        return soldItems;
-    }
-
-    @Override
-    public List<ItemOverviewDto> getMyUnsoldItems() {
-
-        Long memberSeq;
-        List<ItemOverviewDto> unsoldItems;
-
-        try {
-            memberSeq = getMemberByAuthentication().getSeq();
-        } catch (Exception e) {
-            throw new NotAuthenticatedMemberException("MemberServiceImpl getMyUnsoldItems() 회원 인증 실패");
-        }
-
-        try {
-            unsoldItems = itemRepository.getUnsoldItemOverviewsByMember(memberSeq);
-            List<ItemImageSimpleInfoDto> unsoldItemsImages = imageRepository.getUnsoldItemsImagesByMember(memberSeq);
-
-            for (int i = 0; i < unsoldItems.size(); i++) {
-                unsoldItems.get(i).setImageUrl(unsoldItemsImages.get(i).getImageUrl());
-            }
-        } catch (Exception e) {
-            throw new IllegalArgumentException("MemberServiceImpl getMyUnsoldItems() 판매완료 물품 조회 실패");
-        }
-
-        return unsoldItems;
-    }
-
     @Transactional
     @Override
     public Integer changeMember(ReqMemberProfileChangeDto reqMemberProfileChangeDto) {
@@ -193,7 +117,6 @@ public class MemberServiceImpl implements MemberService{
         return 200;
     }
 
-
     @Transactional
     @Override
     public Integer deleteMember() throws Exception {
@@ -215,7 +138,6 @@ public class MemberServiceImpl implements MemberService{
 
             System.out.println("===기존 카카오 아이디: " + kakaoId);
             System.out.println("===연결끊기후 카카오 아이디: " + resKakaoId);
-            System.out.println(kakaoId == resKakaoId);
         } catch (Exception e) {
             log.error(e.getMessage());
             return 503;
@@ -231,7 +153,107 @@ public class MemberServiceImpl implements MemberService{
         return 200;
     }
 
+    @Override
+    public List<ItemOverviewDto> getMySellingItems() {
 
+        Long memberSeq;
+        List<ItemOverviewDto> sellingItems;
+
+        try {
+            memberSeq = getMemberByAuthentication().getSeq();
+        } catch (Exception e) {
+            throw new NotAuthenticatedMemberException("MemberServiceImpl getMySellingItems() 회원 인증 실패");
+        }
+
+        try {
+            sellingItems = itemRepository.getSellingItemOverviewsByMember(memberSeq);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("MemberServiceImpl getMySellingItems() 판매중 물품 조회 실패");
+        }
+
+        return sellingItems;
+    }
+
+    @Override
+    public List<ItemOverviewDto> getMySoldItems() {
+        Long memberSeq;
+        List<ItemOverviewDto> soldItems;
+
+        try {
+            memberSeq = getMemberByAuthentication().getSeq();
+        } catch (Exception e) {
+            throw new NotAuthenticatedMemberException("MemberServiceImpl getMySoldItems() 회원정보 인증 실패");
+        }
+
+        try {
+            soldItems = itemRepository.getSoldItemOverviewsByMember(memberSeq);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("MemberServiceImpl getMySoldItems() 판매완료 물품 조회 실패");
+        }
+
+        return soldItems;
+    }
+
+    @Override
+    public List<ItemOverviewDto> getMyUnsoldItems() {
+
+        Long memberSeq;
+        List<ItemOverviewDto> unsoldItems;
+
+        try {
+            memberSeq = getMemberByAuthentication().getSeq();
+        } catch (Exception e) {
+            throw new NotAuthenticatedMemberException("MemberServiceImpl getMyUnsoldItems() 회원 인증 실패");
+        }
+
+        try {
+            unsoldItems = itemRepository.getUnsoldItemOverviewsByMember(memberSeq);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("MemberServiceImpl getMyUnsoldItems() 판매완료 물품 조회 실패");
+        }
+
+        return unsoldItems;
+    }
+
+    @Override
+    public List<ItemOverviewDto> getMyBoughtItems() {
+        Long memberSeq;
+        List<ItemOverviewDto> boughtItems;
+
+        try {
+            memberSeq = getMemberByAuthentication().getSeq();
+        } catch (Exception e) {
+            throw new NotAuthenticatedMemberException("MemberServiceImpl getMyBoughtItems() 회원 인증 실패");
+        }
+
+        try {
+            boughtItems = itemRepository.getBoughtItemOverviewsByMember(memberSeq);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("MemberServiceImpl getMyBoughtItems() 구매한 물품 조회 실패");
+        }
+
+        return boughtItems;
+    }
+
+    @Override
+    public List<ItemOverviewLikedDto> getMyLikedItems() {
+        Long memberSeq;
+        List<ItemOverviewLikedDto> likedItems;
+
+        try {
+            memberSeq = getMemberByAuthentication().getSeq();
+        } catch (Exception e) {
+            throw new NotAuthenticatedMemberException("MemberServiceImpl getMyLikedItems() 회원 인증 실패");
+        }
+
+        try {
+            likedItems = itemRepository.getLikedItemOverviewsByMember(memberSeq);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("MemberServiceImpl getMyLikedItems() 찜한 물품 조회 실패");
+        }
+
+        return likedItems;
+    }
 
     @Override
     public ResOtherMemberProfileDTO getOtherMemberProfile(Long memberSeq) {
@@ -257,56 +279,7 @@ public class MemberServiceImpl implements MemberService{
         return memberProfile;
     }
 
-    @Override
-    public List<ItemOverviewDto> getMyBoughtItems() {
-        Long memberSeq;
-        List<ItemOverviewDto> boughtItems;
 
-        try {
-            memberSeq = getMemberByAuthentication().getSeq();
-        } catch (Exception e) {
-            throw new NotAuthenticatedMemberException("MemberServiceImpl getMyBoughtItems() 회원 인증 실패");
-        }
-
-        try {
-            boughtItems = itemRepository.getBoughtItemOverviewsByMember(memberSeq);
-            List<ItemImageSimpleInfoDto> boughtItemsImages = imageRepository.getBoughtItemsImagesByMember(memberSeq);
-
-            for (int i = 0; i < boughtItems.size(); i++) {
-                boughtItems.get(i).setImageUrl(boughtItemsImages.get(i).getImageUrl());
-            }
-        } catch (Exception e) {
-            throw new IllegalArgumentException("MemberServiceImpl getMyBoughtItems() 구매한 물품 조회 실패");
-        }
-
-        return boughtItems;
-    }
-
-    @Override
-    public List<ItemOverviewDto> getMyLikedItems() {
-        Long memberSeq;
-        List<ItemOverviewDto> likedItems;
-
-        try {
-            memberSeq = getMemberByAuthentication().getSeq();
-        } catch (Exception e) {
-            throw new NotAuthenticatedMemberException("MemberServiceImpl getMyLikedItems() 회원 인증 실패");
-        }
-
-        try {
-            likedItems = itemRepository.getLikedItemOverviewsByMember(memberSeq);
-            List<ItemImageSimpleInfoDto> likedItemsImages = imageRepository.getLikedItemsImagesByMember(memberSeq);
-
-            for (int i = 0; i < likedItems.size(); i++) {
-                likedItems.get(i).setImageUrl(likedItemsImages.get(i).getImageUrl());
-            }
-
-        } catch (Exception e) {
-            throw new IllegalArgumentException("MemberServiceImpl getMyLikedItems() 찜한 물품 조회 실패");
-        }
-
-        return likedItems;
-    }
 
 
 

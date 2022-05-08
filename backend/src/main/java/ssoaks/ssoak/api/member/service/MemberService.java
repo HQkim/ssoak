@@ -1,6 +1,7 @@
 package ssoaks.ssoak.api.member.service;
 
 import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
+import ssoaks.ssoak.api.auction.dto.response.ItemOverviewLikedDto;
 import ssoaks.ssoak.api.member.dto.request.ReqMemberProfileChangeDto;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileDTO;
 import ssoaks.ssoak.api.member.dto.response.ResOtherMemberProfileDTO;
@@ -26,7 +27,7 @@ public interface MemberService {
 
     List<ItemOverviewDto> getMyBoughtItems();
 
-    List<ItemOverviewDto> getMyLikedItems();
+    List<ItemOverviewLikedDto> getMyLikedItems();
 
     Integer changeMember(ReqMemberProfileChangeDto reqMemberProfileChangeDto) throws Exception;
 

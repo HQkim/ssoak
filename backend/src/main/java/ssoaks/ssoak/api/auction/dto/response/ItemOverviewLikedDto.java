@@ -6,12 +6,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import ssoaks.ssoak.api.auction.enums.AuctionType;
+
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @ToString
-public class ItemOverviewDto {
+public class ItemOverviewLikedDto {
 
     private Long itemSeq;
     private String title;
@@ -23,14 +24,12 @@ public class ItemOverviewDto {
     private Integer biddingCount;
     private Integer lastPrice;
     private String imageUrl;
+    private Boolean isLiked;
 
 
     @Builder
     @QueryProjection
-
-    public ItemOverviewDto(Long itemSeq, String title, Integer startPrice, LocalDateTime startTime,
-                           LocalDateTime endTime, AuctionType auctionType, Boolean isSold,
-                           Integer biddingCount, Integer lastPrice, String imageUrl) {
+    public ItemOverviewLikedDto(Long itemSeq, String title, Integer startPrice, LocalDateTime startTime, LocalDateTime endTime, AuctionType auctionType, Boolean isSold, Integer biddingCount, Integer lastPrice, String imageUrl, Boolean isLiked) {
         this.itemSeq = itemSeq;
         this.title = title;
         this.startPrice = startPrice;
@@ -41,5 +40,6 @@ public class ItemOverviewDto {
         this.biddingCount = biddingCount;
         this.lastPrice = lastPrice;
         this.imageUrl = imageUrl;
+        this.isLiked = isLiked;
     }
 }
