@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ssoaks.ssoak.api.member.dto.request.ReqAppleCallbackDto;
 import ssoaks.ssoak.api.member.dto.request.ReqKakaoCallbackDto;
 import ssoaks.ssoak.api.member.service.MemberService;
 import ssoaks.ssoak.api.member.service.SocialCallbackService;
@@ -20,15 +21,34 @@ public class SocialCallbackController {
     private final SocialCallbackService socialCallbackService;
 
     @PostMapping("/kakao")
-    public ResponseEntity kakaoDisconnectCallback (@RequestHeader("Authorization") String appAdminKey, @RequestBody ReqKakaoCallbackDto reqKakaoCallbackDto) {
-        String adminKey = appAdminKey.substring(8);
-        Integer statusCode;
+    public ResponseEntity kakaoCallback (@RequestHeader("Authorization") String appAdminKey, @RequestBody ReqKakaoCallbackDto reqKakaoCallbackDto) {
+        log.debug("SocialCallbackController kakaoCallback 호출됨");
+        System.out.println("reqKakaoCallbackDto :" + reqKakaoCallbackDto);
 
-        System.out.println(reqKakaoCallbackDto);
+        String adminKey = appAdminKey.substring(8);
 
         try {
-            statusCode = socialCallbackService.checkDisconnectCallbackAndDeleteMember(adminKey, reqKakaoCallbackDto);
+            Integer statusCode = socialCallbackService.checkKakaoCallbackAndDeleteMember(adminKey, reqKakaoCallbackDto);
         } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(400).body(null);
+        }
+
+        return ResponseEntity.status(200).body(null);
+    }
+
+    @PostMapping("/apple")
+    public ResponseEntity appleCallback (@RequestBody ReqAppleCallbackDto reqAppleCallbackDto) {
+        log.debug("SocialCallbackController appleCallback 호출됨");
+        System.out.println("reqAppleCallbackDto: " + reqAppleCallbackDto);
+
+        String jwtApple = reqAppleCallbackDto.getPayload();
+        System.out.println("jwtApple: " + jwtApple);
+
+        try {
+            Integer statusCode = socialCallbackService.checkAppleCallbackAndDeleteMember(jwtApple);
+        } catch (Exception e) {
+            log.error(e.getMessage());
             return ResponseEntity.status(400).body(null);
         }
 

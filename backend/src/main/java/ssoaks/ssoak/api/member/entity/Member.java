@@ -50,7 +50,7 @@ public class Member {
     @CreatedDate
     private LocalDateTime signupTime;
 
-    @LastModifiedDate // 이거 빼야함
+//    @LastModifiedDate // 이거 빼야함
     private LocalDateTime loginTime;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
@@ -62,7 +62,7 @@ public class Member {
 
     @Builder
     public Member(String kakaoId, String appleId, String email, String nickname, String profileImageUrl,
-                  Double grade, Boolean isDeleted, String password
+                  Double grade, LocalDateTime loginTime, Boolean isDeleted, String password
                   ) {
         this.kakaoId = kakaoId;
         this.appleId = appleId;
@@ -70,6 +70,7 @@ public class Member {
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
         this.grade = grade;
+        this.loginTime = loginTime;
         this.isDeleted = isDeleted;
         this.password = password;
     }
@@ -92,5 +93,9 @@ public class Member {
         this.grade = 0.0;
         this.password = "";
 
+    }
+
+    public void changeLoginTime(LocalDateTime loginTime) {
+        this.loginTime = loginTime;
     }
 }
