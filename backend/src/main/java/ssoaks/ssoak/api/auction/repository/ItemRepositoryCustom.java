@@ -18,4 +18,7 @@ public interface ItemRepositoryCustom {
 
     Integer countItemListByAuctionType(String keyword);
     List<AuctionListDto> getItemListByAuctionType(String keyword, Pageable pageable);
+
+    Integer countLiveAuctionBeforeStart(String keyword);
+    List<AuctionListDto> getLiveItemListBeforeStart(String keyword, Pageable pageable);
 }
