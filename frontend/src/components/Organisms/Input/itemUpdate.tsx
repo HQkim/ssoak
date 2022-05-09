@@ -11,8 +11,9 @@ import React, { useState, useEffect } from "react";
 import Border from "../../Atoms/Borders/border";
 import RadioButton from "../../Molecules/Buttons/radioButton";
 import DropDown from "../../Molecules/Buttons/dropDown";
+import ImageUpdateContainer from "../../Molecules/Images/imageUpdateContainer";
 import DateTime from "../../Molecules/Times/dateTime";
-import { createAuction } from "../../../apis/auctionApi";
+import { updateAuction } from "../../../apis/auctionApi";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 const { height: ScreenHeight } = Dimensions.get("window");
@@ -20,68 +21,70 @@ const { height: ScreenHeight } = Dimensions.get("window");
 type Props = {
   navigation: any;
   route: object;
-  images: any;
-  resetImage: Function;
+  item: any;
 };
-
-const ItemCreationInput = (props: Props) => {
-  interface Form {
-    title: string;
-    startPrice: number;
-    content: string;
-    itemCategories: string;
-    auctionType: string;
-    startTime: string;
-    endTime: null;
-    biddingUnit: number;
-  }
-  interface ImageForm {
-    source: string;
-  }
-
+interface Form {
+  title: string;
+  startPrice: number;
+  content: string;
+  itemCategories: string;
+  auctionType: string;
+  startTime: string;
+  endTime: null;
+  biddingUnit: number;
+}
+interface ImageForm {
+  source: string;
+}
+interface Images {
+  images: any;
+}
+const ItemUpdate = (props: Props) => {
+  const auctionItem = props.item;
+  const [item, setItem] = useState(auctionItem);
   const [form, setForm] = useState<Form | null | any>([]);
-  const [imgForm, setImgForm] = useState<ImageForm | null | any>(props.images);
-  const [value, setValue] = useState<Form | null | any>([]);
+  const [images, setImages] = useState<Images | null | any>([]);
+  const [imgForm, setImgForm] = useState<ImageForm | null | any>([]);
+  const [value, setValue] = useState<Form | null | any>({
+    value: {
+      title: item.title,
+      startPrice: item.startPrice,
+      content: item.description,
+    },
+  });
   const [select, setSelect] = useState(true);
   const navigation = useNavigation();
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     setForm((prevState: any) => ({
-  //       form: {
-  //         title: "",
-  //         content: "",
-  //         startPrice: "",
-  //         startTime: "",
-  //         endTime: "",
-  //         auctionType: "LIVE",
-  //         itemCategories: "디지털기기",
-  //       },
-  //     }));
-  //     return () => {
-  //       setImgForm([]);
-  //       setForm((prevState: any) => ({
-  //         form: {
-  //           title: "",
-  //           content: "",
-  //           startPrice: "",
-  //           startTime: "",
-  //           endTime: "",
-  //           auctionType: "LIVE",
-  //           itemCategories: "디지털기기",
-  //         },
-  //       }));
-  //       setValue({
-  //         title: "",
-  //         startPrice: "",
-  //         content: "",
-  //       });
-  //       setSelect(true);
-  //     };
-  //   }, [])
-  // );
+  useFocusEffect(
+    React.useCallback(() => {
+      setForm((prevState: any) => ({
+        form: {
+          title: item.title,
+          content: item.content,
+          startPrice: item.startPrice,
+          startTime: item.startTime,
+          endTime: item.endTime,
+          auctionType: item.auctionType,
+          itemCategories: item.itemCtegoryName,
+        },
+      }));
+      setValue({
+        value: {
+          title: item.title,
+          startPrice: String(item.startPrice),
+          content: item.content,
+        },
+      });
+      setImages(props.item.itemImages);
+      if (item.auctionType === "NORMAL") {
+        setSelect(false);
+      } else {
+        setSelect(true);
+      }
+    }, [])
+  );
 
-  const { title, content, startPrice } = value;
+  const { title, content, startPrice } = value.value;
 
   const onSelect = (info: boolean | string) => {
     if (typeof info === "boolean") {
@@ -107,7 +110,7 @@ const ItemCreationInput = (props: Props) => {
   const getDateTime = (info: string, time: string) => {
     if (form.form.auctionType === "NORMAL") {
       setForm((prevState: any) => ({
-        form: { ...prevState.form, startTime: "", endTime: info },
+        form: { ...prevState.form, startTime: info, endTime: info },
       }));
     }
     if (form.form.auctionType === "LIVE") {
@@ -117,78 +120,66 @@ const ItemCreationInput = (props: Props) => {
     }
   };
 
-  const onChangeInput = (item: string, value: any) => {
+  const onChangeInput = (item: string, itemValue: any) => {
     if (item === "title") {
       setForm((prevState: any) => ({
-        form: { ...prevState.form, title: value },
+        form: { ...prevState.form, title: itemValue },
       }));
       setValue((prevState: any) => ({
-        value: { ...prevState.value, title: value },
+        value: { ...prevState.value, title: itemValue },
       }));
     }
     if (item === "startPrice") {
       setForm((prevState: any) => ({
-        form: { ...prevState.form, startPrice: value },
+        form: { ...prevState.form, startPrice: itemValue },
       }));
       setValue((prevState: any) => ({
-        value: { ...prevState.value, startPrice: value },
+        value: { ...prevState.value, startPrice: itemValue },
       }));
     }
     if (item === "content") {
       setForm((prevState: any) => ({
-        form: { ...prevState.form, content: value },
+        form: { ...prevState.form, content: itemValue },
       }));
       setValue((prevState: any) => ({
-        value: { ...prevState.value, content: value },
+        value: { ...prevState.value, content: itemValue },
       }));
     }
   };
 
-  const resetData = () => {
-    setForm((prevState: any) => ({
-      form: {
-        title: "",
-        content: "",
-        startPrice: "",
-        startTime: "",
-        endTime: "",
-        auctionType: "LIVE",
-        itemCategories: "디지털기기",
-      },
-    }));
-    return () => {
-      setImgForm([]);
-      setForm((prevState: any) => ({
-        form: {
-          title: "",
-          content: "",
-          startPrice: "",
-          startTime: "",
-          endTime: "",
-          auctionType: "LIVE",
-          itemCategories: "디지털기기",
-        },
-      }));
-      setValue({
-        title: "",
-        startPrice: "",
-        content: "",
-      });
-      setSelect(true);
-    };
+  const inputForm = (imageForm) => {
+    const arr: string[] = [];
+    for (let index = 0; index < imageForm.length; index++) {
+      const element = imageForm[index];
+      arr.push(element);
+    }
+    setImgForm(arr);
+  };
+
+  const inputImages = (imageList) => {
+    setImages(imageList);
   };
 
   useEffect(() => {
-    setImgForm(props.images);
+    setImgForm(imgForm);
   }, [imgForm]);
 
   const onSubmit = async () => {
     const formData = new FormData();
+
+    if (images.length > 0) {
+      formData.append("imageUrls", images);
+    }
+
     for (var i = 0; i < imgForm.length; i++) {
+      const trimmedURI = imgForm[i].uri.replace("file://", "");
+      const fileName = trimmedURI.split("/").pop();
       const item: any = {
+        height: imgForm[i].height,
         type: imgForm[i].type,
-        uri: imgForm[i].uri,
-        name: imgForm[i].name,
+        width: imgForm[i].width,
+        uri: trimmedURI,
+        name: fileName,
       };
       formData.append("images", item);
     }
@@ -202,7 +193,7 @@ const ItemCreationInput = (props: Props) => {
     formData.append("itemCategories", form.form.itemCategories);
     console.warn(formData);
 
-    if (imgForm.length < 1) {
+    if (imgForm.length < 1 && images.length < 1) {
       Alert.alert("이미지를 업로드해주세요.");
     } else if (
       form.form.title === "" ||
@@ -213,10 +204,8 @@ const ItemCreationInput = (props: Props) => {
     } else if (form.form.startTime === "" && form.form.endTime === "") {
       Alert.alert("경매 시간을 설정해주세요.");
     } else {
-      const result = await createAuction(formData);
+      const result = await updateAuction(47, formData);
       if (result.statusCode === 201) {
-        props.resetImage();
-        resetData();
         if (result.data.auctionType === "NORMAL") {
           navigation.navigate("auctionDetail", {
             id: result.data.itemSeq,
@@ -234,16 +223,23 @@ const ItemCreationInput = (props: Props) => {
   };
   return (
     <View>
+      <ImageUpdateContainer
+        navigation={props.navigation}
+        route={props.route}
+        inputForm={inputForm}
+        inputImages={inputImages}
+        images={item.itemImages}
+      />
       <RadioButton
         getSelectInformation={onSelect}
         navigation={props.navigation}
         route={props.route}
-        auctionType={"LIVE"}
+        auctionType={item.auctionType}
       />
       <DropDown
         getSelectInformation={onSelect}
         navigation={props.navigation}
-        itemCategory={0}
+        itemCategory={item.itemCategorySeq}
       />
       <TextInput
         placeholder={"글 제목"}
@@ -278,7 +274,7 @@ const ItemCreationInput = (props: Props) => {
           getSelectInformation={getDateTime}
           navigation={props.navigation}
           route={props.route}
-          item={0}
+          item={item}
         />
       </View>
       <Border style={styles.border} />
@@ -294,7 +290,7 @@ const ItemCreationInput = (props: Props) => {
       <Border style={styles.border} />
       <View style={{ alignItems: "center", padding: ScreenHeight / 50 }}>
         <TouchableOpacity style={styles.buttonContainer} onPress={onSubmit}>
-          <Text style={styles.buttonTextContainer}>등록하기</Text>
+          <Text style={styles.buttonTextContainer}>수정하기</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -334,4 +330,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ItemCreationInput;
+export default ItemUpdate;

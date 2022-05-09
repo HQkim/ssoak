@@ -18,23 +18,30 @@ type Props = {
   navigation: any;
   route: object;
   inputForm: Function;
+  inputImages: Function;
+  images: any;
 };
 
-const ImageContainer = (props: Props) => {
+const ImageUpdateContainer = (props: Props) => {
+  const imagesUrl = props.images;
   interface Item {
     imgSource: string;
   }
   interface File {
     imgFile: string;
   }
+  interface ImageList {
+    imgList: string;
+  }
 
-  const [image, setImage] = useState<Item | null | any>([]);
+  const [image, setImage] = useState<Item | null | any>(imagesUrl);
+  const [imageList, setImageList] = useState<Item | null | any>(imagesUrl);
   const [file, setFile] = useState<File | null | any>([]);
 
   useFocusEffect(
     React.useCallback(() => {
       return () => {
-        setImage([]);
+        setImage(imagesUrl);
         setFile([]);
       };
     }, [])
@@ -44,6 +51,10 @@ const ImageContainer = (props: Props) => {
     props.inputForm(file);
   }, [file]);
 
+  useEffect(() => {
+    props.inputImages(imageList);
+  }, [imageList]);
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -51,13 +62,14 @@ const ImageContainer = (props: Props) => {
     });
 
     if (!result.cancelled) {
-      setImage([...image, { imgSource: result.uri }]);
+      setImage([...image, result.uri]);
       setFile([...file, result]);
     }
   };
 
   const deleteImage = (imageSource: string) => {
-    setImage(image.filter((item: any) => item.imgSource !== imageSource));
+    setImage(image.filter((item: any) => item !== imageSource));
+    setImageList(image.filter((item: any) => item !== imageSource));
     setFile(file.filter((item: any) => item.uri !== imageSource));
   };
 
@@ -79,14 +91,11 @@ const ImageContainer = (props: Props) => {
             return (
               <TouchableWithoutFeedback>
                 <View style={{ alignItems: "flex-end" }}>
-                  <Image
-                    source={{ uri: item.imgSource }}
-                    style={styles.imgContainer}
-                  />
+                  <Image source={{ uri: item }} style={styles.imgContainer} />
                   <Ionicons
                     name={"close-circle"}
                     size={ScreenHeight / 40}
-                    onPress={() => deleteImage(item.imgSource)}
+                    onPress={() => deleteImage(item)}
                     style={{ marginRight: ScreenHeight / 150 }}
                   />
                 </View>
@@ -114,4 +123,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ImageContainer;
+export default ImageUpdateContainer;

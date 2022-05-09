@@ -10,6 +10,16 @@ export const detailAuction = async (itemSeq) => {
   return response.data.data;
 };
 
+export const updateAuction = async (itemSeq, formData) => {
+  const response = await fileInstance.patch(`/auctions/${56}`, formData);
+  return response.data;
+};
+
+export const deleteAuction = async (itemSeq) => {
+  const response = await instance.delete(`/auctions/${59}`);
+  return response;
+};
+
 export const likeItem = async (itemSeq) => {
   const response = await instance.post(`/auctions/${itemSeq}/like`);
   return response;
@@ -30,4 +40,12 @@ export const getList = async ({ keyword, page }) => {
     },
   });
   return response.data;
+};
+
+export const biddingAuction = async (itemSeq, formData) => {
+  const response = await instance.post(
+    `/auctions/${itemSeq}/bidding`,
+    formData,
+  );
+  console.warn(response);
 };

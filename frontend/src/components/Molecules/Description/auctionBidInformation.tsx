@@ -7,25 +7,24 @@ import {
   ScrollView,
 } from "react-native";
 import React from "react";
-import Action from "../../Templates/auction";
 
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
 const AuctionBidInformation = ({ item }) => {
-  console.warn(item);
+  const mainImage = item.itemImages[0];
   return (
     <View style={styles.container}>
       <View style={styles.boxContainer}>
         <Text style={styles.textContainer}>현재 입찰자</Text>
         <Image
-          source={require("../../../../assets/초코.jpg")}
+          source={{ uri: mainImage }}
           style={styles.profileContainer}
         ></Image>
         <View style={styles.cardContainer}>
           <Text style={styles.titleStyle}>댕댕</Text>
           <View style={{ alignItems: "center" }}>
             <Image
-              source={require("../../../../assets/temp.jpg")}
+              source={{ uri: mainImage }}
               style={styles.imgContainer}
             ></Image>
             <Text style={styles.title2Style}>현재 입찰가</Text>

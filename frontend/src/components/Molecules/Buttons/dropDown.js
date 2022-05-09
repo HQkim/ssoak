@@ -1,13 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
+import { useFocusEffect } from "@react-navigation/native";
 
 const { height: ScreenHeight } = Dimensions.get("window");
 
-const DropDown = ({ getSelectInformation, navigation }) => {
+const DropDown = ({ getSelectInformation, navigation, itemCategory }) => {
+  const [defaultValue, setDefaultValue] = useState(itemCategory);
+  console.warn(defaultValue);
+
   const onClickCategory = (category) => {
     getSelectInformation(category);
   };
+  useFocusEffect(
+    React.useCallback(() => {
+      setDefaultValue(itemCategory);
+    }, [])
+  );
+
   return (
     <DropDownPicker
       items={[
@@ -32,6 +42,8 @@ const DropDown = ({ getSelectInformation, navigation }) => {
         height: ScreenHeight / 15,
         marginTop: ScreenHeight / 100,
       }}
+      defaultIndex={defaultValue}
+      placeholder="카테고리"
       onChangeItem={(item) => onClickCategory(item.value)}
     />
   );

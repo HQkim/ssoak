@@ -6,26 +6,69 @@ import {
   LayoutAnimation,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Border from "../../Atoms/Borders/border";
 import MoreButton from "../../Atoms/Buttons/moreButton";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
-import { likeItem, cancelLikeItem } from "../../../apis/auctionApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../../store/modules";
+// import { loadDataAsync } from "../../../store/modules/detail";
+import {
+  likeItem,
+  cancelLikeItem,
+  deleteAuction,
+} from "../../../apis/auctionApi";
+import jwt_decode, { JwtPayload } from "jwt-decode";
 
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
 const AuctionDescription = ({ item, reqItem }) => {
+  console.warn(item);
   const [showMore, setShowMore] = useState(false);
   const [showDivider, setShowDivier] = useState<boolean>(true);
-  const [isLiked, setIsLiked] = useState(false);
+  const itemInformation = useSelector((state: RootState) => state.detail.item);
+  // const dispatch = useDispatch();
+  const [isLiked, setIsLiked] = useState(item.isLike);
   const navigation = useNavigation();
+  const [select, setSelect] = useState(false);
+  const [token, setToken] = useState<any>();
+
+  const getToken = async () => {
+    const tokenSeq: string = await AsyncStorage.getItem("accessToken");
+    const decodedToken = jwt_decode<JwtPayload>(tokenSeq);
+    setToken(decodedToken.sub);
+  };
+
+  const onSelect = () => {
+    setSelect(!select);
+  };
+
+  // const onStartLoadData = (id: number) => {
+  //   dispatch(loadDataAsync(id));
+  // };
+
+  const onUpdate = () => {
+    navigation.navigate("itemModification", {
+      params: item,
+    });
+  };
+
+  const ondelete = async (itemSeq: number) => {
+    const result = await deleteAuction(itemSeq);
+    if (result.status === 204) {
+      navigation.navigate("main");
+    }
+  };
 
   const onTextLayout = useCallback((e) => {
     setShowDivier(e.nativeEvent.lines.length < 2);
   }, []);
+
   const handleMoreClick = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setShowMore(!showMore);
@@ -45,25 +88,52 @@ const AuctionDescription = ({ item, reqItem }) => {
   const onBid = () => {
     navigation.navigate("auction", {
       item: item,
+      reqItem: reqItem,
     });
   };
+
+  const onBidClose = () => {
+    Alert.alert("입찰이 종료되었습니다.");
+  };
+
+  useEffect(() => {
+    getToken();
+  }, []);
 
   return (
     <View>
       <View style={styles.box}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <Image
             source={{
-              uri: item.user.profileImageUrl,
+              uri: item.seller.profileImageUrl,
             }}
             style={styles.imgContainer}
           />
           <View style={{ marginLeft: 10 }}>
             <Text style={{ fontWeight: "100", marginBottom: 2 }}>판매자</Text>
-            <Text style={styles.typography}>{item.user.name}</Text>
+            <Text style={styles.typography}>{item.seller.nickname}</Text>
           </View>
         </View>
-        {isLiked ? (
+        {item.seller.seq === token ? (
+          <TouchableOpacity
+            onPress={onSelect}
+            style={{ marginHorizontal: ScreenWidth / 16 }}
+          >
+            <AntDesign
+              name="ellipsis1"
+              size={24}
+              color="black"
+              style={styles.dropdown}
+            />
+          </TouchableOpacity>
+        ) : isLiked ? (
           <Ionicons
             name={"heart"}
             size={ScreenWidth / 9}
@@ -78,11 +148,27 @@ const AuctionDescription = ({ item, reqItem }) => {
             onPress={() => onClickHeart(reqItem)}
           />
         )}
+
+        {select ? (
+          <View style={styles.dropdownContainer}>
+            <Text style={styles.dropdownStyle} onPress={onUpdate}>
+              <Ionicons name="pencil" size={20} color="black" />
+              수정하기
+            </Text>
+            <Text
+              style={styles.dropdownStyle}
+              onPress={() => ondelete(reqItem)}
+            >
+              <Ionicons name="trash-outline" size={20} color="black" />
+              삭제하기
+            </Text>
+          </View>
+        ) : null}
       </View>
       <View style={styles.box}>
         <Text style={styles.title}>{item.title}</Text>
         <View style={styles.category}>
-          <Text style={{ color: "#ffffff" }}>{item.category}</Text>
+          <Text style={{ color: "#ffffff" }}>{item.itemCategoryName}</Text>
         </View>
       </View>
       <Border style={styles.border} />
@@ -101,7 +187,7 @@ const AuctionDescription = ({ item, reqItem }) => {
           <Text style={styles.title}>시초가</Text>
         </View>
 
-        <Text style={styles.title}>500,000원</Text>
+        <Text style={styles.title}>{item.startPrice}원</Text>
       </View>
       <View style={styles.box}>
         <View
@@ -124,7 +210,7 @@ const AuctionDescription = ({ item, reqItem }) => {
         numberOfLines={showMore ? 100 : 4}
         onTextLayout={onTextLayout}
       >
-        {item.description}
+        {item.content}
       </Text>
       {!showDivider && (
         <MoreButton
@@ -134,9 +220,15 @@ const AuctionDescription = ({ item, reqItem }) => {
         />
       )}
       <View style={{ alignItems: "center", padding: ScreenHeight / 50 }}>
-        <TouchableOpacity style={styles.buttonContainer} onPress={onBid}>
-          <Text style={styles.textContainer}>입찰하기</Text>
-        </TouchableOpacity>
+        {item.isSold === true ? (
+          <TouchableOpacity style={styles.buttonContainer} onPress={onBidClose}>
+            <Text style={styles.textContainer}>입찰종료</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.buttonContainer} onPress={onBid}>
+            <Text style={styles.textContainer}>입찰하기</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -205,5 +297,23 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontWeight: "200",
     fontSize: ScreenHeight / 40,
+  },
+  dropdown: {
+    position: "absolute",
+    top: -10,
+    right: -10,
+  },
+  dropdownContainer: {
+    position: "absolute",
+    right: 65,
+    top: 5,
+  },
+  dropdownStyle: {
+    backgroundColor: "#ffffffae",
+    width: 100,
+    height: 35,
+    padding: 5,
+    fontSize: 15,
+    textAlign: "center",
   },
 });

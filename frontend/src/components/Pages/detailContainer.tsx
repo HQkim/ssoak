@@ -10,7 +10,7 @@ import Detail from "../Templates/detail";
 import ImageSkeleton from "../Molecules/Cards/imageSkeleton";
 import DescriptionSkeleton from "../Molecules/Cards/descriptionSkeleton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { detailAuction } from "../../apis/auctionApi";
+
 type Props = {};
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");

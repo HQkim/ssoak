@@ -21,10 +21,13 @@ const AuctionDetail = ({ route }) => {
   };
 
   const item = route.params.item;
+  const reqItem = route.params.reqItem;
+
   let scrollRef: any = useRef();
 
   useEffect(() => {
     onStartLoadData(item.id);
+    console.warn(item.id);
   }, []);
 
   return (
@@ -49,7 +52,11 @@ const AuctionDetail = ({ route }) => {
         <AuctionBidInformation item={item} />
       )}
 
-      {isLoading ? <AuctionBidSkeleton /> : <Action item={item} />}
+      {isLoading ? (
+        <AuctionBidSkeleton />
+      ) : (
+        <Action item={item} reqItem={reqItem} />
+      )}
     </KeyboardAwareScrollView>
   );
 };
