@@ -89,7 +89,7 @@ public class Member {
         this.appleId = null;
         this.email = "";
         this.nickname = "Deleted-User";
-        this.profileImageUrl = "";
+        this.profileImageUrl = "https://ssoak-bucket.s3.ap-northeast-2.amazonaws.com/eecbabe9-1fe3-4f45-bc3d-d800035dbe05.png";
         this.grade = 0.0;
         this.password = "";
 
