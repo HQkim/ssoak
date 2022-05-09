@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ssoaks.ssoak.api.auction.dto.request.ReqSearchDto;
 import ssoaks.ssoak.api.auction.dto.response.AuctionListDto;
 import ssoaks.ssoak.api.auction.dto.response.ItemSimpleOverviewDto;
 import ssoaks.ssoak.api.auction.dto.response.ResAuctionListDto;
@@ -29,7 +30,7 @@ public class AuctionListServiceImpl implements AuctionListService {
     public ResAuctionListDto getAuctionList(String keyword, Pageable pageable) {
 
         log.debug("getAuctionList keyword - {}, page-{}", keyword, pageable);
-        Member member = memberService.getMemberByAuthentication();
+//        Member member = memberService.getMemberByAuthentication();
 
         Integer totalCount = null;
         List<AuctionListDto> auctionList = null;
@@ -43,10 +44,23 @@ public class AuctionListServiceImpl implements AuctionListService {
 
             }
         }
-
         return ResAuctionListDto.builder()
                 .totalCount(totalCount)
                 .auctionList(auctionList)
+                .build();
+    }
+
+    @Override
+    public ResAuctionListDto searchAuctionList(Pageable pageable, ReqSearchDto reqSearchDto) {
+        log.debug("searchAuctionList reqSearchDto - {}, page-{}", reqSearchDto, pageable);
+        Member member = memberService.getMemberByAuthentication();
+
+        Integer totalCount = itemRepository.countSearchItemsByKeyword(reqSearchDto, pageable);
+        List<AuctionListDto> searchItems = itemRepository.getSearchItemsByKeyword(reqSearchDto, pageable);
+
+        return ResAuctionListDto.builder()
+                .totalCount(totalCount)
+                .auctionList(searchItems)
                 .build();
     }
 }

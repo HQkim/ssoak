@@ -1,9 +1,11 @@
 package ssoaks.ssoak.api.auction.repository;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import ssoaks.ssoak.api.auction.dto.request.ReqSearchDto;
 import ssoaks.ssoak.api.auction.dto.response.*;
 import ssoaks.ssoak.api.auction.entity.Item;
 
@@ -12,6 +14,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
+
+import static org.springframework.util.StringUtils.hasText;
 import static ssoaks.ssoak.api.auction.entity.QBidding.bidding;
 import static ssoaks.ssoak.api.auction.entity.QCategory.category;
 import static ssoaks.ssoak.api.auction.entity.QItem.item;
@@ -211,6 +215,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                         .join(itemCategory).on(itemCategory.item.eq(item))
                         .join(category).on(category.seq.eq(itemCategory.category.seq))
                         .where(item.auctionType.stringValue().eq(keyword)
+                                .and(item.startTime.before(LocalDateTime.now()))
                                 .and(item.endTime.after(LocalDateTime.now())))
                         .groupBy(item)
                         .offset((long) (pageable.getPageNumber() - 1) * pageable.getPageSize())
@@ -272,5 +277,82 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                 .fetch();
 
         return auctionListDtos;
+    }
+
+    @Override
+    public Integer countSearchItemsByKeyword(ReqSearchDto searchDto, Pageable pageable) {
+
+        return queryFactory
+                .select(item.count().intValue())
+                .from(item)
+                .where(item.isSold.eq(false)
+                                .and(item.startTime.before(LocalDateTime.now()))
+                                .and(item.endTime.after(LocalDateTime.now()))
+                                .and(item.title.contains(searchDto.getKeyword()))
+                                .or(item.content.contains(searchDto.getKeyword())),
+                        categoryEq(searchDto.getCategory()),
+                        timeBetween(searchDto.getStartTime(), searchDto.getEndTime()),
+                        priceBetween(searchDto.getStartPrice(), searchDto.getEndPrice())
+                )
+                .fetchOne();
+    }
+
+    @Override
+    public List<AuctionListDto> getSearchItemsByKeyword(ReqSearchDto searchDto, Pageable pageable) {
+        JPAQuery<AuctionListDto> query = queryFactory
+                .select(new QAuctionListDto(
+                        item.seq,
+                        item.title,
+                        item.startPrice,
+                        item.startTime,
+                        item.endTime,
+                        item.auctionType,
+                        item.biddingCount,
+                        item.biddingPrice,
+                        image.imageUrl,
+                        item.member.seq,
+                        item.member.nickname,
+                        item.member.profileImageUrl,
+                        category.categoryName
+                ))
+                .from(item)
+                .join(image).on(image.item.eq(item))
+                .join(itemCategory).on(itemCategory.item.eq(item))
+                .join(category).on(category.seq.eq(itemCategory.category.seq))
+                .where(item.isSold.eq(false)
+                                .and(item.startTime.before(LocalDateTime.now()))
+                                .and(item.endTime.after(LocalDateTime.now()))
+                                .and(item.title.contains(searchDto.getKeyword()))
+                                .or(item.content.contains(searchDto.getKeyword())),
+                        categoryEq(searchDto.getCategory()),
+                        timeBetween(searchDto.getStartTime(), searchDto.getEndTime()),
+                        priceBetween(searchDto.getStartPrice(), searchDto.getEndPrice())
+                )
+                .groupBy(item)
+                .offset((long) (pageable.getPageNumber() - 1) * pageable.getPageSize())
+                .limit(pageable.getPageSize());
+
+        for (Sort.Order order : pageable.getSort()) {
+            if(order.getProperty().equals("createdDate")) { // 최신순
+                query.orderBy(item.createdDate.desc());
+            }
+            else if(order.getProperty().equals("biddingCount")) { // 입찰 횟수순
+                query.orderBy(item.biddingCount.desc());
+            }
+        }
+        return query.fetch();
+    }
+
+    private BooleanExpression categoryEq(String categoryParam) {
+        return hasText(categoryParam) ? category.categoryName.eq(categoryParam) : null;
+    }
+
+    private BooleanExpression timeBetween(LocalDateTime startTime, LocalDateTime endTime) {
+        return (startTime != null) ?
+                item.startTime.after(startTime).and(item.endTime.before(endTime)) : null;
+    }
+
+    private BooleanExpression priceBetween(Integer startPrice, Integer endPrice){
+        return (startPrice != null) ? item.biddingPrice.between(startPrice, endPrice) : null;
     }
 }

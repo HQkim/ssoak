@@ -34,7 +34,7 @@ public class LikeServiceImpl implements LikeService {
         Member member = memberService.getMemberByAuthentication();
         System.out.println("like - memberSeq - " + member.getSeq());
 
-        Like findLike = likeRepository.findByItemSeqAndMemberSeq(itemSeq, member.getSeq());
+        Like findLike = likeRepository.findByItemSeqAndMemberSeq(member.getSeq(), itemSeq);
 
         if(findLike == null) {
             Item item = itemRepository.findBySeq(itemSeq)
@@ -58,7 +58,7 @@ public class LikeServiceImpl implements LikeService {
         log.debug("unlike Item - {}", itemSeq);
         Member member = memberService.getMemberByAuthentication();
 
-        Like findLike = likeRepository.findByItemSeqAndMemberSeq(itemSeq, member.getSeq());
+        Like findLike = likeRepository.findByItemSeqAndMemberSeq(member.getSeq(), itemSeq);
 
         if (findLike == null) {
             throw new IllegalStateException("좋아요한 물품을 찾을 수 없습니다.");
