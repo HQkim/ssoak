@@ -42,16 +42,22 @@ export const dataFetchAsync = (payload: any) => ({
 //middleware
 function* mainSaga(action: any) {
   yield put(dataFetch(true));
-  const data = yield call(getList, {
-    keyword: action.payload.keyword,
-    page: action.payload.page,
-  });
-  yield delay(1000);
-  yield put(dataFetchComplete(data.data.auctionList));
+  try {
+    const data = yield call(getList, {
+      keyword: action.payload.keyword,
+      page: action.payload.page,
+    });
+    yield put(dataFetchComplete(data.data.auctionList));
+    yield put(dataFetch(false));
+  } catch (e) {
+    console.log(e);
+  } finally {
+    yield put(dataFetch(false));
+  }
 }
 
 export function* loaderSaga() {
-  yield takeLatest(DATA_FETCH_ASYNC, mainSaga);
+  yield takeEvery(DATA_FETCH_ASYNC, mainSaga);
 }
 
 //reducer

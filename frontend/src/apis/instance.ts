@@ -41,3 +41,7 @@ export const fileInstance = axios.create({
     Authorization: `Bearer ${AsyncStorage.getItem("accessToken")}`,
   },
 });
+
+export const noHeaderInstance = axios.create({
+  baseURL: `${BaseURL}`,
+});

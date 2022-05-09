@@ -1,4 +1,4 @@
-import { instance, fileInstance } from "./instance";
+import { instance, fileInstance, noHeaderInstance } from "./instance";
 
 export const createAuction = async (formData) => {
   const response = await fileInstance.post("/auctions", formData);
@@ -31,7 +31,7 @@ export const cancelLikeItem = async (itemSeq) => {
 };
 
 export const getList = async ({ keyword, page }) => {
-  const response = await instance.get("/auctions/list", {
+  const response = await noHeaderInstance.get("/auctions/list", {
     params: {
       keyword,
       page,

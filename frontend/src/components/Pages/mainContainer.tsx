@@ -25,25 +25,17 @@ const MainContainer = ({ navigation, route }: Props) => {
 
   const onStartLoading = () => {
     dispatch(dataFetchAsync({ keyword: "NORMAL", page: normalPage }));
-    setTimeout(() => {
-      dispatch(dataFetchAsync({ keyword: "LIVE", page: livePage }));
-    }, 2000);
+
+    dispatch(dataFetchAsync({ keyword: "LIVE", page: livePage }));
+
     setNormalPage(normalPage + 1);
     setLivePage(livePage + 1);
   };
 
-  // useEffect(() => {
-  //   navigation.addListener("focus", () => {
-  //     onRefresh();
-  //   });
-  // }, [navigation]);
-
   const onRefresh = () => {
     dispatch(dataReset());
     dispatch(dataFetchAsync({ keyword: "LIVE", page: livePage }));
-    setTimeout(() => {
-      dispatch(dataFetchAsync({ keyword: "NORMAL", page: normalPage }));
-    }, 2000);
+    dispatch(dataFetchAsync({ keyword: "NORMAL", page: normalPage }));
   };
 
   const onScrollLive = () => {
