@@ -1,92 +1,100 @@
 import { Alert, Platform, StyleSheet, Text, View } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-
+import * as StompJs from "@stomp/stompjs";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GiftedChat, IMessage } from "react-native-gifted-chat";
-import * as StompJs from "@stomp/stompjs";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 type Props = {};
 
 const MainChat = (props: Props) => {
-  const [connected, setConnected] = useState(false);
+  let socket: any, cl: any;
   console.log(navigator);
   const [offset, setOffset] = useState(0);
   useEffect(() => {
     Platform.OS === "ios" && setOffset(80);
   }, []);
-  let client: any = null;
 
-  const subscribe = () => {
-    if (client !== null) {
-      client.subscribe("/topic/1_1", (data) => {
-        console.log(new TextDecoder().decode(data._binaryBody), "??");
-      });
-      client.subscribe("/topic/1", (data) => {
-        console.log(
-          new TextDecoder().decode(data._binaryBody),
-          "!!!!!!!!!!!!!!!!!!!!!!",
-        );
-      });
-    }
-  };
+  useEffect(() => {}, []);
 
   const connect = () => {
-    client = new StompJs.Client({
-      brokerURL: "ws://k6a207.p.ssafy.io:5000/api/v1/ws",
-      debug: function (str) {
-        console.log(str);
-      },
-      reconnectDelay: 5000, //자동 재 연결
-      heartbeatIncoming: 4000,
-      heartbeatOutgoing: 4000,
+    socket = new SockJS("http://k6a207.p.ssafy.io:5000/api/v1/ws");
+    cl = Stomp.over(socket);
+    cl.connect({}, function (frame) {
+      console.log(frame, "!!!");
+      cl.subscribe(
+        "/pub/topic/1",
+        (e) => {
+          console.log(e, "@@");
+          console.log(JSON.parse(e.body), "@@");
+        },
+        (error) => {
+          console.log(error);
+        },
+      );
+      cl.send(
+        "/chat",
+        {},
+        JSON.stringify({
+          itemSeq: 1,
+          sellerSeq: 1,
+          buyerSeq: 2,
+          content: "haha",
+        }),
+      );
     });
-
-    client.onConnect = function (frame) {
-      subscribe();
-      setConnected(true);
-      // console.log(frame, "onConnected");
+    cl.debug = function (e) {
+      console.log(e, "!!");
     };
-
-    client.onStompError = function (frame) {
-      console.log(frame, "StompError");
-    };
-
-    client.activate();
   };
+  connect();
 
-  const disconnect = () => {
-    if (client != null) {
-      if (client.connected) client.deactivate();
-    }
+  // const send = () => {
+  const data = {
+    itemSeq: 1,
+    sellerSeq: 1,
+    buyerSeq: 2,
+    content: "haha",
   };
+  //   cl.send("/chat", {}, JSON.stringify(data));
+  // };
+  // send();
+  // const client = new StompJs.Client({
+  //   brokerURL: "ws://k6a207.p.ssafy.io:5000/api/v1/ws",
+  //   // connectHeaders: {
+  //   //   Authorization:
+  //   //     "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUxNjQzNTUxfQ.hR77nGNtvz04M_F7tuGHF1FGUOVqw8ej843OyMQGOO722r9ROtrgw2eqGlMsTxfAA3241IppfoEWkn3HSmboPg",
+  //   // },
+  //   debug: function (str) {
+  //     console.log(str);
+  //   },
+  //   reconnectDelay: 5000,
+  //   heartbeatIncoming: 4000,
+  //   heartbeatOutgoing: 4000,
+  //   onConnect: function (frame) {
+  //     console.log(frame, "connected");
+  //   },
+  // });
+
+  // console.log(client);
+
+  // client.onConnect = function (frame) {
+  //   console.log("connected");
+  // };
+
+  // client.onStompError = function (frame) {
+  //   console.log(frame, "On Error");
+  // };
+
+  // client.activate();
   const [messages, setMessages] = useState<IMessage[]>([]);
   const onSend = useCallback((messages = []) => {
-    // console.log(client, connected, messages);
-    console.log(messages);
-    if (client != null) {
-      if (!connected) return;
-      client.publish({
-        destination: "/pub/live_auction",
-        body: JSON.stringify({
-          ...messages[0],
-        }),
-      });
-    }
     setMessages((prev) => GiftedChat.append(prev, messages));
   }, []);
-
   useEffect(() => {
-    console.log(messages);
-  }, [messages]);
-
-  useEffect(() => {
-    console.log(connected);
-  }, [connected]);
-  useEffect(() => {
-    connect();
     setMessages([
       {
         _id: 1,
-        itemSeq: 1,
         text: "Hello developer",
         createdAt: new Date(),
         user: {
@@ -97,7 +105,6 @@ const MainChat = (props: Props) => {
         type: 1,
       },
     ]);
-    return () => disconnect();
   }, []);
   return (
     <View style={{ flex: 1, backgroundColor: "#719DD7" }}>

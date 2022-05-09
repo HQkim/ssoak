@@ -4,11 +4,7 @@ import Main from "../Templates/main";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import { useDispatch } from "react-redux";
-import {
-  dataFetchAsync,
-  dataReset,
-  dataFetchAsyncWithoutLoader,
-} from "../../store/modules/mainLoader";
+import { dataFetchAsync, dataReset } from "../../store/modules/mainLoader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = {
@@ -20,8 +16,8 @@ const MainContainer = ({ navigation, route }: Props) => {
   const isLoading = useSelector(
     (state: RootState) => state.mainLoader.isLoading,
   );
-
-  // const data = useSelector((state: RootState) => state.mainLoader.data);
+  let prev;
+  const data = useSelector((state: RootState) => state.mainLoader.data);
 
   const [normalPage, setNormalPage] = useState(1);
   const [livePage, setLivePage] = useState(1);
@@ -29,9 +25,9 @@ const MainContainer = ({ navigation, route }: Props) => {
 
   const onStartLoading = () => {
     dispatch(dataFetchAsync({ keyword: "NORMAL", page: normalPage }));
-
-    dispatch(dataFetchAsync({ keyword: "LIVE", page: livePage }));
-
+    setTimeout(() => {
+      dispatch(dataFetchAsync({ keyword: "LIVE", page: livePage }));
+    }, 2000);
     setNormalPage(normalPage + 1);
     setLivePage(livePage + 1);
   };
@@ -44,31 +40,25 @@ const MainContainer = ({ navigation, route }: Props) => {
 
   const onRefresh = () => {
     dispatch(dataReset());
-    dispatch(dataFetchAsync({ keyword: "LIVE", page: 1 }));
-    dispatch(dataFetchAsync({ keyword: "NORMAL", page: 1 }));
-    setNormalPage(2);
-    setLivePage(2);
+    dispatch(dataFetchAsync({ keyword: "LIVE", page: livePage }));
+    setTimeout(() => {
+      dispatch(dataFetchAsync({ keyword: "NORMAL", page: normalPage }));
+    }, 2000);
   };
 
   const onScrollLive = () => {
-    dispatch(dataFetchAsyncWithoutLoader({ keyword: "LIVE", page: livePage }));
+    dispatch(dataFetchAsync({ keyword: "LIVE", page: livePage }));
     setLivePage(livePage + 1);
   };
 
   const onScrollNormal = () => {
-    dispatch(
-      dataFetchAsyncWithoutLoader({ keyword: "NORMAL", page: normalPage }),
-    );
+    dispatch(dataFetchAsync({ keyword: "NORMAL", page: normalPage }));
     setNormalPage(normalPage + 1);
   };
 
   useEffect(() => {
-    onRefresh();
+    onStartLoading();
   }, []);
-
-  useEffect(() => {
-    console.log(livePage, normalPage);
-  }, [livePage, normalPage]);
 
   return (
     <Main

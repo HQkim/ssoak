@@ -14,8 +14,7 @@ const DATA_FETCH = "main/DATA_FETCH_LOADING" as const;
 const DATA_FETCH_COMPLETE = "main/DATA_FETCH_COMPLETE" as const;
 const DATA_FETCH_ASYNC = "main/DATA_FETCH_ASYNC" as const;
 const DATA_RESET = "main/DATA_RESET" as const;
-const DATA_FETCH_ASYNC_WITHOUT_LOADER =
-  "main/DATA_FETCH_ASYNC_WITHOUT_LOADER" as const;
+
 //Action 생성자
 
 export const dataFetch = (status: boolean) => ({
@@ -40,37 +39,19 @@ export const dataFetchAsync = (payload: any) => ({
   },
 });
 
-export const dataFetchAsyncWithoutLoader = (payload: any) => ({
-  type: DATA_FETCH_ASYNC_WITHOUT_LOADER,
-  payload: {
-    keyword: payload.keyword,
-    page: payload.page,
-  },
-});
-
 //middleware
-function* mainSagaLoader(action: any) {
-  console.log(action);
+function* mainSaga(action: any) {
   yield put(dataFetch(true));
   const data = yield call(getList, {
     keyword: action.payload.keyword,
     page: action.payload.page,
   });
-  yield put(dataFetchComplete(data.data.auctionList));
-  yield put(dataFetch(false));
-}
-
-function* mainSagaWithoutLoader(action: any) {
-  const data = yield call(getList, {
-    keyword: action.payload.keyword,
-    page: action.payload.page,
-  });
+  yield delay(1000);
   yield put(dataFetchComplete(data.data.auctionList));
 }
 
 export function* loaderSaga() {
-  yield takeEvery(DATA_FETCH_ASYNC, mainSagaLoader);
-  yield takeEvery(DATA_FETCH_ASYNC_WITHOUT_LOADER, mainSagaWithoutLoader);
+  yield takeLatest(DATA_FETCH_ASYNC, mainSaga);
 }
 
 //reducer
@@ -97,8 +78,7 @@ type LoaderAction =
   | ReturnType<typeof dataFetch>
   | ReturnType<typeof dataFetchAsync>
   | ReturnType<typeof dataFetchComplete>
-  | ReturnType<typeof dataReset>
-  | ReturnType<typeof dataFetchAsyncWithoutLoader>;
+  | ReturnType<typeof dataReset>;
 
 type LoaderState = {
   isLoading: boolean;
