@@ -72,7 +72,7 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public Boolean isLike(Long memberSeq, Long itemSeq) {
 
-        Like findLike = likeRepository.findByItemSeqAndMemberSeq(memberSeq, itemSeq);
+        Like findLike = likeRepository.findByItemSeqAndMemberSeq(itemSeq, memberSeq);
         return findLike != null;
     }
 }
