@@ -5,6 +5,7 @@ import {
   Image,
   Dimensions,
   RefreshControl,
+  Platform,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -41,7 +42,7 @@ const ProfileContainer = ({ navigation, route }: Props) => {
   const [font, setFont] = useState(false);
   const [profile, setProfile] = useState<Profile | null | any>([]);
   const isLoading = useSelector(
-    (state: RootState) => state.mainLoader.isLoading,
+    (state: RootState) => state.mainLoader.isLoading
   );
 
   const dispatch = useDispatch();
@@ -53,26 +54,21 @@ const ProfileContainer = ({ navigation, route }: Props) => {
   const getAccessToken = async () => {
     try {
       const token = await AsyncStorage.getItem("accessToken");
-      console.log("1-------------------------------------------------", token);
-      if (token !== null) {
+      if (typeof token == "string") {
         setAccessToken(token);
         setIsLogin(true);
         try {
-          console.log("2-----------------------------------------------");
           kakaoProfile(token).then((res) => {
-            console.log("첫번째---------------------------------", res);
             setProfile(res.data);
           });
-          console.log("3----------------------------------------------------");
         } catch (err) {
-          console.log("4-----------------------------------------------", err);
+          console.log(err);
         }
+      } else {
+        setIsLogin(false);
       }
     } catch (e) {
-      console.log(
-        "5----------------------------------------------------------------",
-        e,
-      );
+      console.log(e);
     }
   };
 
@@ -101,6 +97,8 @@ const ProfileContainer = ({ navigation, route }: Props) => {
           profile={profile}
           navigation={navigation}
           route={route}
+          token={accessToken}
+          setAccessToken={setAccessToken}
         />
       ) : (
         <View style={styles.container}>
@@ -108,7 +106,7 @@ const ProfileContainer = ({ navigation, route }: Props) => {
           {font ? <Text style={styles.title}>내 손 안에 경매장</Text> : null}
           {font ? <Text style={styles.mainTitle}>쏙</Text> : null}
           <KakaoLoginButton loadKakaoLogin={loadKakaoLogin} />
-          <AppleLoginButton />
+          {Platform.OS == "ios" ? <AppleLoginButton /> : null}
         </View>
       )}
     </View>

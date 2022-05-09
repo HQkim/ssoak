@@ -34,6 +34,8 @@ type Props = {
     profileImageUrl: string;
     seq: number;
   };
+  token: string;
+  setAccessToken: Function;
 };
 
 const { height: ScreenHeight } = Dimensions.get("window");
@@ -44,6 +46,13 @@ const Profile = (props: Props) => {
     (state: RootState) => state.mainLoader.isLoading
   );
   const navigation = useNavigation();
+
+  const logout = async () => {
+    await AsyncStorage.removeItem("accessToken");
+    props.setAccessToken("");
+    props.navigation.navigate("main");
+  };
+
   return (
     <View>
       <ScrollView
@@ -97,7 +106,11 @@ const Profile = (props: Props) => {
                   <Fontisto name="bell" size={20} color="black" />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Ionicons name="settings-outline" size={20} color="black" />
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("setting")}
+                  >
+                    <Ionicons name="settings-outline" size={20} color="black" />
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -228,10 +241,12 @@ const Profile = (props: Props) => {
               <AntDesign name="sound" size={24} color="black" />
               <Text style={{ fontSize: 15, padding: 15 }}>공지사항</Text>
             </View>
-            <View style={styles.informView}>
-              <MaterialIcons name="logout" size={24} color="black" />
-              <Text style={{ fontSize: 15, padding: 15 }}>로그아웃</Text>
-            </View>
+            <TouchableOpacity onPress={logout}>
+              <View style={styles.informView}>
+                <MaterialIcons name="logout" size={24} color="black" />
+                <Text style={{ fontSize: 15, padding: 15 }}>로그아웃</Text>
+              </View>
+            </TouchableOpacity>
             <View style={styles.informView}>
               <Ionicons name="settings-outline" size={20} color="black" />
               <Text style={{ fontSize: 15, padding: 15 }}>설정</Text>
