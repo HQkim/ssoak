@@ -134,10 +134,14 @@ public class MemberServiceImpl implements MemberService{
 
         try {
             String kakaoId = member.getKakaoId();
-            String resKakaoId = authService.disconnectKakao(kakaoId);
+            String resKakaoId;
 
-            System.out.println("===기존 카카오 아이디: " + kakaoId);
-            System.out.println("===연결끊기후 카카오 아이디: " + resKakaoId);
+            // 카카오 유저일 경우에만
+            if (kakaoId != null) {
+                System.out.println("===연결끊기전 기존 카카오 아이디: " + kakaoId);
+                resKakaoId = authService.disconnectKakao(kakaoId);
+                System.out.println("===연결끊기후 카카오 아이디: " + resKakaoId);
+            }
         } catch (Exception e) {
             log.error(e.getMessage());
             return 503;
