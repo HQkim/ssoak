@@ -2,31 +2,20 @@ package ssoaks.ssoak.api.auction.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ssoaks.ssoak.api.auction.dto.request.ReqBiddingRegisterDto;
-import ssoaks.ssoak.api.auction.dto.request.ReqItemChangeDto;
-import ssoaks.ssoak.api.auction.dto.request.ReqItemRegisterDto;
-import ssoaks.ssoak.api.auction.dto.request.ReqSearchDto;
+import ssoaks.ssoak.api.auction.dto.request.*;
 import ssoaks.ssoak.api.auction.dto.response.*;
 import ssoaks.ssoak.api.auction.exception.FailBiddingException;
 import ssoaks.ssoak.api.auction.exception.NotAllowedChangeItemException;
-import ssoaks.ssoak.api.auction.service.AuctionListService;
-import ssoaks.ssoak.api.auction.service.AuctionService;
-import ssoaks.ssoak.api.auction.service.BiddingService;
-import ssoaks.ssoak.api.auction.service.LikeService;
+import ssoaks.ssoak.api.auction.service.*;
 import ssoaks.ssoak.common.dto.BaseDataResponseDTO;
 import ssoaks.ssoak.common.dto.BaseResponseDTO;
 
-import javax.swing.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
-import static ssoaks.ssoak.api.auction.entity.QItem.item;
 
 @Slf4j
 @RestController
@@ -38,6 +27,7 @@ public class AuctionController {
     private final LikeService likeService;
     private final BiddingService biddingService;
     private final AuctionListService auctionListService;
+    private final ReviewService reviewService;
 
     @PostMapping
     public ResponseEntity<BaseDataResponseDTO> registerItem(ReqItemRegisterDto reqItemRegister) {
@@ -71,7 +61,8 @@ public class AuctionController {
                                                       ReqItemChangeDto reqItemChangeDto) {
         log.debug("물품수정  seq- {} dto-{}", itemSeq, reqItemChangeDto);
         System.out.println("===물품수정=====> reqItemChangeDto : " + reqItemChangeDto);
-
+        System.out.println("imageUrls = " + reqItemChangeDto.getImageUrls());
+        System.out.println("images = " + reqItemChangeDto.getImages());
         ResItemSeqDto resItemSeqDto = ResItemSeqDto.builder().itemSeq(itemSeq).build();
         try {
             resItemSeqDto = auctionService.changeItem(itemSeq, reqItemChangeDto);
@@ -195,6 +186,26 @@ public class AuctionController {
         return ResponseEntity.status(201).body(new BaseDataResponseDTO(201, "낙찰이 완료되었습니다.", ResSuccessBidding));
 
     }
+
+    @PostMapping("/{itemSeq}/review")
+    public ResponseEntity<BaseResponseDTO> auctionReview(@PathVariable("itemSeq") Long itemSeq,
+                                                         ReqAuctionReviewDto reqAuctionReviewDto) {
+        log.debug("일반경매 낙찰 seq- {} , dto- {}", itemSeq, reqAuctionReviewDto);
+        try{
+            Boolean review = reviewService.updateReview(itemSeq, reqAuctionReviewDto);
+            if (!review) {
+                return ResponseEntity.status(409).body(new BaseResponseDTO(409, "리뷰 생성 실패"));
+            }
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(404).body(new BaseResponseDTO(404, e.getMessage()));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(409).body(new BaseResponseDTO(409, e.getMessage()));
+        }
+        return ResponseEntity.status(201).body(new BaseResponseDTO(201, "리뷰 등록 성공."));
+    }
+
 
     @GetMapping("/list")
     public ResponseEntity<BaseDataResponseDTO> auctionList (Pageable pageable,

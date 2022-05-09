@@ -57,6 +57,12 @@ public class Item extends BaseModifiedEntity {
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isSold;
 
+    @Column(columnDefinition = "INT UNSIGNED")
+    private Float sellerReview;
+
+    @Column(columnDefinition = "INT UNSIGNED")
+    private Float buyerReview;
+
     // 물품의 입찰 정보들
     @OneToMany(mappedBy = "item", cascade = ALL)
     private List<Bidding> biddings = new ArrayList<>();
@@ -95,6 +101,8 @@ public class Item extends BaseModifiedEntity {
         this.isSold = isSold;
         this.member = member;
         this.buyer = null;
+        this.sellerReview = null;
+        this.buyerReview = null;
     }
 
 
@@ -120,6 +128,14 @@ public class Item extends BaseModifiedEntity {
         this.endTime = endTime;
         this.isSold = isSold;
         this.buyer = buyer;
+    }
+
+    public void updateSellerReview(Float sellerReview) {
+        this.sellerReview = sellerReview;
+    }
+
+    public void updateBuyerReview(Float buyerReview) {
+        this.buyerReview = buyerReview;
     }
 
 }
