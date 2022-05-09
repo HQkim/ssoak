@@ -222,7 +222,7 @@ public class AuctionServiceImpl implements AuctionService {
 
         Item item = itemRepository.findBySeq(itemSeq)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 물품입니다."));
-        if (item.getMember().equals(member)) {
+        if (!(item.getMember().equals(member))) {
             throw new NotAllowedChangeItemException("본인의 경매만 수정이 가능합니다.");
         }
         System.out.println("item - " + item);
@@ -248,8 +248,11 @@ public class AuctionServiceImpl implements AuctionService {
             // image
             List<Image> originImageList = imageRepository.findAllByItemSeq(itemSeq);
             for (Image image : originImageList) {
+                System.out.println("imageurls null이 아니면 true -> " + !CollectionUtils.isEmpty(itemChangeDto.getImageUrls()));
                 if (!CollectionUtils.isEmpty(itemChangeDto.getImageUrls())){
+
                     List<String> imageStringList = itemChangeDto.getImageUrls();
+                    System.out.println("imageUrl이 포함되어있지 않으면  true하고 delete - " + !(imageStringList.contains(image.getImageUrl())));
                     if (!(imageStringList.contains(image.getImageUrl()))) {
                         imageRepository.delete(image);
                     }
@@ -258,6 +261,7 @@ public class AuctionServiceImpl implements AuctionService {
                 }
             }
             if(!CollectionUtils.isEmpty(itemChangeDto.getImages())) {
+                System.out.println("==새로운 이미지 upload====");
                 uploadItemImages(item, itemChangeDto.getImages());
             }
 

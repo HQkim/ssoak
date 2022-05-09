@@ -22,8 +22,6 @@ public class LikeServiceImpl implements LikeService {
 
     private final ItemRepository itemRepository;
 
-    private final MemberRepository memberRepository;
-
     private final MemberService memberService;
 
     @Transactional
@@ -32,10 +30,8 @@ public class LikeServiceImpl implements LikeService {
 
         log.debug("like Item - {}", itemSeq);
         Member member = memberService.getMemberByAuthentication();
-        System.out.println("like - memberSeq - " + member.getSeq());
 
         Like findLike = likeRepository.findByItemSeqAndMemberSeq(itemSeq, member.getSeq());
-
         if(findLike == null) {
             Item item = itemRepository.findBySeq(itemSeq)
                     .orElseThrow(() -> new IllegalArgumentException("물품을 찾을 수 없습니다."));
