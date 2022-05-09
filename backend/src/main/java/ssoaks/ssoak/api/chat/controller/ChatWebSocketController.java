@@ -37,7 +37,7 @@ public class ChatWebSocketController {
     public void ChatHandler(ReqChatDto reqChatDto) {
 
         ResChatDto resChatDto = chatService.insertChat(reqChatDto);
-        template.convertAndSend("/queue/" + reqChatDto.getItemSeq()
+        template.convertAndSend("/queue/" + reqChatDto.getItemSeq() + "_" + reqChatDto.getSellerSeq()
                 + "_" + reqChatDto.getBuyerSeq(), resChatDto);
     }
 

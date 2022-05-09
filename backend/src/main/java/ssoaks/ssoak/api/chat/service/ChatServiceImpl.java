@@ -30,12 +30,15 @@ public class ChatServiceImpl implements ChatService{
 
     @Override
     public ResChatDto insertChat(ReqChatDto reqChatDto) {
+        String nickname = memberRepository.findById(reqChatDto.getSenderSeq()).orElse(null).getNickname();
+
         Chat savedChat = chatRepository.save(Chat.builder()
                 .item(itemRepository.findById(reqChatDto.getItemSeq()).orElse(null))
                 .content(reqChatDto.getContent())
                 .seller(memberRepository.findById(reqChatDto.getSellerSeq()).orElse(null))
                 .buyer(memberRepository.findById(reqChatDto.getBuyerSeq()).orElse(null))
-                .senderSeq(reqChatDto.getSenderSeq())
+                .roomId(reqChatDto.getItemSeq()+"_"+ reqChatDto.getSellerSeq() + "_" + reqChatDto.getBuyerSeq())
+                .senderNickname(nickname)
                 .build());
         return ResChatDto.builder()
                 .itemSeq(savedChat.getSeq())
@@ -43,7 +46,7 @@ public class ChatServiceImpl implements ChatService{
                 .sellerNickname(savedChat.getSeller().getNickname())
                 .buyerNickname(savedChat.getBuyer().getNickname())
                 .createdDate(savedChat.getCreatedDate())
-                .senderNickname(memberRepository.findById(reqChatDto.getSenderSeq()).orElse(null).getNickname())
+                .senderNickname(nickname)
                 .build();
     }
 

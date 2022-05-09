@@ -18,14 +18,6 @@ public class ResChatDto {
     private String senderNickname;
 
     @QueryProjection
-    public ResChatDto(Long itemSeq, String sellerNickname, String buyerNickname, String content, LocalDateTime createdDate) {
-        this.itemSeq = itemSeq;
-        this.sellerNickname = sellerNickname;
-        this.buyerNickname = buyerNickname;
-        this.content = content;
-        this.createdDate = createdDate;
-    }
-
     @Builder
     public ResChatDto(Long itemSeq, String sellerNickname, String buyerNickname, String content, LocalDateTime createdDate, String senderNickname) {
         this.itemSeq = itemSeq;
