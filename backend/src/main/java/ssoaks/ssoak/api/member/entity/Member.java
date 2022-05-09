@@ -85,8 +85,8 @@ public class Member {
             this.isDeleted = true;
         }
 
-        this.kakaoId = "";
-        this.appleId = "";
+        this.kakaoId = null;
+        this.appleId = null;
         this.email = "";
         this.nickname = "Deleted-User";
         this.profileImageUrl = "";

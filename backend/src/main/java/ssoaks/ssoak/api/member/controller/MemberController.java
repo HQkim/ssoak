@@ -13,6 +13,7 @@ import ssoaks.ssoak.api.member.dto.response.ResMemberProfileDTO;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileItemsDTO;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileLikedItemsDTO;
 import ssoaks.ssoak.api.member.dto.response.ResOtherMemberProfileDTO;
+import ssoaks.ssoak.api.member.entity.Member;
 import ssoaks.ssoak.api.member.exception.NotAuthenticatedMemberException;
 import ssoaks.ssoak.api.member.exception.NotFoundMemberException;
 import ssoaks.ssoak.api.member.service.MemberService;
@@ -20,6 +21,10 @@ import ssoaks.ssoak.common.dto.BaseDataResponseDTO;
 import ssoaks.ssoak.common.dto.BaseResponseDTO;
 
 import java.util.List;
+import java.util.Optional;
+
+import static org.springframework.util.StringUtils.hasText;
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Slf4j
 @RestController
