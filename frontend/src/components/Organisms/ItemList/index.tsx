@@ -1,59 +1,46 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  Dimensions,
-  TextInput,
-} from "react-native";
+import { StyleSheet, View, Dimensions, TouchableOpacity } from "react-native";
 import React from "react";
 import AuctionTypeTag from "../../Atoms/Tags/auctionTypeTag";
 import ItemInforms from "../../Molecules/ItemInfo/itemInforms";
-// import ItemTextInput from "../../Atoms/Items/itemTextInput";
 
-type Props = {};
+type Props = {
+  items: Array<object>;
+  navigation: any;
+  route: object;
+};
 
 const randomImage = require("../../../../assets/temp.jpg");
 const { height: ScreenHeight } = Dimensions.get("window");
 const { width: ScreenWidth } = Dimensions.get("window");
 
-const Index = ({ items, containerStyle }) => {
+const Index = ({ items, containerStyle, navigation, route }) => {
+  const goItemDetail = (id: number) => {
+    navigation.navigate("auctionDetail", {
+      id: id,
+    });
+  };
+
   return (
     <View style={containerStyle}>
-      {items.map((item, index) => (
-        <View key={index} style={{ marginTop: 20 }}>
-          <AuctionTypeTag
-            styles={{ tag: styles.auctionTypeTag }}
-            text={item.auctionType}
-          ></AuctionTypeTag>
-          <ItemInforms item={item} />
-          {item.isSold === true ? (
-            <>
-              <View>
-                <View
-                  style={{ flexDirection: "row", marginTop: ScreenWidth / 30 }}
-                >
-                  <Text>경매일 : </Text>
-                  <TextInput
-                    editable={false}
-                    maxLength={30}
-                    value={item.startTime}
-                    style={styles.textAreaDate}
-                    textAlign="left"
-                  />
-                </View>
-              </View>
-            </>
-          ) : null}
-          <View
-            style={{
-              borderBottomColor: "#d7d4d4",
-              borderBottomWidth: 1,
-              marginTop: 15,
-            }}
-          ></View>
-        </View>
-      ))}
+      {items &&
+        items.map((item, index) => (
+          <View key={index} style={{ marginTop: 20 }}>
+            <TouchableOpacity onPress={() => goItemDetail(item.itemSeq)}>
+              <AuctionTypeTag
+                styles={{ tag: styles.auctionTypeTag }}
+                text={item.auctionType == "LIVE" ? "실시간" : "일반"}
+              ></AuctionTypeTag>
+              <ItemInforms item={item} />
+              <View
+                style={{
+                  borderBottomColor: "#d7d4d4",
+                  borderBottomWidth: 1,
+                  marginTop: 15,
+                }}
+              ></View>
+            </TouchableOpacity>
+          </View>
+        ))}
     </View>
   );
 };

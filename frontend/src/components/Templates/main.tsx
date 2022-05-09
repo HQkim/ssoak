@@ -26,210 +26,28 @@ import { useNavigation } from "@react-navigation/native";
 type Props = {
   onRefresh: () => any | undefined;
   navigation: any;
+  onScrollLive: () => any;
+  onScrollNormal: () => any;
 };
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
-const items = [
-  {
-    id: 56,
-    title: "물건을 판매합니다.",
-    content: "물건을 판다구요 판다요 판다가 판다판다 판다판다",
-    startPrice: 2222,
-    biddingUnit: 222,
-    startTime: "2022-05-06T10:09:00",
-    endTime: "2022-05-06T10:39:00",
-    auctionType: "NORMAL",
-    isSold: false,
-    isLike: false,
-    likeCount: 0,
-    itemCategories: ["도서/음반/티켓"],
-    itemImages: [
-      "https://ssoak-bucket.s3.ap-northeast-2.amazonaws.com/c96c7a46-ad54-4829-956c-6f29d777c923.jpg",
-      "https://ssoak-bucket.s3.ap-northeast-2.amazonaws.com/d63a6dc4-6d19-4602-aedf-f0ce5b535ba6.jpg",
-    ],
-    member: {
-      seq: 3,
-      nickname: "민수 강",
-      profileImageUrl:
-        "http://k.kakaocdn.net/dn/ccuvej/btrASuLnbQE/eMkxhPyo0gm62D9QktiKoK/img_640x640.jpg",
-    },
-    bidding: null,
-    seller: {
-      seq: 3,
-      nickname: "민수 강",
-      profileImageUrl:
-        "http://k.kakaocdn.net/dn/ccuvej/btrASuLnbQE/eMkxhPyo0gm62D9QktiKoK/img_640x640.jpg",
-    },
-  },
-  {
-    id: 60,
-    title: "꽃 팝니다",
-    content: "꽃 팔아요",
-    startPrice: 10000,
-    biddingUnit: 1000,
-    startTime: "2022-05-28T19:10:00",
-    endTime: "2022-05-28T19:40:00",
-    auctionType: "LIVE",
-    isSold: false,
-    isLike: false,
-    likeCount: 0,
-    itemCategories: ["디지털기기"],
-    itemImages: [
-      "https://ssoak-bucket.s3.ap-northeast-2.amazonaws.com/387f454b-0ab2-479e-bceb-d087bad34f95.jpg",
-    ],
-    member: {
-      seq: 3,
-      nickname: "민수 강",
-      profileImageUrl:
-        "http://k.kakaocdn.net/dn/ccuvej/btrASuLnbQE/eMkxhPyo0gm62D9QktiKoK/img_640x640.jpg",
-    },
-    bidding: null,
-    seller: {
-      seq: 3,
-      nickname: "민수 강",
-      profileImageUrl:
-        "http://k.kakaocdn.net/dn/ccuvej/btrASuLnbQE/eMkxhPyo0gm62D9QktiKoK/img_640x640.jpg",
-    },
-  },
-  {
-    id: 56,
-    title: "물건을 판매합니다.",
-    content: "물건을 판다구요 판다요 판다가 판다판다 판다판다",
-    startPrice: 2222,
-    biddingUnit: 222,
-    startTime: "2022-05-06T10:09:00",
-    endTime: "2022-05-06T10:39:00",
-    auctionType: "NORMAL",
-    isSold: false,
-    isLike: false,
-    likeCount: 0,
-    itemCategories: ["도서/음반/티켓"],
-    itemImages: [
-      "https://ssoak-bucket.s3.ap-northeast-2.amazonaws.com/c96c7a46-ad54-4829-956c-6f29d777c923.jpg",
-      "https://ssoak-bucket.s3.ap-northeast-2.amazonaws.com/d63a6dc4-6d19-4602-aedf-f0ce5b535ba6.jpg",
-    ],
-    member: {
-      seq: 3,
-      nickname: "민수 강",
-      profileImageUrl:
-        "http://k.kakaocdn.net/dn/ccuvej/btrASuLnbQE/eMkxhPyo0gm62D9QktiKoK/img_640x640.jpg",
-    },
-    bidding: null,
-    seller: {
-      seq: 3,
-      nickname: "민수 강",
-      profileImageUrl:
-        "http://k.kakaocdn.net/dn/ccuvej/btrASuLnbQE/eMkxhPyo0gm62D9QktiKoK/img_640x640.jpg",
-    },
-  },
-  {
-    id: 60,
-    title: "꽃 팝니다",
-    content: "꽃 팔아요",
-    startPrice: 10000,
-    biddingUnit: 1000,
-    startTime: "2022-05-28T19:10:00",
-    endTime: "2022-05-28T19:40:00",
-    auctionType: "LIVE",
-    isSold: false,
-    isLike: false,
-    likeCount: 0,
-    itemCategories: ["디지털기기"],
-    itemImages: [
-      "https://ssoak-bucket.s3.ap-northeast-2.amazonaws.com/387f454b-0ab2-479e-bceb-d087bad34f95.jpg",
-    ],
-    member: {
-      seq: 3,
-      nickname: "민수 강",
-      profileImageUrl:
-        "http://k.kakaocdn.net/dn/ccuvej/btrASuLnbQE/eMkxhPyo0gm62D9QktiKoK/img_640x640.jpg",
-    },
-    bidding: null,
-    seller: {
-      seq: 3,
-      nickname: "민수 강",
-      profileImageUrl:
-        "http://k.kakaocdn.net/dn/ccuvej/btrASuLnbQE/eMkxhPyo0gm62D9QktiKoK/img_640x640.jpg",
-    },
-  },
-  {
-    id: 56,
-    title: "물건을 판매합니다.",
-    content: "물건을 판다구요 판다요 판다가 판다판다 판다판다",
-    startPrice: 2222,
-    biddingUnit: 222,
-    startTime: "2022-05-06T10:09:00",
-    endTime: "2022-05-06T10:39:00",
-    auctionType: "NORMAL",
-    isSold: false,
-    isLike: false,
-    likeCount: 0,
-    itemCategories: ["도서/음반/티켓"],
-    itemImages: [
-      "https://ssoak-bucket.s3.ap-northeast-2.amazonaws.com/c96c7a46-ad54-4829-956c-6f29d777c923.jpg",
-      "https://ssoak-bucket.s3.ap-northeast-2.amazonaws.com/d63a6dc4-6d19-4602-aedf-f0ce5b535ba6.jpg",
-    ],
-    member: {
-      seq: 3,
-      nickname: "민수 강",
-      profileImageUrl:
-        "http://k.kakaocdn.net/dn/ccuvej/btrASuLnbQE/eMkxhPyo0gm62D9QktiKoK/img_640x640.jpg",
-    },
-    bidding: null,
-    seller: {
-      seq: 3,
-      nickname: "민수 강",
-      profileImageUrl:
-        "http://k.kakaocdn.net/dn/ccuvej/btrASuLnbQE/eMkxhPyo0gm62D9QktiKoK/img_640x640.jpg",
-    },
-  },
-  {
-    id: 60,
-    title: "꽃 팝니다",
-    content: "꽃 팔아요",
-    startPrice: 10000,
-    biddingUnit: 1000,
-    startTime: "2022-05-28T19:10:00",
-    endTime: "2022-05-28T19:40:00",
-    auctionType: "LIVE",
-    isSold: false,
-    isLike: false,
-    likeCount: 0,
-    itemCategories: ["디지털기기"],
-    itemImages: [
-      "https://ssoak-bucket.s3.ap-northeast-2.amazonaws.com/387f454b-0ab2-479e-bceb-d087bad34f95.jpg",
-    ],
-    member: {
-      seq: 3,
-      nickname: "민수 강",
-      profileImageUrl:
-        "http://k.kakaocdn.net/dn/ccuvej/btrASuLnbQE/eMkxhPyo0gm62D9QktiKoK/img_640x640.jpg",
-    },
-    bidding: null,
-    seller: {
-      seq: 3,
-      nickname: "민수 강",
-      profileImageUrl:
-        "http://k.kakaocdn.net/dn/ccuvej/btrASuLnbQE/eMkxhPyo0gm62D9QktiKoK/img_640x640.jpg",
-    },
-  },
-];
-
 const Main = (props: Props) => {
+  const data = useSelector((state: RootState) => state.mainLoader.data);
   const [liveItems, setLiveItems] = useState<any>([]);
   const [normalItems, setNormalItems] = useState<any>([]);
   const navigation = useNavigation();
   const handleClickItem = (item: any) => {
     if (item.auctionType === "NORMAL") {
       navigation.navigate("auctionDetail", {
-        id: item.id,
+        id: item.itemSeq,
       });
     } else {
       navigation.navigate("detail", {
-        id: item.id,
+        id: item.itemSeq,
       });
     }
   };
+
   const Slider = ({ items }) => {
     return (
       <>
@@ -251,7 +69,7 @@ const Main = (props: Props) => {
               }}
             >
               <Image
-                source={{ uri: item.itemImages[0] }}
+                source={{ uri: item.imageUrl }}
                 style={{
                   width: ScreenHeight / 7,
                   height: ScreenHeight / 7,
@@ -300,14 +118,14 @@ const Main = (props: Props) => {
                   }}
                 >
                   <Image
-                    source={{ uri: item.seller.profileImageUrl }}
+                    source={{ uri: item.sellerprofile }}
                     style={{
                       width: 20,
                       height: 20,
                       borderRadius: 9999,
                     }}
                   />
-                  <Text style={{ marginLeft: 5 }}>{item.seller.nickname}</Text>
+                  <Text style={{ marginLeft: 5 }}>{item.sellerNickname}</Text>
                 </View>
                 <Text>최소 입찰가 : {item.biddingUnit}</Text>
               </View>
@@ -345,6 +163,19 @@ const Main = (props: Props) => {
       refreshControl={
         <RefreshControl refreshing={isLoading} onRefresh={props.onRefresh} />
       }
+      onScroll={(e) => {
+        let paddingToBottom = 1;
+        paddingToBottom += e.nativeEvent.layoutMeasurement.height;
+
+        if (
+          e.nativeEvent.contentOffset.y + paddingToBottom >=
+          e.nativeEvent.contentSize.height
+        ) {
+          props.onScrollNormal();
+        }
+      }}
+      scrollEventThrottle={0}
+      scrollEnabled={true}
     >
       <Slider items={normalItems} />
     </ScrollView>
@@ -354,6 +185,18 @@ const Main = (props: Props) => {
       refreshControl={
         <RefreshControl refreshing={isLoading} onRefresh={props.onRefresh} />
       }
+      onScroll={(e) => {
+        let paddingToBottom = 1;
+        paddingToBottom += e.nativeEvent.layoutMeasurement.height;
+
+        if (
+          e.nativeEvent.contentOffset.y + paddingToBottom >=
+          e.nativeEvent.contentSize.height
+        ) {
+          props.onScrollLive();
+        }
+      }}
+      scrollEventThrottle={0}
     >
       <Slider items={liveItems} />
     </ScrollView>
@@ -374,18 +217,18 @@ const Main = (props: Props) => {
   ]);
 
   useEffect(() => {
-    const liveItems = items.filter((item) => item.auctionType === "NORMAL");
-    const normalItems = items.filter((item) => item.auctionType === "LIVE");
+    const liveItems = data.filter((item) => item.auctionType === "LIVE");
+    const normalItems = data.filter((item) => item.auctionType === "NORMAL");
     setLiveItems(liveItems);
     setNormalItems(normalItems);
   }, []);
 
   useEffect(() => {
-    const liveItems = items.filter((item) => item.auctionType === "NORMAL");
-    const normalItems = items.filter((item) => item.auctionType === "LIVE");
+    const liveItems = data.filter((item) => item.auctionType === "LIVE");
+    const normalItems = data.filter((item) => item.auctionType === "NORMAL");
     setLiveItems(liveItems);
     setNormalItems(normalItems);
-  }, [items]);
+  }, [data]);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.mainContainer}>

@@ -7,21 +7,23 @@ import {
   ScrollView,
   TouchableOpacity,
   RefreshControl,
+  TextInput,
+  Alert,
+  Platform,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Font from "expo-font";
+import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import { kakaoProfile } from "../../apis/auth";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import { useNavigation } from "@react-navigation/native";
-import NavigateButton from "../Atoms/Buttons/navigateButton";
+import * as ImagePicker from "expo-image-picker";
+// import { editKakaoNickname } from "../../apis/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = {
   onRefresh: () => any | undefined;
@@ -36,7 +38,23 @@ type Props = {
   };
   token: string;
   setAccessToken: Function;
+  setProfile: Function;
+  setEditStatus: Function;
+  editStatus: boolean;
+  setName: Function;
+  name: string | null | any;
 };
+
+interface Item {
+  imgSource: string;
+}
+interface File {
+  imgFile: string;
+}
+
+interface test {
+  test: Array<object>;
+}
 
 const { height: ScreenHeight } = Dimensions.get("window");
 const { width: ScreenWidth } = Dimensions.get("window");
@@ -51,6 +69,90 @@ const Profile = (props: Props) => {
     await AsyncStorage.removeItem("accessToken");
     props.setAccessToken("");
     props.navigation.navigate("main");
+  };
+  const [image, setImage] = useState<Item | null | any>("");
+  const [file, setFile] = useState<File | null | any>([]);
+  const [name, setName] = useState("");
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+    });
+    console.log(result);
+    if (!result.cancelled) {
+      setImage(result.uri); //이미지 uri
+      setFile(result);
+      const formData = new FormData();
+      const trimmedURI = file.uri.replace("file://", "");
+      const trimmedURI_android = file.uri;
+      const fileName = trimmedURI.split("/").pop();
+      const item: any = {
+        type: "image/jpeg",
+        uri: Platform.OS === "ios" ? trimmedURI : trimmedURI_android,
+        name: fileName,
+      };
+      formData.append("profileImage", item);
+      let options = { content: formData };
+      props.setProfile({ ...props.profile, profileImageUrl: image });
+      console.log(formData, "폼!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      let request = new XMLHttpRequest();
+      request.open(
+        "POST",
+        "http://k6a207.p.ssafy.io:5000/api/v1/members/profile/test"
+      );
+      // request.responseType = "blob";
+      console.log("opened 1111111111111111", request.status);
+      request.onprogress = () => {
+        console.log("loading 2222222222222222", request.status);
+      };
+      request.onload = () => {
+        console.log("loading 33333333333333333", request.status);
+      };
+      request.onerror = () => {
+        console.log("errrrrrrrrrrrrrrrrrrrrrrr", request.status);
+      };
+      // request.setRequestHeader("Content-Type", "multipart/form-data");
+      request.setRequestHeader(
+        "Authorization",
+        "Bearer " +
+          "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUzNTI3Nzg5fQ.duH53tFMehKn8sB8X7q2pLj9hT7_-4NVYHpLWtf0qTf3dZ6LQqKbo89fuxEu6eQRgq2dx1gZYrIE2Q9NYbsvqA"
+      );
+      console.log(request.readyState);
+      request.send(options);
+      // request.send(formData);
+    }
+  };
+
+  const editName = async () => {
+    if (props.editStatus == false) {
+      props.setEditStatus(!props.editStatus);
+    } else if (props.editStatus == true && !name) {
+      Alert.alert("닉네임을 입력해주세요");
+    } else if (props.editStatus == true && name) {
+      const formData = new FormData();
+      formData.append("nickname", name);
+      let request = new XMLHttpRequest();
+      request.open(
+        "PATCH",
+        "http://k6a207.p.ssafy.io:5000/api/v1/members/profile"
+      );
+      console.log("opened", request.status);
+      request.onprogress = () => {
+        console.log("loading", request.status);
+      };
+      request.onload = () => {
+        console.log("loading", request.status);
+      };
+      request.setRequestHeader(
+        "Authorization",
+        "Bearer " +
+          "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUzNTI3Nzg5fQ.duH53tFMehKn8sB8X7q2pLj9hT7_-4NVYHpLWtf0qTf3dZ6LQqKbo89fuxEu6eQRgq2dx1gZYrIE2Q9NYbsvqA"
+      );
+      request.send(formData);
+
+      props.setEditStatus(!props.editStatus);
+    }
   };
 
   return (
@@ -124,40 +226,86 @@ const Profile = (props: Props) => {
             zIndex: 1,
           }}
         >
-          <Image
-            style={{
-              width: ScreenHeight / 6,
-              height: ScreenHeight / 6,
-              borderRadius: ScreenHeight / 12,
-              position: "relative",
-              marginTop: -ScreenHeight / 12,
-            }}
-            source={{ uri: props.profile.profileImageUrl }}
-            // source={require("../../../assets/temp.jpg")}
-          />
-          <Feather
-            name="camera"
-            size={24}
-            color="black"
-            style={{
-              position: "absolute",
-              right: ScreenWidth / 3,
-              marginTop: -ScreenHeight / 12,
-            }}
-            onPress={() => alert("clicked")}
-          />
+          <TouchableOpacity onPress={pickImage}>
+            <Image
+              style={{
+                width: ScreenHeight / 6,
+                height: ScreenHeight / 6,
+                borderRadius: ScreenHeight / 12,
+                position: "relative",
+                marginTop: -ScreenHeight / 12,
+              }}
+              source={{ uri: props.profile.profileImageUrl }}
+            />
+            <Feather
+              name="camera"
+              size={24}
+              color="black"
+              style={{
+                position: "absolute",
+                right: ScreenWidth / 30,
+                marginTop: -ScreenHeight / 12,
+              }}
+            />
+          </TouchableOpacity>
           <View style={{ alignItems: "center", marginTop: ScreenHeight / 50 }}>
-            <Text style={{ fontSize: 20, padding: 10, fontWeight: "bold" }}>
-              {props.profile.nickname}
-              test
-            </Text>
+            {props.editStatus == false ? (
+              <TouchableOpacity onPress={editName}>
+                <TextInput
+                  style={{
+                    fontSize: 20,
+                    padding: 10,
+                    fontWeight: "bold",
+                    position: "relative",
+                    color: "black",
+                  }}
+                  editable={false}
+                  textAlign="center"
+                  value={props.profile.nickname}
+                  maxLength={5}
+                />
+                <AntDesign
+                  name="edit"
+                  size={24}
+                  color="black"
+                  style={{ position: "absolute", left: ScreenWidth / 6 }}
+                />
+              </TouchableOpacity>
+            ) : (
+              <>
+                <TextInput
+                  style={{
+                    fontSize: 20,
+                    padding: 10,
+                    fontWeight: "bold",
+                    position: "relative",
+                    color: "black",
+                    borderBottomWidth: 1,
+                  }}
+                  editable={true}
+                  textAlign="center"
+                  value={name}
+                  maxLength={5}
+                  onChangeText={setName}
+                  defaultValue={props.profile.nickname}
+                />
+                <AntDesign
+                  name="checkcircleo"
+                  size={24}
+                  color="black"
+                  onPress={editName}
+                  style={{
+                    position: "absolute",
+                    left: ScreenWidth / 3,
+                  }}
+                />
+              </>
+            )}
             <Text style={{ fontSize: 15, padding: 7, fontWeight: "bold" }}>
               {props.profile.email}
-              test
             </Text>
             <Text style={{ fontSize: 15, padding: 7, fontWeight: "bold" }}>
               {props.profile.grade}
-              test
             </Text>
           </View>
         </View>

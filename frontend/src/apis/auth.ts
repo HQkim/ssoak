@@ -1,4 +1,4 @@
-import { instance } from "./instance";
+import { instance, fileInstance } from "./instance";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const kakaoLogin = async (access_code: string) => {
@@ -50,4 +50,10 @@ export const kakaoDelete = async () => {
   } catch (e) {
     console.log(e);
   }
+export const editKakaoNickname = async (formData) => {
+  const response = await fileInstance.put(
+    "/members/profile/formData",
+    formData
+  );
+  return response.data;
 };

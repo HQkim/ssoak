@@ -16,6 +16,7 @@ import Profile from "../Templates/profile";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import { useDispatch } from "react-redux";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { dataFetchAsync } from "../../store/modules/mainLoader";
 import AppleLoginButton from "../Atoms/Buttons/appleLoginButton";
 
@@ -41,6 +42,7 @@ const ProfileContainer = ({ navigation, route }: Props) => {
   const [accessToken, setAccessToken] = useState("");
   const [font, setFont] = useState(false);
   const [profile, setProfile] = useState<Profile | null | any>([]);
+  const [editStatus, setEditStatus] = useState(false);
   const isLoading = useSelector(
     (state: RootState) => state.mainLoader.isLoading
   );
@@ -76,6 +78,15 @@ const ProfileContainer = ({ navigation, route }: Props) => {
     navigation.navigate("kakaoLogin");
   };
 
+  // 이름 수정중 화면 이동할때 초기화하는 코드
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        setEditStatus(false);
+      };
+    }, [])
+  );
+
   useEffect(() => {
     navigation.addListener("focus", () => {
       onStartLoading(false);
@@ -95,10 +106,13 @@ const ProfileContainer = ({ navigation, route }: Props) => {
         <Profile
           onRefresh={() => onStartLoading(true)}
           profile={profile}
+          setProfile={setProfile}
           navigation={navigation}
           route={route}
           token={accessToken}
           setAccessToken={setAccessToken}
+          setEditStatus={setEditStatus}
+          editStatus={editStatus}
         />
       ) : (
         <View style={styles.container}>
