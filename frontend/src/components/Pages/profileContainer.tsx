@@ -102,7 +102,7 @@ const ProfileContainer = ({ navigation, route }: Props) => {
   }, [navigation]);
   return (
     <View>
-      {isLogin ? (
+      {isLogin == false ? (
         <Profile
           onRefresh={() => onStartLoading(true)}
           profile={profile}
