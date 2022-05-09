@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
-    Like findByItemSeqAndMemberSeq(Long memberSeq, Long itemSeq);
+    Like findByItemSeqAndMemberSeq(Long itemSeq, Long memberSeq);
 
     Integer countLikeByItemSeq(Long itemSeq);
 
