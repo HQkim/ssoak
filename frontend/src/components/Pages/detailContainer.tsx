@@ -14,7 +14,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 type Props = {};
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
-const DetailContainer = (props: Props) => {
+const DetailContainer = (props: any) => {
   const isLoading = useSelector((state: RootState) => state.detail.isLoading);
   const item = useSelector((state: RootState) => state.detail.item);
   // const isLoading = false;
