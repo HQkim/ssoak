@@ -6,22 +6,25 @@ import {
   View,
 } from "react-native";
 import React, { useState, useRef } from "react";
-import { createStackNavigator } from "@react-navigation/stack";
-import ItemCreation from "../Templates/itemCreation";
-import NavigatorTitle from "../Atoms/Typographies/navigatorTitle";
-import { useNavigation } from "@react-navigation/native";
+import ItemModification from "../Templates/itemModification";
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
 
 type Props = {
   navigation: any;
   route: object;
+  params: any;
 };
 
 const ItemModificationContainer = (props: Props) => {
+  const item = props.route.params.params;
   return (
     <View>
-      <Text>수정</Text>
+      <ItemModification
+        route={props.route}
+        item={item}
+        navigation={props.navigation}
+      />
     </View>
   );
 };

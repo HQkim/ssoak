@@ -4,8 +4,9 @@ import Main from "../Templates/main";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import { useDispatch } from "react-redux";
-import { showLoaderAsync } from "../../store/modules/mainLoader";
+import { dataFetchAsync } from "../../store/modules/mainLoader";
 import { withNavigation } from "react-navigation";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = {
   navigation: any;
@@ -14,14 +15,17 @@ type Props = {
 
 const MainContainer = ({ navigation, route }: Props) => {
   const isLoading = useSelector(
-    (state: RootState) => state.mainLoader.isLoading
+    (state: RootState) => state.mainLoader.isLoading,
   );
 
   const dispatch = useDispatch();
 
   const onStartLoading = (state: boolean) => {
-    dispatch(showLoaderAsync(state));
+    dispatch(dataFetchAsync(state));
   };
+  // useEffect(() => {
+  //   onStartLoading(true);
+  // }, []);
   useEffect(() => {
     navigation.addListener("focus", () => {
       onStartLoading(false);

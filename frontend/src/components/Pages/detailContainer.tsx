@@ -10,43 +10,26 @@ import Detail from "../Templates/detail";
 import ImageSkeleton from "../Molecules/Cards/imageSkeleton";
 import DescriptionSkeleton from "../Molecules/Cards/descriptionSkeleton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
 type Props = {};
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
 const DetailContainer = (props: Props) => {
   const isLoading = useSelector((state: RootState) => state.detail.isLoading);
+  const item = useSelector((state: RootState) => state.detail.item);
+  // const isLoading = false;
   const dispatch = useDispatch();
   const [showIndicator, setShowIndicator] = useState(false);
 
+  useEffect(() => {
+    onStartLoadData(props.route.params.id);
+  }, []);
   useEffect(() => {
     setShowIndicator(!isLoading);
   }, [isLoading]);
   const onStartLoadData = (id: number) => {
     dispatch(loadDataAsync(id));
   };
-
-  const [item, setItem] = useState({
-    id: 1,
-    title: "나는 뭔가를 팔고있어요",
-    user: {
-      name: "강민수",
-      exp: 100,
-    },
-    type: "normal",
-    minbid: 1000,
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam temporibus vero provident fugit praesentium quos in velit recusandae repellat beatae est, dicta adipisci, hic omnis nam animi iure nihil. Id.",
-    urls: [
-      "https://picsum.photos/400",
-      "https://picsum.photos/400",
-      "https://picsum.photos/400",
-      "https://picsum.photos/400",
-      "https://picsum.photos/400",
-    ],
-  });
-  useEffect(() => {
-    onStartLoadData(item.id);
-  }, []);
 
   let scrollRef: any = useRef();
   return (
@@ -57,7 +40,7 @@ const DetailContainer = (props: Props) => {
       refreshControl={
         <RefreshControl
           refreshing={isLoading}
-          onRefresh={() => onStartLoadData(item.id)}
+          onRefresh={() => onStartLoadData(props.route.params.id)}
         />
       }
     >
@@ -68,15 +51,16 @@ const DetailContainer = (props: Props) => {
           showPageIndicator={showIndicator}
           keyboardDismissMode={"on-drag"}
           overdrag={true}
+          layoutDirection="ltr"
         >
           {isLoading ? (
             <ImageSkeleton />
           ) : (
-            <Carousel imageUrls={item.urls} style={styles.page} />
+            <Carousel imageUrls={item.itemImages} style={styles.page} />
           )}
         </PagerView>
       </View>
-      {isLoading ? <DescriptionSkeleton /> : <Detail item={item} />}
+      {isLoading && item ? <DescriptionSkeleton /> : <Detail item={item} />}
     </KeyboardAwareScrollView>
   );
 };

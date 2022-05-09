@@ -1,9 +1,10 @@
 import { StyleSheet, Dimensions, TouchableOpacity, Text } from "react-native";
-import React, { useState, useRef } from "react";
+import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import ItemCreation from "../Templates/itemCreation";
 import NavigatorTitle from "../Atoms/Typographies/navigatorTitle";
 import { useNavigation } from "@react-navigation/native";
+import ImageBrowser from "../Molecules/Images/imageBroser";
+import ImageCreateContainer from "../Molecules/Images/imageCreateContainer";
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
 
@@ -29,8 +30,8 @@ const CreateNavigator = (props: Props) => {
       }}
     >
       <Stack.Screen
-        name="ItemCreation"
-        component={ItemCreation}
+        name="ImageCreate"
+        component={ImageCreateContainer}
         options={{
           headerTitleAlign: "center",
           headerTitle: (props) => (
@@ -47,6 +48,16 @@ const CreateNavigator = (props: Props) => {
               <Text style={styles.navigatorTitle}>X</Text>
             </TouchableOpacity>
           ),
+        }}
+      />
+      <Stack.Screen
+        name="ImageBrowser"
+        component={ImageBrowser}
+        options={{
+          title: "Selected 0 files",
+          headerStyle: {
+            backgroundColor: "#ffffff",
+          },
         }}
       />
     </Stack.Navigator>

@@ -10,6 +10,7 @@ type Props = {
   getSelectInformation: Function;
   navigation: any;
   route: object;
+  auctionType: string;
 };
 
 const RadioButton = (props: Props) => {
@@ -17,8 +18,18 @@ const RadioButton = (props: Props) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      return () => {
+      const auctionType = props.auctionType;
+      if (auctionType === "NORMAL") {
+        setSelect(false);
+      } else {
         setSelect(true);
+      }
+      return () => {
+        if (auctionType === "NORMAL") {
+          setSelect(false);
+        } else {
+          setSelect(true);
+        }
       };
     }, [])
   );

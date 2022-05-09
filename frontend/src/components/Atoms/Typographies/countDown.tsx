@@ -3,10 +3,10 @@ import React from "react";
 import Countdown, { zeroPad } from "react-countdown";
 type Props = {};
 
-const CountDown = ({ style }) => {
+const CountDown = ({ style, endTime }) => {
   return (
     <Countdown
-      date={1650967623196 + 1000000000}
+      date={endTime}
       intervalDelay={0}
       precision={0}
       // daysInHours={true}
