@@ -171,7 +171,7 @@ const Main = (props: Props) => {
           e.nativeEvent.contentOffset.y + paddingToBottom >=
           e.nativeEvent.contentSize.height
         ) {
-          props.onScrollNormal();
+          // props.onScrollNormal();
         }
       }}
       scrollEventThrottle={0}
@@ -193,7 +193,7 @@ const Main = (props: Props) => {
           e.nativeEvent.contentOffset.y + paddingToBottom >=
           e.nativeEvent.contentSize.height
         ) {
-          props.onScrollLive();
+          // props.onScrollLive();
         }
       }}
       scrollEventThrottle={0}

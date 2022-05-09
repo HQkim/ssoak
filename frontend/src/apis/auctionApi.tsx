@@ -31,15 +31,19 @@ export const cancelLikeItem = async (itemSeq) => {
 };
 
 export const getList = async ({ keyword, page }) => {
-  const response = await noHeaderInstance.get("/auctions/list", {
-    params: {
-      keyword,
-      page,
-      size: 10,
-      sort: "createdDate",
-    },
-  });
-  return response.data;
+  try {
+    const response = await noHeaderInstance.get("/auctions/list", {
+      params: {
+        keyword,
+        page,
+        size: 10,
+        sort: "createdDate",
+      },
+    });
+    return response.data;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const biddingAuction = async (itemSeq, formData) => {
