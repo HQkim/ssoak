@@ -4,8 +4,7 @@ import Main from "../Templates/main";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import { useDispatch } from "react-redux";
-import { dataFetchAsync } from "../../store/modules/mainLoader";
-import { withNavigation } from "react-navigation";
+import { dataFetchAsync, dataReset } from "../../store/modules/mainLoader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = {
@@ -17,23 +16,57 @@ const MainContainer = ({ navigation, route }: Props) => {
   const isLoading = useSelector(
     (state: RootState) => state.mainLoader.isLoading,
   );
+  let prev;
+  const data = useSelector((state: RootState) => state.mainLoader.data);
 
+  const [normalPage, setNormalPage] = useState(1);
+  const [livePage, setLivePage] = useState(1);
   const dispatch = useDispatch();
 
-  const onStartLoading = (state: boolean) => {
-    dispatch(dataFetchAsync(state));
+  const onStartLoading = () => {
+    dispatch(dataFetchAsync({ keyword: "NORMAL", page: normalPage }));
+    setTimeout(() => {
+      dispatch(dataFetchAsync({ keyword: "LIVE", page: livePage }));
+    }, 2000);
+    setNormalPage(normalPage + 1);
+    setLivePage(livePage + 1);
   };
+
   // useEffect(() => {
-  //   onStartLoading(true);
-  // }, []);
+  //   navigation.addListener("focus", () => {
+  //     onRefresh();
+  //   });
+  // }, [navigation]);
+
+  const onRefresh = () => {
+    dispatch(dataReset());
+    dispatch(dataFetchAsync({ keyword: "LIVE", page: livePage }));
+    setTimeout(() => {
+      dispatch(dataFetchAsync({ keyword: "NORMAL", page: normalPage }));
+    }, 2000);
+  };
+
+  const onScrollLive = () => {
+    dispatch(dataFetchAsync({ keyword: "LIVE", page: livePage }));
+    setLivePage(livePage + 1);
+  };
+
+  const onScrollNormal = () => {
+    dispatch(dataFetchAsync({ keyword: "NORMAL", page: normalPage }));
+    setNormalPage(normalPage + 1);
+  };
+
   useEffect(() => {
-    navigation.addListener("focus", () => {
-      onStartLoading(false);
-    });
-  }, [navigation]);
+    onStartLoading();
+  }, []);
 
   return (
-    <Main onRefresh={() => onStartLoading(true)} navigation={navigation} />
+    <Main
+      onRefresh={() => onRefresh()}
+      navigation={navigation}
+      onScrollLive={() => onScrollLive()}
+      onScrollNormal={() => onScrollNormal()}
+    />
   );
 };
 

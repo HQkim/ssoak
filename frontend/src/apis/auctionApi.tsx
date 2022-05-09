@@ -19,3 +19,15 @@ export const cancelLikeItem = async (itemSeq) => {
   const response = await instance.delete(`/auctions/${itemSeq}/like`);
   return response.data;
 };
+
+export const getList = async ({ keyword, page }) => {
+  const response = await instance.get("/auctions/list", {
+    params: {
+      keyword,
+      page,
+      size: 10,
+      sort: "createdDate",
+    },
+  });
+  return response.data;
+};

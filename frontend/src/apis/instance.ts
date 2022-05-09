@@ -6,7 +6,7 @@ const BaseURL = "http://k6a207.p.ssafy.io:5000/api/v1";
 export const instance: AxiosInstance = axios.create({
   baseURL: `${BaseURL}`,
   headers: {
-    Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUzNTMwMzkyfQ.MtzbBjQmlU1najLsVwxTbUmFPD3aOPv0MhUDTKoC5RvZ2HuLooClTgrQdqfo0uNDgXk6m4yUAqsXpWzjGmrCkQ`,
+    Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1IiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUzNzgzNzUyfQ.vGckW0y-bCTsPBwKT2-fkPeBqyVymRaGXmvdc0-IdoL5CCpMNkW8ghAgL-OUUwS-AvVaczqAT0xHRI01Nf-F8w`,
     "Content-type": "application/json",
   },
 });
@@ -17,7 +17,7 @@ instance.interceptors.request.use(
     const token = await AsyncStorage.getItem("accessToken");
     config.headers[
       "Authorization"
-    ] = `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUzNTMwMzkyfQ.MtzbBjQmlU1najLsVwxTbUmFPD3aOPv0MhUDTKoC5RvZ2HuLooClTgrQdqfo0uNDgXk6m4yUAqsXpWzjGmrCkQ`;
+    ] = `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1IiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUzNzgzNzUyfQ.vGckW0y-bCTsPBwKT2-fkPeBqyVymRaGXmvdc0-IdoL5CCpMNkW8ghAgL-OUUwS-AvVaczqAT0xHRI01Nf-F8w`;
     return config;
   },
   (err) => {
@@ -30,13 +30,13 @@ export const fileInstance = axios.create({
   headers: {
     "Content-Type": "multipart/form-data",
     Authorization:
-      "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUzNTMwMzkyfQ.MtzbBjQmlU1najLsVwxTbUmFPD3aOPv0MhUDTKoC5RvZ2HuLooClTgrQdqfo0uNDgXk6m4yUAqsXpWzjGmrCkQ",
+      "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1IiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUzNzgzNzUyfQ.vGckW0y-bCTsPBwKT2-fkPeBqyVymRaGXmvdc0-IdoL5CCpMNkW8ghAgL-OUUwS-AvVaczqAT0xHRI01Nf-F8w",
   },
 });
 
 fileInstance.interceptors.request.use(
   async (config: any) => {
-    config.headers.Authorization = `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUzNTMwMzkyfQ.MtzbBjQmlU1najLsVwxTbUmFPD3aOPv0MhUDTKoC5RvZ2HuLooClTgrQdqfo0uNDgXk6m4yUAqsXpWzjGmrCkQ`;
+    config.headers.Authorization = `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1IiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUzNzgzNzUyfQ.vGckW0y-bCTsPBwKT2-fkPeBqyVymRaGXmvdc0-IdoL5CCpMNkW8ghAgL-OUUwS-AvVaczqAT0xHRI01Nf-F8w`;
     return config;
   },
   (err) => {

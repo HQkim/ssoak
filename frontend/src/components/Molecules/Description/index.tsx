@@ -71,158 +71,167 @@ const index = ({ item, descStyle, titleStyle }) => {
     Alert.alert("이건 또 왜 눌렀슈?" + bidAssignValue);
   };
   return (
-    <View style={{ paddingBottom: Dimensions.get("window").height / 20 }}>
-      <Text style={styles.type}>
-        {item.auctionType === "NORMAL" ? "일반 경매" : "실시간 경매"}
-      </Text>
-      <Text style={titleStyle} numberOfLines={2}>
-        {item.title}
-      </Text>
-      <View style={styles.badges}>
-        <Text style={styles.typography}>{item.seller.nickname}</Text>
-        <Text style={styles.typography}>
-          최소 입찰가 :{" "}
-          {item.biddingUnit.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
-        </Text>
-      </View>
-      <View
-        style={{
-          ...styles.divider,
-          ...styles.dividerContainer,
-        }}
-      />
-      <Text
-        style={descStyle}
-        numberOfLines={showMore ? 100 : 2}
-        onTextLayout={onTextLayout}
-      >
-        {item.content}
-      </Text>
-      {!showDivider ? (
-        <MoreButton
-          handleMoreClick={handleMoreClick}
-          style={styles.dividerContainer}
-          showMore={showMore}
-        />
-      ) : (
-        <View
-          style={{
-            ...styles.divider,
-            ...styles.dividerContainer,
-          }}
-        />
-      )}
-      <View style={styles.itemInformationContainer}>
-        <Text style={styles.information}>종료까지 남은 시간 : </Text>
-        <CountDown style={styles.information} endTime={item.endTime} />
-      </View>
-      <View style={styles.itemInformationContainer}>
-        <Text style={styles.information}>현재 입찰가 : </Text>
-        <TextInput
-          editable={false}
-          maxLength={15}
-          value={currentCost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-          style={styles.textArea}
-          textAlign="center"
-        />
-        <View style={{ flex: 1, flexDirection: "row" }}>
-          <View style={{ flex: 0.2 }} />
-        </View>
-      </View>
-      <View
-        style={{
-          ...styles.divider,
-          ...styles.dividerContainer,
-        }}
-      />
-      <View style={styles.itemInformationContainer}>
-        <Text style={styles.information}>즉시 입찰가 : </Text>
-        <TextInput
-          editable={false}
-          maxLength={15}
-          value={""}
-          style={styles.textArea}
-          textAlign="center"
-          keyboardType="numeric"
-          onChange={handleOnchangebidRightNow}
-        >
-          <NumberFormat
-            value={bidRightNow}
-            thousandSeparator={true}
-            displayType={"text"}
-            renderText={(value: number, props: any) => <Text>{value}</Text>}
-            onValueChange={(values) => {
-              const { formattedValue, value } = values;
-              setBidRightNow(value);
+    <>
+      {item && (
+        <View style={{ paddingBottom: Dimensions.get("window").height / 20 }}>
+          <Text style={styles.type}>
+            {item.auctionType === "NORMAL" ? "일반 경매" : "실시간 경매"}
+          </Text>
+          <Text style={titleStyle} numberOfLines={2}>
+            {item.title}
+          </Text>
+          <View style={styles.badges}>
+            <Text style={styles.typography}>{item.seller.nickname}</Text>
+            <Text style={styles.typography}>
+              최소 입찰가 :{" "}
+              {item.biddingUnit
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+              원
+            </Text>
+          </View>
+          <View
+            style={{
+              ...styles.divider,
+              ...styles.dividerContainer,
             }}
           />
-        </TextInput>
-        <View style={{ flex: 1, flexDirection: "row" }}>
-          <View style={{ flex: 0.1 }} />
-          <GeneralButton
-            styles={{ box: styles.bidButton, text: styles.bidText }}
-            text={"즉시입찰"}
-            onPress={handlebidRightNow}
+          <Text
+            style={descStyle}
+            numberOfLines={showMore ? 100 : 2}
+            onTextLayout={onTextLayout}
           >
-            <AntDesign
-              name="upcircleo"
-              size={18}
-              color="white"
-              style={{ marginRight: 10 }}
+            {item.content}
+          </Text>
+          {!showDivider ? (
+            <MoreButton
+              handleMoreClick={handleMoreClick}
+              style={styles.dividerContainer}
+              showMore={showMore}
             />
-          </GeneralButton>
-        </View>
-      </View>
-      <View style={styles.itemInformationContainer}>
-        <Text style={styles.information}>지정 입찰가 : </Text>
-        <TextInput
-          editable={false}
-          maxLength={15}
-          value={""}
-          style={styles.textArea}
-          textAlign="center"
-          editable={true}
-          keyboardType="numeric"
-          onChange={handleOnchangebidAssignValue}
-        >
-          <NumberFormat
-            value={bidAssignValue}
-            thousandSeparator={true}
-            displayType={"text"}
-            renderText={(value, props) => <Text>{value}</Text>}
-            onValueChange={(values) => {
-              const { formattedValue, value } = values;
-              setBidAssignValue(value);
+          ) : (
+            <View
+              style={{
+                ...styles.divider,
+                ...styles.dividerContainer,
+              }}
+            />
+          )}
+          <View style={styles.itemInformationContainer}>
+            <Text style={styles.information}>종료까지 남은 시간 : </Text>
+            <CountDown style={styles.information} endTime={item.endTime} />
+          </View>
+          <View style={styles.itemInformationContainer}>
+            <Text style={styles.information}>현재 입찰가 : </Text>
+            <TextInput
+              editable={false}
+              maxLength={15}
+              value={currentCost
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+              style={styles.textArea}
+              textAlign="center"
+            />
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <View style={{ flex: 0.2 }} />
+            </View>
+          </View>
+          <View
+            style={{
+              ...styles.divider,
+              ...styles.dividerContainer,
             }}
           />
-        </TextInput>
-        <View style={{ flex: 1, flexDirection: "row" }}>
-          <View style={{ flex: 0.1 }} />
-          <GeneralButton
-            styles={{ box: styles.bidButton, text: styles.bidText }}
-            text={"입찰하기"}
-            onPress={handlebidAssignValue}
-          >
-            <AntDesign
-              name="upcircleo"
-              size={18}
-              color="white"
-              style={{ marginRight: 10 }}
-            />
-          </GeneralButton>
-        </View>
-      </View>
-      <View style={{ flex: 1, flexDirection: "row" }}>
-        <View style={{ flex: 1 }} />
+          <View style={styles.itemInformationContainer}>
+            <Text style={styles.information}>즉시 입찰가 : </Text>
+            <TextInput
+              editable={false}
+              maxLength={15}
+              value={""}
+              style={styles.textArea}
+              textAlign="center"
+              keyboardType="numeric"
+              onChange={handleOnchangebidRightNow}
+            >
+              <NumberFormat
+                value={bidRightNow}
+                thousandSeparator={true}
+                displayType={"text"}
+                renderText={(value: number, props: any) => <Text>{value}</Text>}
+                onValueChange={(values) => {
+                  const { formattedValue, value } = values;
+                  setBidRightNow(value);
+                }}
+              />
+            </TextInput>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <View style={{ flex: 0.1 }} />
+              <GeneralButton
+                styles={{ box: styles.bidButton, text: styles.bidText }}
+                text={"즉시입찰"}
+                onPress={handlebidRightNow}
+              >
+                <AntDesign
+                  name="upcircleo"
+                  size={18}
+                  color="white"
+                  style={{ marginRight: 10 }}
+                />
+              </GeneralButton>
+            </View>
+          </View>
+          <View style={styles.itemInformationContainer}>
+            <Text style={styles.information}>지정 입찰가 : </Text>
+            <TextInput
+              editable={false}
+              maxLength={15}
+              value={""}
+              style={styles.textArea}
+              textAlign="center"
+              editable={true}
+              keyboardType="numeric"
+              onChange={handleOnchangebidAssignValue}
+            >
+              <NumberFormat
+                value={bidAssignValue}
+                thousandSeparator={true}
+                displayType={"text"}
+                renderText={(value, props) => <Text>{value}</Text>}
+                onValueChange={(values) => {
+                  const { formattedValue, value } = values;
+                  setBidAssignValue(value);
+                }}
+              />
+            </TextInput>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <View style={{ flex: 0.1 }} />
+              <GeneralButton
+                styles={{ box: styles.bidButton, text: styles.bidText }}
+                text={"입찰하기"}
+                onPress={handlebidAssignValue}
+              >
+                <AntDesign
+                  name="upcircleo"
+                  size={18}
+                  color="white"
+                  style={{ marginRight: 10 }}
+                />
+              </GeneralButton>
+            </View>
+          </View>
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <View style={{ flex: 1 }} />
 
-        <GeneralButton
-          styles={{ box: styles.startChatBox, text: styles.startChatText }}
-          onPress={onHandleChatOpen}
-          text="채팅방 참여"
-        />
-        <View style={{ flex: 1 }} />
-      </View>
-    </View>
+            <GeneralButton
+              styles={{ box: styles.startChatBox, text: styles.startChatText }}
+              onPress={onHandleChatOpen}
+              text="채팅방 참여"
+            />
+            <View style={{ flex: 1 }} />
+          </View>
+        </View>
+      )}
+    </>
   );
 };
 

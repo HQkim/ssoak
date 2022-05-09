@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import Description from "../Molecules/Description";
 
 type Props = {};

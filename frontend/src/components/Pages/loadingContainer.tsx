@@ -17,7 +17,7 @@ const LoadingContainer = () => {
   useEffect(() => {
     setTimeout(function () {
       setIsLoading(true);
-    }, 3000);
+    }, 1000);
     setIsLoading(false);
   }, []);
 

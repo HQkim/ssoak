@@ -60,7 +60,7 @@ const DetailContainer = (props: Props) => {
           )}
         </PagerView>
       </View>
-      {isLoading && item ? <DescriptionSkeleton /> : <Detail item={item} />}
+      {isLoading ? <DescriptionSkeleton /> : <Detail item={item} />}
     </KeyboardAwareScrollView>
   );
 };
