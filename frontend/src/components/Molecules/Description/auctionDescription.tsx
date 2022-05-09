@@ -110,12 +110,14 @@ const AuctionDescription = ({ item, reqItem }) => {
             justifyContent: "center",
           }}
         >
-          <Image
-            source={{
-              uri: item.seller.profileImageUrl,
-            }}
-            style={styles.imgContainer}
-          />
+          {item.seller.profileImageUrl && (
+            <Image
+              source={{
+                uri: item.seller.profileImageUrl,
+              }}
+              style={styles.imgContainer}
+            />
+          )}
           <View style={{ marginLeft: 10 }}>
             <Text style={{ fontWeight: "100", marginBottom: 2 }}>판매자</Text>
             <Text style={styles.typography}>{item.seller.nickname}</Text>

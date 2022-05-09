@@ -35,3 +35,16 @@ export const kakaoProfile = async (access_Token: string) => {
     console.log(err);
   }
 };
+
+export const appleLogin = async (socialToken: string) => {
+  const response = await instance.post(
+    "members/login/apple",
+    {},
+    {
+      headers: {
+        "Social-Token": socialToken,
+      },
+    },
+  );
+  return response.data;
+};
