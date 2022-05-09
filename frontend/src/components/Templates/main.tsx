@@ -13,13 +13,7 @@ import {
 } from "react-native";
 
 // import { showLoaderAsync } from "../../store/modules/mainLoader";
-import React, {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/modules";
@@ -54,9 +48,6 @@ const Main = (props: Props) => {
     }
   };
 
-  useEffect(() => {
-    console.log(liveItems);
-  }, [liveItems]);
   const Slider = ({ items }) => {
     return (
       <>
@@ -172,7 +163,7 @@ const Main = (props: Props) => {
       refreshControl={
         <RefreshControl refreshing={isLoading} onRefresh={props.onRefresh} />
       }
-      onScroll={(e: any) => {
+      onScroll={(e) => {
         let paddingToBottom = 1;
         paddingToBottom += e.nativeEvent.layoutMeasurement.height;
 
@@ -184,6 +175,7 @@ const Main = (props: Props) => {
         }
       }}
       scrollEventThrottle={0}
+      scrollEnabled={true}
     >
       <Slider items={normalItems} />
     </ScrollView>
