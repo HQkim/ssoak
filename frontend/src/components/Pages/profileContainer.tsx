@@ -55,26 +55,19 @@ const ProfileContainer = ({ navigation, route }: Props) => {
   const getAccessToken = async () => {
     try {
       const token = await AsyncStorage.getItem("accessToken");
-      console.log("1-------------------------------------------------", token);
       if (token !== null) {
         setAccessToken(token);
         setIsLogin(true);
         try {
-          console.log("2-----------------------------------------------");
           kakaoProfile(token).then((res) => {
-            console.log("첫번째---------------------------------", res);
             setProfile(res.data);
           });
-          console.log("3----------------------------------------------------");
         } catch (err) {
-          console.log("4-----------------------------------------------", err);
+          console.log(err);
         }
       }
     } catch (e) {
-      console.log(
-        "5----------------------------------------------------------------",
-        e
-      );
+      console.log(e);
     }
   };
 
