@@ -6,34 +6,10 @@ const BaseURL = "http://k6a207.p.ssafy.io:5000/api/v1";
 export const instance: AxiosInstance = axios.create({
   baseURL: `${BaseURL}`,
   headers: {
-    Authorization: `Bearer ${AsyncStorage.getItem("accessToken")}`,
+    // Authorization: `Bearer ${AsyncStorage.getItem("accessToken")}`,
     "Content-type": "application/json",
   },
 });
-
-export const setApiHeaders = async () => {
-  instance.interceptors.request.use(
-    async (config: any) => {
-      const token = await AsyncStorage.getItem("accessToken");
-      config.headers["Authorization"] = `Bearer ${token}`;
-      return config;
-    },
-    (err) => {
-      return Promise.reject(err);
-    },
-  );
-  fileInstance.interceptors.request.use(
-    async (config: any) => {
-      const token = await AsyncStorage.getItem("accessToken");
-      config.headers["Authorization"] = `Bearer ${token}`;
-      return config;
-    },
-    (err) => {
-      return Promise.reject(err);
-    },
-  );
-};
-
 export const fileInstance = axios.create({
   baseURL: `${BaseURL}`,
   headers: {
@@ -41,6 +17,27 @@ export const fileInstance = axios.create({
     Authorization: `Bearer ${AsyncStorage.getItem("accessToken")}`,
   },
 });
+
+instance.interceptors.request.use(
+  async (config: any) => {
+    const token = await AsyncStorage.getItem("accessToken");
+    config.headers["Authorization"] = `Bearer ${token}`;
+    return config;
+  },
+  (err) => {
+    return Promise.reject(err);
+  },
+);
+fileInstance.interceptors.request.use(
+  async (config: any) => {
+    const token = await AsyncStorage.getItem("accessToken");
+    config.headers["Authorization"] = `Bearer ${token}`;
+    return config;
+  },
+  (err) => {
+    return Promise.reject(err);
+  },
+);
 
 export const noHeaderInstance = axios.create({
   baseURL: `${BaseURL}`,
