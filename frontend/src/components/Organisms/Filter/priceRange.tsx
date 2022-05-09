@@ -6,23 +6,44 @@ type Props = {
   navigation: any;
   route: object;
 };
+
+type PriceType = {
+  startPrice: object;
+  endPrice: object;
+};
+
 const { height: ScreenHeight } = Dimensions.get("window");
 const { width: ScreenWidth } = Dimensions.get("window");
 
 const PriceRange = (props: Props) => {
-  const [select, setSelect] = useState(true);
-  const [startPrice, setStartPrice] = useState("");
-  const [endPrice, setEndPrice] = useState("");
+  const [startPrice, setStartPrice] = useState<number | any | null>("");
+  const [endPrice, setEndPrice] = useState<number | any | null>("");
+  const [priceRange, setPriceRange] = useState<PriceType | any | null>([]);
   const inputStartPrice = (text) => {
     setStartPrice(text);
+    // setPriceRange((prev: any) => [
+    //   { startPrice: text },
+    //   { endPrice: endPrice },
+    // ]);
+    setPriceRange({
+      startPrice: startPrice,
+      endPrice: endPrice,
+    });
+    props.getSelectInformation(priceRange);
   };
   const inputEndPrice = (text) => {
     setEndPrice(text);
+    // setPriceRange((prev: any) => [
+    //   { startPrice: startPrice },
+    //   { endPrice: text },
+    // ]);
+    setPriceRange({
+      startPrice: startPrice,
+      endPrice: text,
+    });
+    props.getSelectInformation(priceRange);
   };
-  const onSelect = () => {
-    setSelect(!select);
-    props.getSelectInformation(select);
-  };
+
   return (
     <View>
       <View style={{ height: ScreenHeight / 20 }}>
@@ -31,9 +52,10 @@ const PriceRange = (props: Props) => {
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <TextInput
           maxLength={15}
-          value={startPrice.toString()}
+          keyboardType={"numeric"}
+          value={startPrice}
           style={styles.textArea}
-          textAlign="left"
+          textAlign="center"
           onChangeText={(text) => inputStartPrice(text)}
         />
         <View>
@@ -41,9 +63,10 @@ const PriceRange = (props: Props) => {
         </View>
         <TextInput
           maxLength={15}
-          value={endPrice.toString()}
+          keyboardType={"numeric"}
+          value={endPrice}
           style={styles.textArea}
-          textAlign="left"
+          textAlign="center"
           onChangeText={(text) => inputEndPrice(text)}
         />
       </View>

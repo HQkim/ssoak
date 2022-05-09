@@ -14,13 +14,8 @@ const FavoriteContainer = ({ navigation, route }: Props) => {
   const onCancel = () => {
     navigation.navigate("main");
   };
-  useEffect(() => {
-    navigation.addListener("focus", () => {
-      console.log("hi");
-    });
-  }, [navigation]);
 
-  return <Favorite />;
+  return <Favorite navigation={navigation} route={route} />;
 };
 
 export default FavoriteContainer;

@@ -15,6 +15,7 @@ import Profile from "../Templates/profile";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import { useDispatch } from "react-redux";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { dataFetchAsync } from "../../store/modules/mainLoader";
 import AppleLoginButton from "../Atoms/Buttons/appleLoginButton";
 
@@ -40,8 +41,9 @@ const ProfileContainer = ({ navigation, route }: Props) => {
   const [accessToken, setAccessToken] = useState("");
   const [font, setFont] = useState(false);
   const [profile, setProfile] = useState<Profile | null | any>([]);
+  const [editStatus, setEditStatus] = useState(false);
   const isLoading = useSelector(
-    (state: RootState) => state.mainLoader.isLoading,
+    (state: RootState) => state.mainLoader.isLoading
   );
 
   const dispatch = useDispatch();
@@ -53,32 +55,34 @@ const ProfileContainer = ({ navigation, route }: Props) => {
   const getAccessToken = async () => {
     try {
       const token = await AsyncStorage.getItem("accessToken");
-      console.log("1-------------------------------------------------", token);
       if (token !== null) {
         setAccessToken(token);
         setIsLogin(true);
         try {
-          console.log("2-----------------------------------------------");
           kakaoProfile(token).then((res) => {
-            console.log("첫번째---------------------------------", res);
             setProfile(res.data);
           });
-          console.log("3----------------------------------------------------");
         } catch (err) {
-          console.log("4-----------------------------------------------", err);
+          console.log(err);
         }
       }
     } catch (e) {
-      console.log(
-        "5----------------------------------------------------------------",
-        e,
-      );
+      console.log(e);
     }
   };
 
   const loadKakaoLogin = () => {
     navigation.navigate("kakaoLogin");
   };
+
+  // 이름 수정중 화면 이동할때 초기화하는 코드
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        setEditStatus(false);
+      };
+    }, [])
+  );
 
   useEffect(() => {
     navigation.addListener("focus", () => {
@@ -99,8 +103,11 @@ const ProfileContainer = ({ navigation, route }: Props) => {
         <Profile
           onRefresh={() => onStartLoading(true)}
           profile={profile}
+          setProfile={setProfile}
           navigation={navigation}
           route={route}
+          setEditStatus={setEditStatus}
+          editStatus={editStatus}
         />
       ) : (
         <View style={styles.container}>

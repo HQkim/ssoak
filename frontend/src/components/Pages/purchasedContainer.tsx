@@ -9,12 +9,7 @@ type Props = {
 };
 
 const PurchasedContainer = ({ navigation, route }: Props) => {
-  useEffect(() => {
-    navigation.addListener("focus", () => {
-      console.warn("purchased");
-    });
-  }, [navigation]);
-  return <Purchased />;
+  return <Purchased navigation={navigation} route={route} />;
 };
 
 export default PurchasedContainer;
