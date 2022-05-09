@@ -24,13 +24,15 @@ const DateTime = (props: Props) => {
     selectedDate !== undefined && setDate(currentDate);
     const now = new Date(selectedDate);
     now.setHours(now.getHours() + 9);
-    let timeInformation = JSON.stringify(now);
-    let tmp = timeInformation.replace(".000Z", "");
-    let time = JSON.parse(tmp);
+    const timeInformation = JSON.stringify(now);
+    const result = timeInformation.substring(20, 25);
+    const tmp = timeInformation.replace(result, "");
+    const time = JSON.parse(tmp);
     now.setMinutes(now.getMinutes() + 30);
-    let timeInfo = JSON.stringify(now);
-    let temp = timeInfo.replace(".000Z", "");
-    let dateTime = JSON.parse(temp);
+    const timeInfo = JSON.stringify(now);
+    const result2 = timeInfo.substring(20, 25);
+    const temp = timeInfo.replace(result2, "");
+    const dateTime = JSON.parse(temp);
     props.getSelectInformation(time, dateTime);
   };
 

@@ -32,16 +32,23 @@ const AuctionDescription = ({ item, reqItem }) => {
   const [showMore, setShowMore] = useState(false);
   const [showDivider, setShowDivier] = useState<boolean>(true);
   const itemInformation = useSelector((state: RootState) => state.detail.item);
+  const [biddingPrice, setBiddingPrice] = useState(0);
   // const dispatch = useDispatch();
   const [isLiked, setIsLiked] = useState(item.isLike);
   const navigation = useNavigation();
   const [select, setSelect] = useState(false);
   const [token, setToken] = useState<any>();
 
+  const date = new Date();
+  let timeInfo = JSON.stringify(date);
+  let temp = timeInfo.replace(".000Z", "");
+
   const getToken = async () => {
     const tokenSeq: string = await AsyncStorage.getItem("accessToken");
     const decodedToken = jwt_decode<JwtPayload>(tokenSeq);
-    setToken(decodedToken.sub);
+    const myToken = Number(decodedToken.sub);
+    setToken(myToken);
+    console.warn(typeof item.seller.seq, typeof token);
   };
 
   const onSelect = () => {
@@ -98,6 +105,9 @@ const AuctionDescription = ({ item, reqItem }) => {
 
   useEffect(() => {
     getToken();
+    if (item.bidding) {
+      setBiddingPrice(item.bidding.biddingPrice);
+    }
   }, []);
 
   return (
@@ -121,7 +131,7 @@ const AuctionDescription = ({ item, reqItem }) => {
             <Text style={styles.typography}>{item.seller.nickname}</Text>
           </View>
         </View>
-        {item.seller.seq === token ? (
+        {token === undefined ? null : item.seller.seq === token ? (
           <TouchableOpacity
             onPress={onSelect}
             style={{ marginHorizontal: ScreenWidth / 16 }}
@@ -187,7 +197,9 @@ const AuctionDescription = ({ item, reqItem }) => {
           <Text style={styles.title}>시초가</Text>
         </View>
 
-        <Text style={styles.title}>{item.startPrice}원</Text>
+        <Text style={styles.title}>
+          {item.startPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
+        </Text>
       </View>
       <View style={styles.box}>
         <View
@@ -203,7 +215,9 @@ const AuctionDescription = ({ item, reqItem }) => {
           />
           <Text style={styles.title}>현재 입찰가</Text>
         </View>
-        <Text style={styles.title}>550,000원</Text>
+        <Text style={styles.title}>
+          {biddingPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
+        </Text>
       </View>
       <Text
         style={styles.description}

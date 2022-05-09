@@ -10,14 +10,15 @@ type Props = {
   getSelectInformation: Function;
   navigation: any;
   route: object;
-  auctionType: string;
+  auctionType: any;
 };
 
 const RadioButton = (props: Props) => {
-  const [select, setSelect] = useState(true);
+  const [select, setSelect] = useState<any>();
 
   useFocusEffect(
     React.useCallback(() => {
+      console.warn(props.auctionType);
       const auctionType = props.auctionType;
       if (auctionType === "NORMAL") {
         setSelect(false);

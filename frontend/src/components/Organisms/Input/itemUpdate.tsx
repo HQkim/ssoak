@@ -172,7 +172,7 @@ const ItemUpdate = (props: Props) => {
     }
 
     for (var i = 0; i < imgForm.length; i++) {
-      const trimmedURI = imgForm[i].uri.replace("file://", "");
+      const trimmedURI = imgForm[i].uri;
       const fileName = trimmedURI.split("/").pop();
       const item: any = {
         height: imgForm[i].height,
