@@ -2,6 +2,7 @@ package ssoaks.ssoak.api.auction.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ssoaks.ssoak.api.auction.dto.request.ReqBiddingRegisterDto;
 import ssoaks.ssoak.api.auction.dto.request.ReqItemChangeDto;
 import ssoaks.ssoak.api.auction.dto.request.ReqItemRegisterDto;
+import ssoaks.ssoak.api.auction.dto.request.ReqSearchDto;
 import ssoaks.ssoak.api.auction.dto.response.*;
 import ssoaks.ssoak.api.auction.exception.FailBiddingException;
 import ssoaks.ssoak.api.auction.exception.NotAllowedChangeItemException;
@@ -21,6 +23,7 @@ import ssoaks.ssoak.common.dto.BaseDataResponseDTO;
 import ssoaks.ssoak.common.dto.BaseResponseDTO;
 
 import javax.swing.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static ssoaks.ssoak.api.auction.entity.QItem.item;
@@ -206,5 +209,20 @@ public class AuctionController {
             return ResponseEntity.status(409).body(new BaseDataResponseDTO<>(409, e.getMessage(), null));
         }
         return ResponseEntity.status(200).body(new BaseDataResponseDTO<>(200, "물품 조회 성공", auctionListDto));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<BaseDataResponseDTO> searchAuction(Pageable pageable,
+                                                             ReqSearchDto reqSearchDto) {
+        log.debug("경매 검색 reqSearchDto - {} , page - {}", reqSearchDto, pageable);
+        ResAuctionListDto resAuctionListDto = null;
+        try{
+            resAuctionListDto = auctionListService.searchAuctionList(pageable, reqSearchDto);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(409).body(new BaseDataResponseDTO<>(409, e.getMessage(), null));
+        }
+
+        return ResponseEntity.status(200).body(new BaseDataResponseDTO<>(200, "물품 검색 성공", resAuctionListDto));
     }
 }
