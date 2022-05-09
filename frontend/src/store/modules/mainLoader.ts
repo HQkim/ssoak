@@ -1,9 +1,19 @@
 // ducks 패턴
-import { delay, put, take, takeEvery, takeLatest } from "redux-saga/effects";
+import {
+  delay,
+  put,
+  take,
+  takeEvery,
+  takeLatest,
+  call,
+} from "redux-saga/effects";
+import { getList } from "../../apis/auctionApi";
 
 // actions
-const DATA_FETCH = "main/DATA_FETCH" as const;
+const DATA_FETCH = "main/DATA_FETCH_LOADING" as const;
+const DATA_FETCH_COMPLETE = "main/DATA_FETCH_COMPLETE" as const;
 const DATA_FETCH_ASYNC = "main/DATA_FETCH_ASYNC" as const;
+const DATA_RESET = "main/DATA_RESET" as const;
 
 //Action 생성자
 
@@ -12,17 +22,32 @@ export const dataFetch = (status: boolean) => ({
   payload: status,
 });
 
-export const dataFetchAsync = (status: boolean) => ({
+export const dataFetchComplete = (data: any) => ({
+  type: DATA_FETCH_COMPLETE,
+  payload: data,
+});
+
+export const dataReset = () => ({
+  type: DATA_RESET,
+});
+
+export const dataFetchAsync = (payload: any) => ({
   type: DATA_FETCH_ASYNC,
-  payload: status,
+  payload: {
+    keyword: payload.keyword,
+    page: payload.page,
+  },
 });
 
 //middleware
 function* mainSaga(action: any) {
-  // console.log(action);
   yield put(dataFetch(true));
+  const data = yield call(getList, {
+    keyword: action.payload.keyword,
+    page: action.payload.page,
+  });
   yield delay(1000);
-  yield put(dataFetch(false));
+  yield put(dataFetchComplete(data.data.auctionList));
 }
 
 export function* loaderSaga() {
@@ -36,7 +61,11 @@ function counter(
 ): LoaderState {
   switch (action.type) {
     case DATA_FETCH:
-      return { isLoading: action.payload };
+      return { ...state, isLoading: action.payload };
+    case DATA_FETCH_COMPLETE:
+      return { isLoading: false, data: [...state.data, ...action.payload] };
+    case DATA_RESET:
+      return { ...state, data: [] };
     default:
       return state;
   }
@@ -47,13 +76,17 @@ export default counter;
 //Types for typescript
 type LoaderAction =
   | ReturnType<typeof dataFetch>
-  | ReturnType<typeof dataFetchAsync>;
+  | ReturnType<typeof dataFetchAsync>
+  | ReturnType<typeof dataFetchComplete>
+  | ReturnType<typeof dataReset>;
 
 type LoaderState = {
   isLoading: boolean;
+  data: any;
 };
 
 //initial state
 const initialState: LoaderState = {
   isLoading: true,
+  data: [],
 };

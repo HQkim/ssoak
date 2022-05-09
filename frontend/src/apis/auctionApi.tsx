@@ -30,10 +30,22 @@ export const cancelLikeItem = async (itemSeq) => {
   return response.data;
 };
 
+export const getList = async ({ keyword, page }) => {
+  const response = await instance.get("/auctions/list", {
+    params: {
+      keyword,
+      page,
+      size: 10,
+      sort: "createdDate",
+    },
+  });
+  return response.data;
+};
+
 export const biddingAuction = async (itemSeq, formData) => {
   const response = await instance.post(
     `/auctions/${itemSeq}/bidding`,
-    formData
+    formData,
   );
   console.warn(response);
 };
