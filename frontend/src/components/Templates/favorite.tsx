@@ -13,8 +13,8 @@ import AuctionTypeTag from "../Atoms/Tags/auctionTypeTag";
 import CompletedTag from "../Atoms/Tags/completedTag";
 import { getFavoriteItems } from "../../apis/ItemApi";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { likeItem } from "../../apis/autcionApi";
-import { cancelLikeItem } from "../../apis/autcionApi";
+import { likeItem } from "../../apis/auctionApi";
+import { cancelLikeItem } from "../../apis/auctionApi";
 
 type Props = {
   navigation: any;
@@ -36,18 +36,25 @@ const Favorite = (props: Props) => {
     const response = await getFavoriteItems();
     setItems(response);
   };
-  const goDetail = () => {
-    console.warn("상세목록으로 이동");
-    // navigation.navigate("/")
+  const goDetail = (item) => {
+    if (item.auctionType == "NORMAL") {
+      props.navigation.navigate("auctionDetail", {
+        id: item.itemSeq,
+      });
+    } else {
+      props.navigation.navigate("detail", {
+        id: item.itemSeq,
+      });
+    }
   };
 
-  const pressHeart = async (id: number) => {
-    if (heart == true) {
+  const pressHeart = async (item) => {
+    if (item.isLike == true) {
       setHeart(false);
-      await cancelLikeItem(id);
+      await cancelLikeItem(item.itemSeq);
     } else {
       setHeart(true);
-      await likeItem(id);
+      await likeItem(item.itemSeq);
     }
   };
 
@@ -63,7 +70,7 @@ const Favorite = (props: Props) => {
       {items &&
         items.map((item, index) => (
           <View key={index} style={styles.favListContainer}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => goDetail(item.itemSeq)}>
               <View>
                 <AuctionTypeTag
                   styles={{ tag: styles.auctionTypeTag }}
@@ -112,8 +119,8 @@ const Favorite = (props: Props) => {
                     justifyContent: "flex-end",
                   }}
                 >
-                  <TouchableOpacity onPress={() => pressHeart(item.itemSeq)}>
-                    {heart === true ? (
+                  <TouchableOpacity onPress={() => pressHeart(item)}>
+                    {item.isLike === true ? (
                       <Ionicons name="heart" size={24} color="#EA759A" />
                     ) : (
                       <Ionicons name="heart-outline" size={24} color="black" />
