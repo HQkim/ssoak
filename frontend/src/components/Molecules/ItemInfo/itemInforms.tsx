@@ -50,7 +50,7 @@ const ItemInforms = ({ item }) => {
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                 textAlign={"center"}
-                maxLength={10}
+                maxLength={7}
                 textInputStyle={styles.textArea}
               />
             </View>
@@ -61,10 +61,31 @@ const ItemInforms = ({ item }) => {
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                 textAlign={"center"}
-                maxLength={10}
+                maxLength={7}
                 textInputStyle={styles.textArea}
               />
             </View>
+          </View>
+          <View style={{ flexDirection: "row", marginTop: ScreenWidth / 30 }}>
+            <Text>경매일 : </Text>
+            <ItemTextInput
+              value={
+                item.auctionType == "LIVE"
+                  ? item.startTime.split("T")[0] +
+                    "-" +
+                    item.startTime.split("T")[1]
+                  : item.startTime.split("T")[0] +
+                    "-" +
+                    item.startTime.split("T")[1].slice(0, 5) +
+                    " ~ " +
+                    item.endTime.split("T")[0] +
+                    "-" +
+                    item.endTime.split("T")[1].slice(0, 5)
+              }
+              textAlign={"left"}
+              maxLength={50}
+              textInputStyle={styles.textAreaDate}
+            />
           </View>
         </>
       ) : (
@@ -96,31 +117,26 @@ const ItemInforms = ({ item }) => {
               </View>
             </View>
           </View>
-          <View style={{ marginTop: ScreenWidth / 30 }}>
-            <View style={{ flexDirection: "row", flex: 1 }}>
-              <Text>시작날짜 : </Text>
-              <ItemTextInput
-                value={item.startTime}
-                textAlign={"center"}
-                maxLength={20}
-                textInputStyle={styles.textAreaDate}
-              />
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                flex: 1,
-                marginTop: ScreenWidth / 40,
-              }}
-            >
-              <Text>종료날짜 : </Text>
-              <ItemTextInput
-                value={item.endTime}
-                textAlign={"center"}
-                maxLength={20}
-                textInputStyle={styles.textAreaDate}
-              />
-            </View>
+          <View style={{ flexDirection: "row", marginTop: ScreenWidth / 30 }}>
+            <Text>경매일 : </Text>
+            <ItemTextInput
+              value={
+                item.auctionType == "LIVE"
+                  ? item.startTime.split("T")[0] +
+                    "-" +
+                    item.startTime.split("T")[1]
+                  : item.startTime.split("T")[0] +
+                    "-" +
+                    item.startTime.split("T")[1].slice(0, 5) +
+                    " ~ " +
+                    item.endTime.split("T")[0] +
+                    "-" +
+                    item.endTime.split("T")[1].slice(0, 5)
+              }
+              textAlign={"left"}
+              maxLength={50}
+              textInputStyle={styles.textAreaDate}
+            />
           </View>
         </>
       )}
@@ -153,9 +169,14 @@ const styles = StyleSheet.create({
     width: ScreenWidth / 4,
   },
   textAreaDate: {
+    // borderRadius: 20,
+    // borderWidth: 0.5,
+    // height: 24,
+    // width: ScreenWidth / 2,
     borderRadius: 20,
     borderWidth: 0.5,
     height: 24,
-    width: ScreenWidth / 2,
+    width: ScreenWidth * 0.73,
+    paddingLeft: 8,
   },
 });
