@@ -20,7 +20,7 @@ export const setApiHeaders = async () => {
     },
     (err) => {
       return Promise.reject(err);
-    }
+    },
   );
   fileInstance.interceptors.request.use(
     async (config: any) => {
@@ -30,7 +30,7 @@ export const setApiHeaders = async () => {
     },
     (err) => {
       return Promise.reject(err);
-    }
+    },
   );
 };
 
@@ -40,4 +40,8 @@ export const fileInstance = axios.create({
     "Content-Type": "multipart/form-data",
     Authorization: `Bearer ${AsyncStorage.getItem("accessToken")}`,
   },
+});
+
+export const noHeaderInstance = axios.create({
+  baseURL: `${BaseURL}`,
 });

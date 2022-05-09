@@ -1,4 +1,4 @@
-import { instance, fileInstance } from "./instance";
+import { instance, fileInstance, noHeaderInstance } from "./instance";
 
 export const createAuction = async (formData) => {
   const response = await fileInstance.post("/auctions", formData);
@@ -31,15 +31,19 @@ export const cancelLikeItem = async (itemSeq) => {
 };
 
 export const getList = async ({ keyword, page }) => {
-  const response = await instance.get("/auctions/list", {
-    params: {
-      keyword,
-      page,
-      size: 10,
-      sort: "createdDate",
-    },
-  });
-  return response.data;
+  try {
+    const response = await noHeaderInstance.get("/auctions/list", {
+      params: {
+        keyword,
+        page,
+        size: 10,
+        sort: "createdDate",
+      },
+    });
+    return response.data;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const biddingAuction = async (itemSeq, formData) => {

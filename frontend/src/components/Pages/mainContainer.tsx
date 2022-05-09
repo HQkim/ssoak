@@ -4,7 +4,11 @@ import Main from "../Templates/main";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import { useDispatch } from "react-redux";
-import { dataFetchAsync, dataReset } from "../../store/modules/mainLoader";
+import {
+  dataFetchAsync,
+  dataReset,
+  dataFetchAsyncWithoutLoader,
+} from "../../store/modules/mainLoader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = {
@@ -16,56 +20,49 @@ const MainContainer = ({ navigation, route }: Props) => {
   const isLoading = useSelector(
     (state: RootState) => state.mainLoader.isLoading,
   );
-  let prev;
-  const data = useSelector((state: RootState) => state.mainLoader.data);
+
+  // const data = useSelector((state: RootState) => state.mainLoader.data);
 
   const [normalPage, setNormalPage] = useState(1);
   const [livePage, setLivePage] = useState(1);
   const dispatch = useDispatch();
 
-  const onStartLoading = () => {
-    dispatch(dataFetchAsync({ keyword: "NORMAL", page: normalPage }));
-    setTimeout(() => {
-      dispatch(dataFetchAsync({ keyword: "LIVE", page: livePage }));
-    }, 2000);
-    setNormalPage(normalPage + 1);
-    setLivePage(livePage + 1);
-  };
-
-  // useEffect(() => {
-  //   navigation.addListener("focus", () => {
-  //     onRefresh();
-  //   });
-  // }, [navigation]);
-
   const onRefresh = () => {
     dispatch(dataReset());
-    dispatch(dataFetchAsync({ keyword: "LIVE", page: livePage }));
-    setTimeout(() => {
-      dispatch(dataFetchAsync({ keyword: "NORMAL", page: normalPage }));
-    }, 2000);
+    dispatch(dataFetchAsync({ keyword: "LIVE", page: 1 }));
+    dispatch(dataFetchAsync({ keyword: "NORMAL", page: 1 }));
+    setNormalPage(2);
+    setLivePage(2);
   };
 
-  const onScrollLive = () => {
-    dispatch(dataFetchAsync({ keyword: "LIVE", page: livePage }));
-    setLivePage(livePage + 1);
-  };
+  // const onScrollLive = (e) => {
+  //   dispatch(dataFetchAsyncWithoutLoader({ keyword: "LIVE", page: livePage }));
+  //   setLivePage(livePage + 1);
+  // };
 
-  const onScrollNormal = () => {
-    dispatch(dataFetchAsync({ keyword: "NORMAL", page: normalPage }));
-    setNormalPage(normalPage + 1);
-  };
+  // const onScrollNormal = () => {
+  //   dispatch(
+  //     dataFetchAsyncWithoutLoader({ keyword: "NORMAL", page: normalPage }),
+  //   );
+  //   setNormalPage(normalPage + 1);
+  // };
 
   useEffect(() => {
-    onStartLoading();
+    return () => {
+      onRefresh();
+    };
   }, []);
+
+  useEffect(() => {
+    console.log(livePage, normalPage);
+  }, [livePage, normalPage]);
 
   return (
     <Main
       onRefresh={() => onRefresh()}
       navigation={navigation}
-      onScrollLive={() => onScrollLive()}
-      onScrollNormal={() => onScrollNormal()}
+      // onScrollLive={(e) => onScrollLive(e)}
+      // onScrollNormal={(e) => onScrollNormal(e)}
     />
   );
 };
