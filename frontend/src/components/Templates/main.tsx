@@ -35,7 +35,7 @@ const Main = (props: Props) => {
   const data = useSelector((state: RootState) => state.mainLoader.data);
   const [liveItems, setLiveItems] = useState<any>([]);
   const [normalItems, setNormalItems] = useState<any>([]);
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
   const handleClickItem = (item: any) => {
     if (item.auctionType === "NORMAL") {
       navigation.navigate("auctionDetail", {
