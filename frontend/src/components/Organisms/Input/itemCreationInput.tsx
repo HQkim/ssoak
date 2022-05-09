@@ -7,15 +7,15 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Border from "../../Atoms/Borders/border";
 import RadioButton from "../../Molecules/Buttons/radioButton";
 import DropDown from "../../Molecules/Buttons/dropDown";
 import DateTime from "../../Molecules/Times/dateTime";
 import { createAuction } from "../../../apis/auctionApi";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
-const { height: ScreenHeight } = Dimensions.get("window");
+const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
 
 type Props = {
   navigation: any;
@@ -35,53 +35,35 @@ const ItemCreationInput = (props: Props) => {
     endTime: null;
     biddingUnit: number;
   }
-  interface ImageForm {
-    source: string;
-  }
 
   const [form, setForm] = useState<Form | null | any>([]);
-  const [imgForm, setImgForm] = useState<ImageForm | null | any>(props.images);
+  console.warn(form, 888);
   const [value, setValue] = useState<Form | null | any>([]);
   const [select, setSelect] = useState(true);
   const navigation = useNavigation();
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     setForm((prevState: any) => ({
-  //       form: {
-  //         title: "",
-  //         content: "",
-  //         startPrice: "",
-  //         startTime: "",
-  //         endTime: "",
-  //         auctionType: "LIVE",
-  //         itemCategories: "디지털기기",
-  //       },
-  //     }));
-  //     return () => {
-  //       setImgForm([]);
-  //       setForm((prevState: any) => ({
-  //         form: {
-  //           title: "",
-  //           content: "",
-  //           startPrice: "",
-  //           startTime: "",
-  //           endTime: "",
-  //           auctionType: "LIVE",
-  //           itemCategories: "디지털기기",
-  //         },
-  //       }));
-  //       setValue({
-  //         title: "",
-  //         startPrice: "",
-  //         content: "",
-  //       });
-  //       setSelect(true);
-  //     };
-  //   }, [])
-  // );
-
   const { title, content, startPrice } = value;
+
+  useEffect(() => {
+    setForm((prevState: any) => ({
+      form: {
+        title: "",
+        content: "",
+        startPrice: "",
+        startTime: "",
+        endTime: "",
+        auctionType: "LIVE",
+        itemCategories: "디지털기기",
+      },
+    }));
+    setValue({
+      title: "",
+      startPrice: "",
+      content: "",
+    });
+    setSelect(true);
+    console.warn(form);
+  }, []);
 
   const onSelect = (info: boolean | string) => {
     if (typeof info === "boolean") {
@@ -156,33 +138,22 @@ const ItemCreationInput = (props: Props) => {
         itemCategories: "디지털기기",
       },
     }));
-    return () => {
-      setImgForm([]);
-      setForm((prevState: any) => ({
-        form: {
-          title: "",
-          content: "",
-          startPrice: "",
-          startTime: "",
-          endTime: "",
-          auctionType: "LIVE",
-          itemCategories: "디지털기기",
-        },
-      }));
-      setValue({
-        title: "",
-        startPrice: "",
-        content: "",
-      });
-      setSelect(true);
-    };
+    setValue({
+      title: "",
+      startPrice: "",
+      content: "",
+    });
+    setSelect(true);
   };
 
-  useEffect(() => {
-    setImgForm(props.images);
-  }, [imgForm]);
+  const onCancel = () => {
+    props.resetImage();
+    resetData();
+    navigation.navigate("main");
+  };
 
   const onSubmit = async () => {
+    const imgForm = props.images;
     const formData = new FormData();
     for (var i = 0; i < imgForm.length; i++) {
       const item: any = {
@@ -201,7 +172,6 @@ const ItemCreationInput = (props: Props) => {
     formData.append("auctionType", form.form.auctionType);
     formData.append("itemCategories", form.form.itemCategories);
     console.warn(formData);
-
     if (imgForm.length < 1) {
       Alert.alert("이미지를 업로드해주세요.");
     } else if (
@@ -238,7 +208,7 @@ const ItemCreationInput = (props: Props) => {
         getSelectInformation={onSelect}
         navigation={props.navigation}
         route={props.route}
-        auctionType={"LIVE"}
+        auctionType={form === [] ? null : null}
       />
       <DropDown
         getSelectInformation={onSelect}
@@ -292,10 +262,24 @@ const ItemCreationInput = (props: Props) => {
         onChangeText={(text) => onChangeInput("content", text)}
       ></TextInput>
       <Border style={styles.border} />
-      <View style={{ alignItems: "center", padding: ScreenHeight / 50 }}>
-        <TouchableOpacity style={styles.buttonContainer} onPress={onSubmit}>
-          <Text style={styles.buttonTextContainer}>등록하기</Text>
-        </TouchableOpacity>
+      <View
+        style={{
+          flexDirection: "row",
+          padding: 15,
+          marginBottom: ScreenHeight / 50,
+          justifyContent: "center",
+        }}
+      >
+        <View style={{ alignItems: "center" }}>
+          <TouchableOpacity style={styles.buttonContainer2} onPress={onCancel}>
+            <Text style={styles.buttonTextContainer}>취소</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ alignItems: "center" }}>
+          <TouchableOpacity style={styles.buttonContainer} onPress={onSubmit}>
+            <Text style={styles.buttonTextContainer}>등록하기</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -321,11 +305,21 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     backgroundColor: "#0176B7",
-    width: "100%",
     borderRadius: 5,
+    width: ScreenWidth / 1.8,
     height: ScreenHeight / 17,
     justifyContent: "center",
     alignItems: "center",
+    margin: 10,
+  },
+  buttonContainer2: {
+    backgroundColor: "#F8A33E",
+    borderRadius: 5,
+    width: ScreenWidth / 3,
+    height: ScreenHeight / 17,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
   },
   buttonTextContainer: {
     color: "#ffffff",

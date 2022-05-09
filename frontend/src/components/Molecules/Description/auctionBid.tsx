@@ -12,7 +12,7 @@ import BidCard from "../../Molecules/Cards/bidCard";
 
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
-const AuctionBid = ({ item, reqItem }) => {
+const AuctionBid = ({ item, reqItem, getItemDetail }) => {
   return (
     <View style={styles.Container}>
       <BidCard
@@ -22,6 +22,7 @@ const AuctionBid = ({ item, reqItem }) => {
         button={"즉시입찰"}
         edit={false}
         biddingUnit={item.biddingUnit}
+        getItemDetail={getItemDetail}
       ></BidCard>
       <BidCard
         reqItem={reqItem}
@@ -30,6 +31,7 @@ const AuctionBid = ({ item, reqItem }) => {
         button={"입찰하기"}
         edit={true}
         biddingUnit={item.startPrice}
+        getItemDetail={getItemDetail}
       ></BidCard>
     </View>
   );

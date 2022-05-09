@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions, TouchableOpacity, Text } from "react-native";
-import React from "react";
+import React, { Children, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import NavigatorTitle from "../Atoms/Typographies/navigatorTitle";
 import { useNavigation } from "@react-navigation/native";
@@ -16,10 +16,6 @@ type Props = {
 const Stack = createStackNavigator();
 const CreateNavigator = (props: Props) => {
   const navigation = useNavigation();
-
-  const onCancel = () => {
-    navigation.navigate("main");
-  };
 
   return (
     <Stack.Navigator
@@ -39,14 +35,6 @@ const CreateNavigator = (props: Props) => {
               title={"경매 물품 등록"}
               style={styles.navigatorTitle}
             />
-          ),
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={onCancel}
-              style={{ marginHorizontal: ScreenWidth / 16 }}
-            >
-              <Text style={styles.navigatorTitle}>X</Text>
-            </TouchableOpacity>
           ),
         }}
       />

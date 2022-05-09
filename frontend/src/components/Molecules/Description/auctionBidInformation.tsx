@@ -12,25 +12,36 @@ const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
 const AuctionBidInformation = ({ item }) => {
   const mainImage = item.itemImages[0];
+  const time = new Date(item.bidding.biddingDate);
+  time.setHours(time.getHours() + 9);
+
   return (
     <View style={styles.container}>
       <View style={styles.boxContainer}>
         <Text style={styles.textContainer}>현재 입찰자</Text>
         <Image
-          source={{ uri: mainImage }}
+          source={{ uri: item.bidding.buyer.profileImageUrl }}
           style={styles.profileContainer}
         ></Image>
         <View style={styles.cardContainer}>
-          <Text style={styles.titleStyle}>댕댕</Text>
+          <Text style={styles.titleStyle}>{item.bidding.buyer.nickname}</Text>
           <View style={{ alignItems: "center" }}>
             <Image
               source={{ uri: mainImage }}
               style={styles.imgContainer}
             ></Image>
             <Text style={styles.title2Style}>현재 입찰가</Text>
-            <Text style={styles.priceStyle}>550,000원</Text>
+            <Text style={styles.priceStyle}>
+              {item.bidding.biddingPrice
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+              원
+            </Text>
           </View>
-          <Text style={styles.title2Style}>입찰 시간 : 2022.04.21</Text>
+          <Text style={styles.title2Style}>
+            입찰 시간 : {new Date(time).toLocaleDateString("ko-KR")}{" "}
+            {new Date(time).toLocaleTimeString("ko-KR")}
+          </Text>
         </View>
       </View>
     </View>

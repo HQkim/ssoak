@@ -7,15 +7,47 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { biddingAuction } from "../../../apis/auctionApi";
+import { RootState } from "../../../store/modules";
+import { loadDataAsync } from "../../../store/modules/detail";
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
 
-const BidCard = ({ item, title, button, edit, biddingUnit, reqItem }) => {
-  const bidding = async () => {
-    const result = await biddingAuction(reqItem, biddingUnit, false);
-    console.warn(result);
+const BidCard = ({
+  item,
+  title,
+  button,
+  edit,
+  biddingUnit,
+  reqItem,
+  getItemDetail,
+}) => {
+  const isLoading = useSelector((state: RootState) => state.detail.isLoading);
+  const dispatch = useDispatch();
+  let biddingPrice = JSON.stringify(biddingUnit);
+  const [value, setValue] = useState(biddingPrice);
+
+  const inputValue = (number) => {
+    setValue(number);
+  };
+
+  const bidding = async (text: string) => {
+    const formData = new FormData();
+    if (text === "immediately") {
+      const price = Number(value);
+      const itemPrice: any = price + item.bidding.biddingPrice;
+      formData.append("biddingPrice", itemPrice);
+    } else {
+      const price = Number(value);
+      const itemPrice: any = price;
+      formData.append("biddingPrice", itemPrice);
+    }
+    const hammer: any = false;
+    formData.append("isHammered", hammer);
+    const result = await biddingAuction(reqItem, formData);
+    getItemDetail();
   };
 
   return (
@@ -31,17 +63,29 @@ const BidCard = ({ item, title, button, edit, biddingUnit, reqItem }) => {
           editable={edit}
           maxLength={15}
           keyboardType="numeric"
-          value={biddingUnit.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+          value={value}
           style={styles.textArea}
           textAlign="center"
-        />
+          onChangeText={(text) => inputValue(text)}
+        ></TextInput>
         <Text style={styles.textStyle}>{title}</Text>
       </View>
-      <TouchableOpacity style={styles.buttonContainer}>
-        <Text style={styles.textStyle2} onPress={bidding}>
-          {button}
-        </Text>
-      </TouchableOpacity>
+      {edit === false ? (
+        <TouchableOpacity style={styles.buttonContainer}>
+          <Text
+            style={styles.textStyle2}
+            onPress={() => bidding("immediately")}
+          >
+            {button}
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity style={styles.buttonContainer}>
+          <Text style={styles.textStyle2} onPress={() => bidding("input")}>
+            {button}
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

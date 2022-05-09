@@ -20,6 +20,7 @@ const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
 const AutionDetailContainer = (props: Props) => {
   const isLoading = useSelector((state: RootState) => state.detail.isLoading);
   const item = useSelector((state: RootState) => state.detail.item);
+  console.warn(props.route);
   const dispatch = useDispatch();
   const [showIndicator, setShowIndicator] = useState(false);
   const reqItem = props.route.params.id;
@@ -57,7 +58,7 @@ const AutionDetailContainer = (props: Props) => {
           keyboardDismissMode={"on-drag"}
           overdrag={true}
         >
-          {isLoading ? (
+          {isLoading && item ? (
             <ImageSkeleton />
           ) : (
             <Carousel imageUrls={item.itemImages} style={styles.page} />
