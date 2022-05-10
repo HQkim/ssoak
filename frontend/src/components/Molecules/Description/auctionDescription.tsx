@@ -9,63 +9,19 @@ import {
   Alert,
 } from "react-native";
 import React, { useState, useCallback, useEffect } from "react";
-import { Ionicons } from "@expo/vector-icons";
 import Border from "../../Atoms/Borders/border";
 import MoreButton from "../../Atoms/Buttons/moreButton";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../../store/modules";
-// import { loadDataAsync } from "../../../store/modules/detail";
-import {
-  likeItem,
-  cancelLikeItem,
-  deleteAuction,
-} from "../../../apis/auctionApi";
-import jwt_decode, { JwtPayload } from "jwt-decode";
+import UpdateButton from "./updateButton";
 
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
 const AuctionDescription = ({ item, reqItem }) => {
   const [showMore, setShowMore] = useState(false);
   const [showDivider, setShowDivier] = useState<boolean>(true);
-  const itemInformation = useSelector((state: RootState) => state.detail.item);
   const [biddingPrice, setBiddingPrice] = useState(0);
-  // const dispatch = useDispatch();
-  const [isLiked, setIsLiked] = useState(item.isLike);
   const navigation = useNavigation();
-  const [select, setSelect] = useState(false);
-  const [token, setToken] = useState<any>();
-
-  const getToken = async () => {
-    const tokenSeq: string = await AsyncStorage.getItem("accessToken");
-    const decodedToken = jwt_decode<JwtPayload>(tokenSeq);
-    const myToken = Number(decodedToken.sub);
-    setToken(myToken);
-  };
-
-  const onSelect = () => {
-    setSelect(!select);
-  };
-
-  // const onStartLoadData = (id: number) => {
-  //   dispatch(loadDataAsync(id));
-  // };
-
-  const onUpdate = () => {
-    navigation.navigate("itemModification", {
-      params: item,
-      reqItem: reqItem,
-    });
-  };
-
-  const ondelete = async (itemSeq: number) => {
-    const result = await deleteAuction(itemSeq);
-    if (result.status === 204) {
-      navigation.navigate("main");
-    }
-  };
 
   const onTextLayout = useCallback((e) => {
     setShowDivier(e.nativeEvent.lines.length < 2);
@@ -74,17 +30,6 @@ const AuctionDescription = ({ item, reqItem }) => {
   const handleMoreClick = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setShowMore(!showMore);
-  };
-
-  const onClickHeart = async (reqItemNumber: number) => {
-    setIsLiked(!isLiked);
-    if (isLiked === true) {
-      const result = await cancelLikeItem(reqItemNumber);
-      console.warn(result);
-    } else {
-      const result = await likeItem(reqItemNumber);
-      console.warn(result);
-    }
   };
 
   const onBid = () => {
@@ -99,7 +44,6 @@ const AuctionDescription = ({ item, reqItem }) => {
   };
 
   useEffect(() => {
-    getToken();
     if (item.bidding) {
       setBiddingPrice(item.bidding.biddingPrice);
     }
@@ -126,50 +70,7 @@ const AuctionDescription = ({ item, reqItem }) => {
             <Text style={styles.typography}>{item.seller.nickname}</Text>
           </View>
         </View>
-        {token === undefined ? null : item.seller.seq === token ? (
-          // <TouchableOpacity
-          //   onPress={onSelect}
-          //   style={{ marginHorizontal: ScreenWidth / 16 }}
-          // >
-          <AntDesign
-            name="ellipsis1"
-            size={24}
-            color="black"
-            style={styles.dropdown}
-            onPress={onSelect}
-          />
-        ) : // </TouchableOpacity>
-        isLiked ? (
-          <Ionicons
-            name={"heart"}
-            size={ScreenWidth / 9}
-            color={"#EA759A"}
-            onPress={() => onClickHeart(reqItem)}
-          />
-        ) : (
-          <Ionicons
-            name={"heart-outline"}
-            size={ScreenWidth / 9}
-            color={"#EA759A"}
-            onPress={() => onClickHeart(reqItem)}
-          />
-        )}
-
-        {select ? (
-          <View style={styles.dropdownContainer}>
-            <Text style={styles.dropdownStyle} onPress={onUpdate}>
-              <Ionicons name="pencil" size={20} color="black" />
-              수정하기
-            </Text>
-            <Text
-              style={styles.dropdownStyle}
-              onPress={() => ondelete(reqItem)}
-            >
-              <Ionicons name="trash-outline" size={20} color="black" />
-              삭제하기
-            </Text>
-          </View>
-        ) : null}
+        <UpdateButton item={item} reqItem={reqItem} />
       </View>
       <View style={styles.box}>
         <Text style={styles.title}>{item.title}</Text>
@@ -307,23 +208,5 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontWeight: "200",
     fontSize: ScreenHeight / 40,
-  },
-  dropdown: {
-    position: "absolute",
-    top: -10,
-    right: -10,
-  },
-  dropdownContainer: {
-    position: "absolute",
-    right: 65,
-    top: 5,
-  },
-  dropdownStyle: {
-    backgroundColor: "#ffffffae",
-    width: 100,
-    height: 35,
-    padding: 5,
-    fontSize: 15,
-    textAlign: "center",
   },
 });
