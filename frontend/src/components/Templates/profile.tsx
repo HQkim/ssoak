@@ -58,7 +58,7 @@ const { width: ScreenWidth } = Dimensions.get("window");
 
 const Profile = (props: Props) => {
   const isLoading = useSelector(
-    (state: RootState) => state.mainLoader.isLoading
+    (state: RootState) => state.mainLoader.isLoading,
   );
   const navigation = useNavigation();
 
@@ -91,7 +91,7 @@ const Profile = (props: Props) => {
       let request = new XMLHttpRequest();
       request.open(
         "POST",
-        "http://k6a207.p.ssafy.io:5000/api/v1/members/profile/test"
+        "https://k6a207.p.ssafy.io/api/v1/members/profile/test",
       );
       // request.responseType = "blob";
       console.log("opened 1111111111111111", request.status);
@@ -108,7 +108,7 @@ const Profile = (props: Props) => {
       request.setRequestHeader(
         "Authorization",
         "Bearer " +
-          "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUzNTI3Nzg5fQ.duH53tFMehKn8sB8X7q2pLj9hT7_-4NVYHpLWtf0qTf3dZ6LQqKbo89fuxEu6eQRgq2dx1gZYrIE2Q9NYbsvqA"
+          "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUzNTI3Nzg5fQ.duH53tFMehKn8sB8X7q2pLj9hT7_-4NVYHpLWtf0qTf3dZ6LQqKbo89fuxEu6eQRgq2dx1gZYrIE2Q9NYbsvqA",
       );
       console.log(request.readyState);
       request.send(options);
@@ -125,10 +125,7 @@ const Profile = (props: Props) => {
       const formData = new FormData();
       formData.append("nickname", name);
       let request = new XMLHttpRequest();
-      request.open(
-        "PATCH",
-        "http://k6a207.p.ssafy.io:5000/api/v1/members/profile"
-      );
+      request.open("PATCH", "https://k6a207.p.ssafy.io/api/v1/members/profile");
       console.log("opened", request.status);
       request.onprogress = () => {
         console.log("loading", request.status);
@@ -139,7 +136,7 @@ const Profile = (props: Props) => {
       request.setRequestHeader(
         "Authorization",
         "Bearer " +
-          "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUzNTI3Nzg5fQ.duH53tFMehKn8sB8X7q2pLj9hT7_-4NVYHpLWtf0qTf3dZ6LQqKbo89fuxEu6eQRgq2dx1gZYrIE2Q9NYbsvqA"
+          "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUzNTI3Nzg5fQ.duH53tFMehKn8sB8X7q2pLj9hT7_-4NVYHpLWtf0qTf3dZ6LQqKbo89fuxEu6eQRgq2dx1gZYrIE2Q9NYbsvqA",
       );
       request.send(formData);
 

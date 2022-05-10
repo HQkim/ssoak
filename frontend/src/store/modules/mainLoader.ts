@@ -6,6 +6,7 @@ import {
   takeEvery,
   takeLatest,
   call,
+  all,
 } from "redux-saga/effects";
 import { getList } from "../../apis/auctionApi";
 
@@ -16,6 +17,7 @@ const DATA_FETCH_ASYNC = "main/DATA_FETCH_ASYNC" as const;
 const DATA_RESET = "main/DATA_RESET" as const;
 const DATA_FETCH_ASYNC_WITHOUT_LOADER =
   "main/DATA_FETCH_ASYNC_WITHOUT_LOADER" as const;
+const DATA_FETCH_FIRST_ASYNC = "main/DATA_FETCH_FIRST_ASYNC" as const;
 //Action 생성자
 
 export const dataFetch = (status: boolean) => ({
@@ -23,9 +25,14 @@ export const dataFetch = (status: boolean) => ({
   payload: status,
 });
 
-export const dataFetchComplete = (data: any) => ({
+export const dataFetchComplete = (data: any, keyword: string) => ({
   type: DATA_FETCH_COMPLETE,
   payload: data,
+  keyword,
+});
+
+export const dataFetchFirstAsync = () => ({
+  type: DATA_FETCH_FIRST_ASYNC,
 });
 
 export const dataReset = () => ({
@@ -58,24 +65,58 @@ function* mainSagaLoader(action: any) {
       page: action.payload.page,
     });
     yield delay(1000);
-    yield put(dataFetchComplete(data.data.auctionList));
-  } catch {
+    yield put(dataFetchComplete(data.data.auctionList, action.payload.keyword));
+  } catch (e) {
+    // console.log(e);
   } finally {
     yield put(dataFetch(false));
   }
 }
 
 function* mainSagaWithoutLoader(action: any) {
-  const data = yield call(getList, {
-    keyword: action.payload.keyword,
-    page: action.payload.page,
-  });
-  yield put(dataFetchComplete(data.data.auctionList));
+  try {
+    const data = yield call(getList, {
+      keyword: action.payload.keyword,
+      page: action.payload.page,
+    });
+    yield put(dataFetchComplete(data.data.auctionList, action.payload.keyword));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* mainFirstFetchSagaLoader(action: any) {
+  try {
+    yield put(dataFetch(true));
+    const params = ["LIVE", "NORMAL"];
+
+    const responses = yield all(
+      params.map((param) =>
+        call(getList, {
+          keyword: param,
+          page: 1,
+        }),
+      ),
+    );
+    yield delay(1000);
+
+    yield put(
+      dataFetchComplete(
+        responses[0].data.auctionList.concat(responses[1].data.auctionList),
+        "FIRST",
+      ),
+    );
+  } catch (e) {
+    console.log(e);
+  } finally {
+    yield put(dataFetch(false));
+  }
 }
 
 export function* loaderSaga() {
   yield takeEvery(DATA_FETCH_ASYNC, mainSagaLoader);
   yield takeEvery(DATA_FETCH_ASYNC_WITHOUT_LOADER, mainSagaWithoutLoader);
+  yield takeLatest(DATA_FETCH_FIRST_ASYNC, mainFirstFetchSagaLoader);
 }
 
 //reducer
@@ -87,7 +128,49 @@ function counter(
     case DATA_FETCH:
       return { ...state, isLoading: action.payload };
     case DATA_FETCH_COMPLETE:
-      return { isLoading: false, data: [...state.data, ...action.payload] };
+      if (action.keyword === "FIRST") {
+        return {
+          livePageAvailable: true,
+          normalPageAvailable: true,
+          isLoading: false,
+          data: state.data.concat(action.payload),
+        };
+      }
+      if (action.payload.length < 10) {
+        if (action.keyword === "LIVE") {
+          return {
+            ...state,
+            livePageAvailable: false,
+            isLoading: false,
+            data: state.data.concat(action.payload),
+          };
+        }
+        if (action.keyword === "NORMAL") {
+          return {
+            ...state,
+            normalPageAvailable: false,
+            isLoading: false,
+            data: state.data.concat(action.payload),
+          };
+        }
+      } else {
+        if (action.keyword === "LIVE") {
+          return {
+            ...state,
+            livePageAvailable: true,
+            isLoading: false,
+            data: state.data.concat(action.payload),
+          };
+        }
+        if (action.keyword === "NORMAL") {
+          return {
+            ...state,
+            normalPageAvailable: true,
+            isLoading: false,
+            data: state.data.concat(action.payload),
+          };
+        }
+      }
     case DATA_RESET:
       return { ...state, data: [] };
     default:
@@ -108,10 +191,14 @@ type LoaderAction =
 type LoaderState = {
   isLoading: boolean;
   data: any;
+  livePageAvailable: boolean;
+  normalPageAvailable: boolean;
 };
 
 //initial state
 const initialState: LoaderState = {
   isLoading: true,
   data: [],
+  livePageAvailable: true,
+  normalPageAvailable: true,
 };

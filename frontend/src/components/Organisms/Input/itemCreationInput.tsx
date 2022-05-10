@@ -12,7 +12,7 @@ import Border from "../../Atoms/Borders/border";
 import RadioButton from "../../Molecules/Buttons/radioButton";
 import DropDown from "../../Molecules/Buttons/dropDown";
 import DateTime from "../../Molecules/Times/dateTime";
-import { createAuction } from "../../../apis/auctionApi";
+import { uction } from "../../../apis/auctionApi";
 import { useNavigation } from "@react-navigation/native";
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");

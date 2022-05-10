@@ -43,14 +43,14 @@ const ProfileContainer = ({ navigation, route }: Props) => {
   const [profile, setProfile] = useState<Profile | null | any>([]);
   const [editStatus, setEditStatus] = useState(false);
   const isLoading = useSelector(
-    (state: RootState) => state.mainLoader.isLoading
+    (state: RootState) => state.mainLoader.isLoading,
   );
 
   const dispatch = useDispatch();
 
-  const onStartLoading = (state: boolean) => {
-    dispatch(dataFetchAsync(state));
-  };
+  // const onStartLoading = (state: boolean) => {
+  //   dispatch(dataFetchAsync(state));
+  // };
 
   const getAccessToken = async () => {
     try {
@@ -81,12 +81,12 @@ const ProfileContainer = ({ navigation, route }: Props) => {
       return () => {
         setEditStatus(false);
       };
-    }, [])
+    }, []),
   );
 
   useEffect(() => {
     navigation.addListener("focus", () => {
-      onStartLoading(false);
+      // onStartLoading(false);
       getAccessToken();
     });
     async function loadFonts() {
@@ -101,7 +101,7 @@ const ProfileContainer = ({ navigation, route }: Props) => {
     <View>
       {isLogin ? (
         <Profile
-          onRefresh={() => onStartLoading(true)}
+          // onRefresh={() => onStartLoading(true)}
           profile={profile}
           setProfile={setProfile}
           navigation={navigation}
