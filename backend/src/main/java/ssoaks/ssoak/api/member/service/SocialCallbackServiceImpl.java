@@ -34,8 +34,21 @@ public class SocialCallbackServiceImpl implements SocialCallbackService{
 
         Integer statusCode;
         String referredType = reqKakaoCallbackDto.getReferrer_type();
+
+        // 테스트 로그 equals로 해줘야함!!!
+        System.out.println("adminKey type: " + adminKey.getClass());
+        System.out.println("ourKakaoAdminKey type: " + ourKakaoAdminKey.getClass());
+        System.out.println("referredType type: " + referredType.getClass());
+        System.out.println("adminKey: " + adminKey);
+        System.out.println("ourKakaoAdminKey: " + ourKakaoAdminKey);
+        System.out.println("referredType: " + referredType);
+        System.out.println("adminKey == ourKakaoAdminKey: " + (adminKey.equals(ourKakaoAdminKey)));
+        System.out.println("referredType == ACCOUNT_DELETE: " + (referredType.equals("ACCOUNT_DELETE")));
+        System.out.println("referredType == UNLINK_FROM_ADMIN: " + (referredType.equals("UNLINK_FROM_ADMIN")));
+        System.out.println("referredType == UNLINK_FROM_APPS: "+ (referredType.equals("UNLINK_FROM_APPS")));
+
         try {
-            if (adminKey == ourKakaoAdminKey && (referredType == "ACCOUNT_DELETE" || referredType == "UNLINK_FROM_ADMIN" || referredType == "UNLINK_FROM_APPS")) {
+            if (adminKey.equals(ourKakaoAdminKey) && (referredType.equals("ACCOUNT_DELETE") || referredType.equals("UNLINK_FROM_ADMIN") || referredType.equals("UNLINK_FROM_APPS"))) {
                 statusCode = deleteMemberByKakaoId(reqKakaoCallbackDto.getUser_id());;
             } else {
                 throw new Exception("어드민키 다름!!!");
