@@ -16,6 +16,8 @@ import ssoaks.ssoak.api.member.entity.Member;
 import ssoaks.ssoak.api.member.repository.MemberRepository;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -32,8 +34,8 @@ public class LiveAuctionMessageServiceImpl implements LiveAuctionMessageService{
     @Override
     public ResLiveAuctionMessageDto sendAuctionMessage(ReqLiveAuctionMessageDto reqLiveAuctionMessageDto) {
 
-        Long messageType = reqLiveAuctionMessageDto.getMessageType();
-        Member member = memberRepository.findBySeq(reqLiveAuctionMessageDto.getMemberSeq())
+        Long messageType = reqLiveAuctionMessageDto.getType();
+        Member member = memberRepository.findBySeq((Long) reqLiveAuctionMessageDto.getUser().get("_id"))
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 회원입니다"));
 
         Item item = itemRepository.findBySeq(reqLiveAuctionMessageDto.getItemSeq())
@@ -42,7 +44,7 @@ public class LiveAuctionMessageServiceImpl implements LiveAuctionMessageService{
         if (messageType == 1) {
 
             Bidding latestBidding = biddingRepository.getLatestBiddingByItemSeq(reqLiveAuctionMessageDto.getItemSeq());
-            int price = Integer.parseInt(reqLiveAuctionMessageDto.getContent());
+            int price = Integer.parseInt(reqLiveAuctionMessageDto.getText());
 
             if (latestBidding == null || latestBidding.getBiddingPrice() < price) {
                 Bidding newBidding = Bidding.builder()
@@ -57,13 +59,18 @@ public class LiveAuctionMessageServiceImpl implements LiveAuctionMessageService{
                 throw new NotAcceptableBiddingException("최고 입찰가보다 낮은 입찰입니다.");
             }
         }
+        Map<String, Object> resUser = new HashMap<String, Object>();
+        Map<String, Object> reqUser = reqLiveAuctionMessageDto.getUser();
+        resUser.put("_id", reqUser.get("_id"));
+        resUser.put("avatar", member.getProfileImageUrl());
+        resUser.put("name", member.getNickname());
         return ResLiveAuctionMessageDto.builder()
+                ._id(reqLiveAuctionMessageDto.get_id())
                 .itemSeq(reqLiveAuctionMessageDto.getItemSeq())
-                .memberSeq(reqLiveAuctionMessageDto.getMemberSeq())
-                .memberNickname(member.getNickname())
-                .messageType(messageType)
-                .content(reqLiveAuctionMessageDto.getContent())
-                .createdAt(LocalDateTime.now())
+                .createdAt(reqLiveAuctionMessageDto.getCreatedAt())
+                .text(reqLiveAuctionMessageDto.getText())
+                .type(reqLiveAuctionMessageDto.getType())
+                .user(resUser)
                 .build();
     }
 
