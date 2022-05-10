@@ -33,10 +33,10 @@ public class SocialCallbackServiceImpl implements SocialCallbackService{
             (String adminKey, ReqKakaoCallbackDto reqKakaoCallbackDto) throws Exception{
 
         Integer statusCode;
-        String referredType = reqKakaoCallbackDto.getReferredType();
+        String referredType = reqKakaoCallbackDto.getReferrer_type();
         try {
-            if (adminKey == ourKakaoAdminKey && (referredType == "ACCOUNT_DELET" || referredType == "UNLINK_FROM_ADMIN" || referredType == "UNLINK_FROM_APPS")) {
-                statusCode = deleteMemberByKakaoId(reqKakaoCallbackDto.getUserId());;
+            if (adminKey == ourKakaoAdminKey && (referredType == "ACCOUNT_DELETE" || referredType == "UNLINK_FROM_ADMIN" || referredType == "UNLINK_FROM_APPS")) {
+                statusCode = deleteMemberByKakaoId(reqKakaoCallbackDto.getUser_id());;
             } else {
                 throw new Exception("어드민키 다름!!!");
             }

@@ -9,8 +9,8 @@ import lombok.ToString;
 @Data
 public class ReqKakaoCallbackDto {
 
-    String appId;
-    String userId;
-    String referredType;
+    String app_id;
+    String user_id;
+    String referrer_type;
 
 }
