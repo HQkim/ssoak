@@ -18,12 +18,14 @@ type Props = {
 
 const ItemModificationContainer = (props: Props) => {
   const item = props.route.params.params;
+  const reqItem = props.route.params.reqItem;
   return (
     <View>
       <ItemModification
         route={props.route}
         item={item}
         navigation={props.navigation}
+        reqItem={reqItem}
       />
     </View>
   );

@@ -31,7 +31,6 @@ const AuctionDetail = ({ route }) => {
   }, []);
 
   const getItemDetail = () => {
-    console.warn(333);
     dispatch(loadDataAsync(reqItem));
     setItem(route.params.item);
   };

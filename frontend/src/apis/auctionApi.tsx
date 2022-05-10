@@ -11,12 +11,12 @@ export const detailAuction = async (itemSeq) => {
 };
 
 export const updateAuction = async (itemSeq, formData) => {
-  const response = await fileInstance.patch(`/auctions/${56}`, formData);
+  const response = await fileInstance.patch(`/auctions/${itemSeq}`, formData);
   return response.data;
 };
 
 export const deleteAuction = async (itemSeq) => {
-  const response = await instance.delete(`/auctions/${59}`);
+  const response = await instance.delete(`/auctions/${itemSeq}`);
   return response;
 };
 
@@ -49,7 +49,7 @@ export const getList = async ({ keyword, page }) => {
 export const biddingAuction = async (itemSeq, formData) => {
   const response = await instance.post(
     `/auctions/${itemSeq}/bidding`,
-    formData,
+    formData
   );
   console.warn(response);
 };

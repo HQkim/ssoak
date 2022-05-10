@@ -4,6 +4,8 @@ import Main from "../Templates/main";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import { useDispatch } from "react-redux";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+
 import {
   dataFetchAsync,
   dataReset,
@@ -18,7 +20,7 @@ type Props = {
 
 const MainContainer = ({ navigation, route }: Props) => {
   const isLoading = useSelector(
-    (state: RootState) => state.mainLoader.isLoading,
+    (state: RootState) => state.mainLoader.isLoading
   );
 
   // const data = useSelector((state: RootState) => state.mainLoader.data);
@@ -47,11 +49,24 @@ const MainContainer = ({ navigation, route }: Props) => {
   //   setNormalPage(normalPage + 1);
   // };
 
+  // useEffect(() => {
+  //   return () => {
+  //     onRefresh();
+  //   };
+  // }, []);
+
   useEffect(() => {
-    return () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       onRefresh();
-    };
-  }, []);
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     onRefresh();
+  //   }, [])
+  // );
 
   useEffect(() => {
     console.log(livePage, normalPage);
