@@ -6,7 +6,6 @@ import ItemTextInput from "../../Atoms/Items/itemTextInput";
 import CompletedTag from "../../Atoms/Tags/completedTag";
 
 type Props = {};
-const source = require("../../../../assets/temp.jpg");
 const { height: ScreenHeight } = Dimensions.get("window");
 const { width: ScreenWidth } = Dimensions.get("window");
 
@@ -17,7 +16,10 @@ const ItemInforms = ({ item }) => {
         <>
           <View style={{ flexDirection: "row", marginTop: 10 }}>
             <View style={{ flex: 2 }}>
-              <ItemImage source={source} imageStyle={styles.imageStyle} />
+              <ItemImage
+                source={{ uri: item.imageUrl }}
+                imageStyle={styles.imageStyle}
+              />
             </View>
             <View style={{ flex: 6, justifyContent: "space-between" }}>
               <ItemTitle
@@ -46,7 +48,7 @@ const ItemInforms = ({ item }) => {
             <View style={{ flexDirection: "row", flex: 1 }}>
               <Text>시초가 : </Text>
               <ItemTextInput
-                value={item.biddingCount
+                value={item.startPrice
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                 textAlign={"center"}
@@ -57,7 +59,7 @@ const ItemInforms = ({ item }) => {
             <View style={{ flexDirection: "row", flex: 1, marginLeft: 19 }}>
               <Text>입찰가 : </Text>
               <ItemTextInput
-                value={item.biddingCount
+                value={item.lastPrice
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                 textAlign={"center"}
@@ -92,7 +94,10 @@ const ItemInforms = ({ item }) => {
         <>
           <View style={{ flexDirection: "row", marginTop: 10 }}>
             <View style={{ flex: 2 }}>
-              <ItemImage source={source} imageStyle={styles.imageStyle} />
+              <ItemImage
+                source={{ uri: item.imageUrl }}
+                imageStyle={styles.imageStyle}
+              />
             </View>
             <View style={{ flex: 6, justifyContent: "space-between" }}>
               <ItemTitle
@@ -150,6 +155,8 @@ const styles = StyleSheet.create({
   imageStyle: {
     width: ScreenHeight / 10,
     height: ScreenHeight / 10,
+    borderColor: "#d7d4d4",
+    borderWidth: 1,
   },
   titleStyle: {
     fontSize: 18,
@@ -169,10 +176,6 @@ const styles = StyleSheet.create({
     width: ScreenWidth / 4,
   },
   textAreaDate: {
-    // borderRadius: 20,
-    // borderWidth: 0.5,
-    // height: 24,
-    // width: ScreenWidth / 2,
     borderRadius: 20,
     borderWidth: 0.5,
     height: 24,

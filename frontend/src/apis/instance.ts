@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const BaseURL = "http://k6a207.p.ssafy.io:5000/api/v1";
+const BaseURL = "https://k6a207.p.ssafy.io/api/v1";
 
 export const instance: AxiosInstance = axios.create({
   baseURL: `${BaseURL}`,
@@ -26,7 +26,7 @@ instance.interceptors.request.use(
   },
   (err) => {
     return Promise.reject(err);
-  },
+  }
 );
 fileInstance.interceptors.request.use(
   async (config: any) => {
@@ -36,7 +36,7 @@ fileInstance.interceptors.request.use(
   },
   (err) => {
     return Promise.reject(err);
-  },
+  }
 );
 
 export const noHeaderInstance = axios.create({

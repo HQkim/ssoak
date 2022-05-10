@@ -11,7 +11,7 @@ import {
   Alert,
   Platform,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -22,10 +22,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
-import { editKakaoNickname } from "../../apis/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { editKakaoProfile } from "../../apis/auth";
 
 type Props = {
-  onRefresh: () => any | undefined;
   navigation: any | undefined;
   route: object;
   profile: {
@@ -35,6 +35,8 @@ type Props = {
     profileImageUrl: string;
     seq: number;
   };
+  token: string;
+  setAccessToken: Function;
   setProfile: Function;
   setEditStatus: Function;
   editStatus: boolean;
@@ -49,20 +51,20 @@ interface File {
   imgFile: string;
 }
 
-interface test {
-  test: Array<object>;
-}
-
 const { height: ScreenHeight } = Dimensions.get("window");
 const { width: ScreenWidth } = Dimensions.get("window");
 
 const Profile = (props: Props) => {
-  const isLoading = useSelector(
-    (state: RootState) => state.mainLoader.isLoading
-  );
   const navigation = useNavigation();
 
-  const [image, setImage] = useState<Item | null | any>("");
+  const logout = async () => {
+    await AsyncStorage.removeItem("accessToken");
+    props.setAccessToken("");
+    props.navigation.navigate("main");
+  };
+  const [image, setImage] = useState<Item | null | any>(
+    props.profile.profileImageUrl
+  );
   const [file, setFile] = useState<File | null | any>([]);
   const [name, setName] = useState("");
 
@@ -73,46 +75,24 @@ const Profile = (props: Props) => {
     });
     console.log(result);
     if (!result.cancelled) {
-      setImage(result.uri); //이미지 uri
+      const uri = result.uri;
+      const newFile = result;
+      setImage(result.uri);
       setFile(result);
       const formData = new FormData();
       const trimmedURI = file.uri.replace("file://", "");
-      const trimmedURI_android = file.uri;
+      const trimmedURI_android = uri;
       const fileName = trimmedURI.split("/").pop();
+      const fileName_android = trimmedURI_android.split("/").pop();
       const item: any = {
         type: "image/jpeg",
         uri: Platform.OS === "ios" ? trimmedURI : trimmedURI_android,
-        name: fileName,
+        name: Platform.OS === "ios" ? fileName : fileName_android,
       };
       formData.append("profileImage", item);
-      let options = { content: formData };
-      props.setProfile({ ...props.profile, profileImageUrl: image });
-      console.log(formData, "폼!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      let request = new XMLHttpRequest();
-      request.open(
-        "POST",
-        "http://k6a207.p.ssafy.io:5000/api/v1/members/profile/test"
+      await editKakaoProfile(formData).then(() =>
+        props.setProfile({ ...props.profile, profileImageUrl: uri })
       );
-      // request.responseType = "blob";
-      console.log("opened 1111111111111111", request.status);
-      request.onprogress = () => {
-        console.log("loading 2222222222222222", request.status);
-      };
-      request.onload = () => {
-        console.log("loading 33333333333333333", request.status);
-      };
-      request.onerror = () => {
-        console.log("errrrrrrrrrrrrrrrrrrrrrrr", request.status);
-      };
-      // request.setRequestHeader("Content-Type", "multipart/form-data");
-      request.setRequestHeader(
-        "Authorization",
-        "Bearer " +
-          "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUzNTI3Nzg5fQ.duH53tFMehKn8sB8X7q2pLj9hT7_-4NVYHpLWtf0qTf3dZ6LQqKbo89fuxEu6eQRgq2dx1gZYrIE2Q9NYbsvqA"
-      );
-      console.log(request.readyState);
-      request.send(options);
-      // request.send(formData);
     }
   };
 
@@ -124,36 +104,14 @@ const Profile = (props: Props) => {
     } else if (props.editStatus == true && name) {
       const formData = new FormData();
       formData.append("nickname", name);
-      let request = new XMLHttpRequest();
-      request.open(
-        "PATCH",
-        "http://k6a207.p.ssafy.io:5000/api/v1/members/profile"
-      );
-      console.log("opened", request.status);
-      request.onprogress = () => {
-        console.log("loading", request.status);
-      };
-      request.onload = () => {
-        console.log("loading", request.status);
-      };
-      request.setRequestHeader(
-        "Authorization",
-        "Bearer " +
-          "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNjUzNTI3Nzg5fQ.duH53tFMehKn8sB8X7q2pLj9hT7_-4NVYHpLWtf0qTf3dZ6LQqKbo89fuxEu6eQRgq2dx1gZYrIE2Q9NYbsvqA"
-      );
-      request.send(formData);
-
+      await editKakaoProfile(formData);
       props.setEditStatus(!props.editStatus);
     }
   };
 
   return (
     <View>
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={props.onRefresh} />
-        }
-      >
+      <ScrollView>
         <View
           style={{
             height: ScreenHeight / 3,
@@ -200,7 +158,11 @@ const Profile = (props: Props) => {
                   <Fontisto name="bell" size={20} color="black" />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Ionicons name="settings-outline" size={20} color="black" />
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("setting")}
+                  >
+                    <Ionicons name="settings-outline" size={20} color="black" />
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -222,6 +184,8 @@ const Profile = (props: Props) => {
                 borderRadius: ScreenHeight / 12,
                 position: "relative",
                 marginTop: -ScreenHeight / 12,
+                borderColor: "#d7d4d4",
+                borderWidth: 1,
               }}
               source={{ uri: props.profile.profileImageUrl }}
             />
@@ -239,54 +203,49 @@ const Profile = (props: Props) => {
           <View style={{ alignItems: "center", marginTop: ScreenHeight / 50 }}>
             {props.editStatus == false ? (
               <TouchableOpacity onPress={editName}>
-                <TextInput
-                  style={{
-                    fontSize: 20,
-                    padding: 10,
-                    fontWeight: "bold",
-                    position: "relative",
-                    color: "black",
-                  }}
-                  editable={false}
-                  textAlign="center"
-                  value={props.profile.nickname}
-                  maxLength={5}
-                />
-                <AntDesign
-                  name="edit"
-                  size={24}
-                  color="black"
-                  style={{ position: "absolute", left: ScreenWidth / 6 }}
-                />
+                <View style={{ flexDirection: "row" }}>
+                  <TextInput
+                    style={{
+                      fontSize: 20,
+                      padding: 10,
+                      fontWeight: "bold",
+                      color: "black",
+                    }}
+                    editable={false}
+                    textAlign="center"
+                    value={props.profile.nickname}
+                    maxLength={5}
+                  />
+                  <AntDesign name="edit" size={24} color="black" />
+                </View>
               </TouchableOpacity>
             ) : (
               <>
-                <TextInput
-                  style={{
-                    fontSize: 20,
-                    padding: 10,
-                    fontWeight: "bold",
-                    position: "relative",
-                    color: "black",
-                    borderBottomWidth: 1,
-                  }}
-                  editable={true}
-                  textAlign="center"
-                  value={name}
-                  maxLength={5}
-                  onChangeText={setName}
-                  defaultValue={props.profile.nickname}
-                />
-                <AntDesign
-                  name="checkcircleo"
-                  size={24}
-                  color="black"
-                  onPress={editName}
-                  style={{
-                    position: "absolute",
-                    left: ScreenWidth / 3,
-                  }}
-                />
+                <View style={{ flexDirection: "row" }}>
+                  <TextInput
+                    style={{
+                      fontSize: 20,
+                      padding: 10,
+                      fontWeight: "bold",
+                      // position: "relative",
+                      color: "black",
+                      borderBottomWidth: 1,
+                    }}
+                    editable={true}
+                    textAlign="center"
+                    value={name}
+                    maxLength={5}
+                    onChangeText={setName}
+                    defaultValue={props.profile.nickname}
+                  />
+
+                  <AntDesign
+                    name="checkcircleo"
+                    size={24}
+                    color="black"
+                    onPress={editName}
+                  />
+                </View>
               </>
             )}
             <Text style={{ fontSize: 15, padding: 7, fontWeight: "bold" }}>
@@ -377,14 +336,18 @@ const Profile = (props: Props) => {
               <AntDesign name="sound" size={24} color="black" />
               <Text style={{ fontSize: 15, padding: 15 }}>공지사항</Text>
             </View>
-            <View style={styles.informView}>
-              <MaterialIcons name="logout" size={24} color="black" />
-              <Text style={{ fontSize: 15, padding: 15 }}>로그아웃</Text>
-            </View>
-            <View style={styles.informView}>
-              <Ionicons name="settings-outline" size={20} color="black" />
-              <Text style={{ fontSize: 15, padding: 15 }}>설정</Text>
-            </View>
+            <TouchableOpacity onPress={logout}>
+              <View style={styles.informView}>
+                <MaterialIcons name="logout" size={24} color="black" />
+                <Text style={{ fontSize: 15, padding: 15 }}>로그아웃</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("setting")}>
+              <View style={styles.informView}>
+                <Ionicons name="settings-outline" size={20} color="black" />
+                <Text style={{ fontSize: 15, padding: 15 }}>설정</Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
