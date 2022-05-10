@@ -49,24 +49,14 @@ const MainContainer = ({ navigation, route }: Props) => {
   //   setNormalPage(normalPage + 1);
   // };
 
-  // useEffect(() => {
-  //   return () => {
-  //     onRefresh();
-  //   };
-  // }, []);
+  navigation.addListener("focus", () => {
+    onRefresh();
+  });
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      onRefresh();
-    });
-    return unsubscribe;
-  }, [navigation]);
+  navigation.addListener("blur", () => {
+    dispatch(dataReset());
+  });
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     onRefresh();
-  //   }, [])
-  // );
 
   useEffect(() => {
     console.log(livePage, normalPage);
