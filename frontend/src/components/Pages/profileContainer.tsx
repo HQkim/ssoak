@@ -5,6 +5,7 @@ import {
   Image,
   Dimensions,
   RefreshControl,
+  Platform,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,7 +17,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import { useDispatch } from "react-redux";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { dataFetchAsync } from "../../store/modules/mainLoader";
 import AppleLoginButton from "../Atoms/Buttons/appleLoginButton";
 
 const LogoImage = require("../../../assets/loading/loadingImg.jpg");
@@ -42,29 +42,24 @@ const ProfileContainer = ({ navigation, route }: Props) => {
   const [font, setFont] = useState(false);
   const [profile, setProfile] = useState<Profile | null | any>([]);
   const [editStatus, setEditStatus] = useState(false);
-  const isLoading = useSelector(
-    (state: RootState) => state.mainLoader.isLoading,
-  );
 
   const dispatch = useDispatch();
-
-  // const onStartLoading = (state: boolean) => {
-  //   dispatch(dataFetchAsync(state));
-  // };
 
   const getAccessToken = async () => {
     try {
       const token = await AsyncStorage.getItem("accessToken");
-      if (token !== null) {
+      if (typeof token == "string") {
         setAccessToken(token);
         setIsLogin(true);
         try {
-          kakaoProfile(token).then((res) => {
+          await kakaoProfile().then((res) => {
             setProfile(res.data);
           });
         } catch (err) {
           console.log(err);
         }
+      } else {
+        setIsLogin(false);
       }
     } catch (e) {
       console.log(e);
@@ -86,7 +81,6 @@ const ProfileContainer = ({ navigation, route }: Props) => {
 
   useEffect(() => {
     navigation.addListener("focus", () => {
-      // onStartLoading(false);
       getAccessToken();
     });
     async function loadFonts() {
@@ -101,11 +95,12 @@ const ProfileContainer = ({ navigation, route }: Props) => {
     <View>
       {isLogin ? (
         <Profile
-          // onRefresh={() => onStartLoading(true)}
           profile={profile}
           setProfile={setProfile}
           navigation={navigation}
           route={route}
+          token={accessToken}
+          setAccessToken={setAccessToken}
           setEditStatus={setEditStatus}
           editStatus={editStatus}
         />
@@ -115,7 +110,7 @@ const ProfileContainer = ({ navigation, route }: Props) => {
           {font ? <Text style={styles.title}>내 손 안에 경매장</Text> : null}
           {font ? <Text style={styles.mainTitle}>쏙</Text> : null}
           <KakaoLoginButton loadKakaoLogin={loadKakaoLogin} />
-          <AppleLoginButton />
+          {Platform.OS == "ios" ? <AppleLoginButton /> : null}
         </View>
       )}
     </View>

@@ -27,17 +27,40 @@ const MainChat = (props: Props) => {
       });
     }
   };
+  const [token, setToken] = useState<any>("");
+  const getToken = async () => {
+    await AsyncStorage.getItem("accessToken", (err, res) => {
+      setToken(res);
+    });
+  };
+  useEffect(() => {
+    getToken();
+  }, []);
+
+  useEffect(() => {
+    connect();
+  }, [token]);
+
+  console.log();
 
   const connect = () => {
     client = new StompJs.Client({
       brokerURL: "wss://k6a207.p.ssafy.io/api/v1/ws",
+      // connectHeaders: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+
       debug: function (str) {
-        console.log(str);
+        console.log(str, "onDebug");
       },
       reconnectDelay: 1000, //자동 재 연결
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
     });
+
+    client.beforeConnect = (message) => {
+      console.log(message, "beforeConnect");
+    };
 
     client.onConnect = function (frame) {
       subscribe();
@@ -64,8 +87,7 @@ const MainChat = (props: Props) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
 
   const onSend = useCallback((messages = []) => {
-    console.log(client, connected, messages);
-    // console.log(messages);
+    console.log(connected, messages);
     if (client != null) {
       if (!connected) return;
       client.publish({
@@ -82,7 +104,6 @@ const MainChat = (props: Props) => {
     console.log(connected, "connected Changed");
   }, [connected]);
   useEffect(() => {
-    connect();
     setMessages([
       {
         _id: 1,

@@ -17,7 +17,6 @@ const DateTime = (props: Props) => {
   const [timeOpen, setTimeOpen] = useState(false);
   const [date, setDate] = useState(new Date());
   const [minimumDate, setMinimumDate] = useState(new Date());
-  const [selectDate, setSelectDate] = useState(props.item);
 
   const onChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
@@ -40,7 +39,7 @@ const DateTime = (props: Props) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      if (props.item === 0 || props.item === 1) {
+      if (props.item === 0) {
         setDate(new Date());
       } else if (props.item != 0) {
         const startDateTime = props.item.startTime;
@@ -52,6 +51,20 @@ const DateTime = (props: Props) => {
         }
       }
       setMinimumDate(new Date());
+      return () => {
+        if (props.item === 0) {
+          setDate(new Date());
+        } else if (props.item != 0) {
+          const startDateTime = props.item.startTime;
+          const endDateTime = props.item.endTime;
+          if (props.item.auctionType === "NORMAL") {
+            setDate(new Date(endDateTime));
+          } else if (props.item.auctionType === "LIVE") {
+            setDate(new Date(startDateTime));
+          }
+        }
+        setMinimumDate(new Date());
+      };
     }, [])
   );
 

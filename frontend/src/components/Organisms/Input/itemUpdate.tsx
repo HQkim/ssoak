@@ -274,12 +274,12 @@ const ItemUpdate = (props: Props) => {
         >
           {select ? "경매 시작 날짜" : "경매 종료 날짜"}
         </Text>
-        {/* <DateTime
+        <DateTime
           getSelectInformation={getDateTime}
           navigation={props.navigation}
           route={props.route}
           item={item}
-        /> */}
+        />
       </View>
       <Border style={styles.border} />
       <TextInput

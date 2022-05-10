@@ -29,12 +29,7 @@ const NotSold = (props: Props) => {
 
   return (
     <ScrollView style={{ backgroundColor: "#fff", height: "100%" }}>
-      <ItemList
-        items={items}
-        containerStyle={styles.container}
-        navigation={props.navigation}
-        route={props.route}
-      />
+      <ItemList items={items} containerStyle={styles.container} />
     </ScrollView>
   );
 };

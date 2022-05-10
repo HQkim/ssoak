@@ -7,6 +7,7 @@ import OnSaleContainer from "../../Pages/onSaleContainer";
 import PurchasedContainer from "../../Pages/purchasedContainer";
 import HistoryContainer from "../../Pages/historyContainer";
 import NavigatorTitle from "../../Atoms/Typographies/navigatorTitle";
+import SettingContainer from "../../Pages/settingContainer";
 
 type Props = {};
 
@@ -79,6 +80,16 @@ const ProfileStackNavigator = (props: Props) => {
               title={"판매이력 목록"}
               style={styles.navigatorTitle}
             />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="setting"
+        component={SettingContainer}
+        options={{
+          headerTitleAlign: "center",
+          headerTitle: (props) => (
+            <NavigatorTitle title={"설정"} style={styles.navigatorTitle} />
           ),
         }}
       />

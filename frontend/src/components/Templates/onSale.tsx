@@ -28,15 +28,22 @@ const { width: ScreenWidth } = Dimensions.get("window");
 
 const onSale = (props: Props) => {
   const [items, setItems] = useState<Items | null | any>([]);
+  const navigation: any = useNavigation();
   const getData = async () => {
     const response = await getOnSaleItems();
     setItems(response);
   };
 
-  const goItemDetail = (id: number) => {
-    props.navigation.navigate("auctionDetail", {
-      id: id,
-    });
+  const goDetail = (item) => {
+    if (item.auctionType == "NORMAL") {
+      navigation.navigate("auctionDetail", {
+        id: item.itemSeq,
+      });
+    } else {
+      navigation.navigate("detail", {
+        id: item.itemSeq,
+      });
+    }
   };
 
   useFocusEffect(
@@ -51,7 +58,7 @@ const onSale = (props: Props) => {
       {items &&
         items.map((item, index) => (
           <View key={index} style={styles.onSaleContainer}>
-            <TouchableOpacity onPress={() => goItemDetail(item.itemSeq)}>
+            <TouchableOpacity onPress={() => goDetail(item)}>
               <AuctionTypeTag
                 styles={{ tag: styles.auctionTypeTag }}
                 text={item.auctionType == "LIVE" ? "실시간" : "일반"}
@@ -63,6 +70,8 @@ const onSale = (props: Props) => {
                     style={{
                       width: ScreenHeight / 10,
                       height: ScreenHeight / 10,
+                      borderColor: "#d7d4d4",
+                      borderWidth: 1,
                     }}
                   />
                 </View>

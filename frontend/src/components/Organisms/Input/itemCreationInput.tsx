@@ -62,7 +62,6 @@ const ItemCreationInput = (props: Props) => {
       content: "",
     });
     setSelect(true);
-    // console.warn(form);
   }, []);
 
   const onSelect = (info: boolean | string) => {
