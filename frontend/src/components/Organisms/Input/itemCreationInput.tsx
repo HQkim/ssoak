@@ -40,7 +40,7 @@ const ItemCreationInput = (props: Props) => {
   const [value, setValue] = useState<Form | null | any>([]);
   const [select, setSelect] = useState(true);
   const [dateTime, setDateTime] = useState(0);
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
 
   const { title, content, startPrice } = value;
 
