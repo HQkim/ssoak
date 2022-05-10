@@ -69,19 +69,18 @@ const BidCard = ({
         <Text style={styles.textStyle}>{title}</Text>
       </View>
       {edit === false ? (
-        <TouchableOpacity style={styles.buttonContainer}>
-          <Text
-            style={styles.textStyle2}
-            onPress={() => bidding("immediately")}
-          >
-            {button}
-          </Text>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => bidding("input")}
+        >
+          <Text style={styles.textStyle2}>{button}</Text>
         </TouchableOpacity>
       ) : (
-        <TouchableOpacity style={styles.buttonContainer}>
-          <Text style={styles.textStyle2} onPress={() => bidding("input")}>
-            {button}
-          </Text>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => bidding("input")}
+        >
+          <Text style={styles.textStyle2}>{button}</Text>
         </TouchableOpacity>
       )}
     </View>
