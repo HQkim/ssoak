@@ -291,6 +291,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                                 .and(item.endTime.after(LocalDateTime.now()))
                                 .and(item.title.contains(searchDto.getKeyword()))
                                 .or(item.content.contains(searchDto.getKeyword())),
+                        auctionTypeEq(searchDto.getAuctionType()),
                         categoryEq(searchDto.getCategory()),
                         timeBetween(searchDto.getStartTime(), searchDto.getEndTime()),
                         priceBetween(searchDto.getStartPrice(), searchDto.getEndPrice())
