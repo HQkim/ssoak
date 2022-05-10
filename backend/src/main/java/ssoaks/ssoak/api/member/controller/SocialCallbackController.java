@@ -21,9 +21,10 @@ public class SocialCallbackController {
     private final SocialCallbackService socialCallbackService;
 
     @PostMapping("/kakao")
-    public ResponseEntity kakaoCallback (@RequestHeader("Authorization") String appAdminKey, @RequestBody ReqKakaoCallbackDto reqKakaoCallbackDto) {
+    public ResponseEntity kakaoCallback (@RequestHeader("Authorization") String appAdminKey, ReqKakaoCallbackDto reqKakaoCallbackDto) {
         log.debug("SocialCallbackController kakaoCallback 호출됨");
         System.out.println("======appAdminKey: " + appAdminKey);
+        System.out.println("======appAdminKey Length: " + appAdminKey.length());
         System.out.println("======reqKakaoCallbackDto: " + reqKakaoCallbackDto);
 
         String adminKey = appAdminKey.substring(8);
