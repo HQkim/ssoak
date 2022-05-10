@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions, TextInput } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import NavigatorTitle from "../../Atoms/Typographies/navigatorTitle";
 import NavigatorTextInput from "../../Atoms/Typographies/navigatorTextInput";
@@ -12,6 +12,7 @@ const Stack = createStackNavigator();
 const { width: ScreenWidth } = Dimensions.get("window");
 const { height: ScreenHeight } = Dimensions.get("window");
 const SearchStackNavigator = (props: Props) => {
+  const [text, setText] = useState("");
   return (
     <Stack.Navigator
       screenOptions={{
@@ -29,7 +30,11 @@ const SearchStackNavigator = (props: Props) => {
         options={{
           headerTitleAlign: "center",
           headerTitle: (props) => (
-            <NavigatorTextInput style={styles.NavigatorTextInput} />
+            <NavigatorTextInput
+              style={styles.NavigatorTextInput}
+              setText={setText}
+              text={text}
+            />
           ),
         }}
       />
@@ -42,6 +47,7 @@ const SearchStackNavigator = (props: Props) => {
             <NavigatorTitle title={"검색 필터"} style={styles.navigatorTitle} />
           ),
         }}
+        /// <reference path="search" />
       />
     </Stack.Navigator>
   );
@@ -59,5 +65,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     textAlign: "center",
     padding: 7,
+    position: "relative",
   },
 });
