@@ -54,7 +54,7 @@ const ItemUpdate = (props: Props) => {
     },
   });
   const [select, setSelect] = useState(true);
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
 
   useFocusEffect(
     React.useCallback(() => {
