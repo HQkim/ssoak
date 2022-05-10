@@ -17,7 +17,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import { useDispatch } from "react-redux";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { dataFetchAsync } from "../../store/modules/mainLoader";
 import AppleLoginButton from "../Atoms/Buttons/appleLoginButton";
 
 const LogoImage = require("../../../assets/loading/loadingImg.jpg");
@@ -43,15 +42,8 @@ const ProfileContainer = ({ navigation, route }: Props) => {
   const [font, setFont] = useState(false);
   const [profile, setProfile] = useState<Profile | null | any>([]);
   const [editStatus, setEditStatus] = useState(false);
-  const isLoading = useSelector(
-    (state: RootState) => state.mainLoader.isLoading
-  );
 
   const dispatch = useDispatch();
-
-  const onStartLoading = (state: boolean) => {
-    dispatch(dataFetchAsync(state));
-  };
 
   const getAccessToken = async () => {
     try {
@@ -60,7 +52,7 @@ const ProfileContainer = ({ navigation, route }: Props) => {
         setAccessToken(token);
         setIsLogin(true);
         try {
-          kakaoProfile(token).then((res) => {
+          await kakaoProfile().then((res) => {
             setProfile(res.data);
           });
         } catch (err) {
@@ -89,7 +81,6 @@ const ProfileContainer = ({ navigation, route }: Props) => {
 
   useEffect(() => {
     navigation.addListener("focus", () => {
-      onStartLoading(false);
       getAccessToken();
     });
     async function loadFonts() {
@@ -102,9 +93,8 @@ const ProfileContainer = ({ navigation, route }: Props) => {
   }, [navigation]);
   return (
     <View>
-      {isLogin == false ? (
+      {isLogin ? (
         <Profile
-          onRefresh={() => onStartLoading(true)}
           profile={profile}
           setProfile={setProfile}
           navigation={navigation}
