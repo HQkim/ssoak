@@ -8,10 +8,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { biddingAuction } from "../../../apis/auctionApi";
 import { RootState } from "../../../store/modules";
-import { loadDataAsync } from "../../../store/modules/detail";
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
 
@@ -25,7 +24,6 @@ const BidCard = ({
   getItemDetail,
 }) => {
   const isLoading = useSelector((state: RootState) => state.detail.isLoading);
-  const dispatch = useDispatch();
   let biddingPrice = JSON.stringify(biddingUnit);
   const [value, setValue] = useState(biddingPrice);
 
