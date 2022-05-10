@@ -47,11 +47,18 @@ const MainContainer = ({ navigation, route }: Props) => {
   //   setNormalPage(normalPage + 1);
   // };
 
-  useEffect(() => {
-    return () => {
-      onRefresh();
-    };
-  }, []);
+  navigation.addListener("focus", () => {
+    onRefresh();
+  });
+
+  navigation.addListener("blur", () => {
+    dispatch(dataReset());
+  });
+  // useEffect(() => {
+  //   return () => {
+  //     onRefresh();
+  //   };
+  // }, []);
 
   useEffect(() => {
     console.log(livePage, normalPage);
