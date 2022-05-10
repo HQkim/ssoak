@@ -12,15 +12,16 @@ type Props = {
 const SettingContainer = (props: Props) => {
   return (
     <View style={styles.SettingContainer}>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 2 }}>
         <UserSetting />
       </View>
-      <View style={{ flex: 2 }}>
+      <View style={{ flex: 6 }}>
         <AlarmSetting />
       </View>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 3 }}>
         <OtherSetting navigation={props.navigation} route={props.route} />
       </View>
+      <View style={{ flex: 2 }}></View>
     </View>
   );
 };
