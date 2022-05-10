@@ -4,8 +4,6 @@ import Main from "../Templates/main";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/modules";
 import { useDispatch } from "react-redux";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
-
 import {
   dataFetchAsync,
   dataReset,
@@ -49,24 +47,13 @@ const MainContainer = ({ navigation, route }: Props) => {
   //   setNormalPage(normalPage + 1);
   // };
 
-  // useEffect(() => {
-  //   return () => {
-  //     onRefresh();
-  //   };
-  // }, []);
+  navigation.addListener("focus", () => {
+    onRefresh();
+  });
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      onRefresh();
-    });
-    return unsubscribe;
-  }, [navigation]);
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     onRefresh();
-  //   }, [])
-  // );
+  navigation.addListener("blur", () => {
+    dispatch(dataReset());
+  });
 
   useEffect(() => {
     console.log(livePage, normalPage);
