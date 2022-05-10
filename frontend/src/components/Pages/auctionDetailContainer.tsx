@@ -2,7 +2,7 @@ import { StyleSheet, View, Dimensions, RefreshControl } from "react-native";
 import React, { createRef, useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/modules";
-import { loadDataAsync } from "../../store/modules/detail";
+import { loadDataAsync, dataReset } from "../../store/modules/detail";
 import PagerView from "react-native-pager-view";
 // import ReactNativeZoomableView from "@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView";
 import Carousel from "../Organisms/Carousel";
@@ -20,7 +20,6 @@ const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
 const AutionDetailContainer = (props: Props) => {
   const isLoading = useSelector((state: RootState) => state.detail.isLoading);
   const item = useSelector((state: RootState) => state.detail.item);
-  console.warn(props.route);
   const dispatch = useDispatch();
   const [showIndicator, setShowIndicator] = useState(false);
   const reqItem = props.route.params.id;
@@ -33,9 +32,13 @@ const AutionDetailContainer = (props: Props) => {
     dispatch(loadDataAsync(id));
   };
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   onStartLoadData(props.route.params.id);
+  // }, []);
+
+  props.navigation.addListener("focus", () => {
     onStartLoadData(props.route.params.id);
-  }, []);
+  });
 
   let scrollRef: any = useRef();
   return (
@@ -58,17 +61,17 @@ const AutionDetailContainer = (props: Props) => {
           keyboardDismissMode={"on-drag"}
           overdrag={true}
         >
-          {isLoading && item ? (
-            <ImageSkeleton />
-          ) : (
+          {isLoading === false && item.itemImages ? (
             <Carousel imageUrls={item.itemImages} style={styles.page} />
+          ) : (
+            <ImageSkeleton />
           )}
         </PagerView>
       </View>
-      {isLoading && item ? (
-        <DescriptionSkeleton />
-      ) : (
+      {isLoading === false && item.itemImages ? (
         <AuctionDetail item={item} reqItem={reqItem} />
+      ) : (
+        <DescriptionSkeleton />
       )}
     </KeyboardAwareScrollView>
   );

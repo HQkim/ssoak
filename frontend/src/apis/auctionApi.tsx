@@ -51,5 +51,4 @@ export const biddingAuction = async (itemSeq, formData) => {
     `/auctions/${itemSeq}/bidding`,
     formData
   );
-  console.warn(response);
 };
