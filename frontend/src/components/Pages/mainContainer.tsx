@@ -18,7 +18,7 @@ type Props = {
 
 const MainContainer = ({ navigation, route }: Props) => {
   const isLoading = useSelector(
-    (state: RootState) => state.mainLoader.isLoading,
+    (state: RootState) => state.mainLoader.isLoading
   );
 
   // const data = useSelector((state: RootState) => state.mainLoader.data);
@@ -47,11 +47,13 @@ const MainContainer = ({ navigation, route }: Props) => {
   //   setNormalPage(normalPage + 1);
   // };
 
-  useEffect(() => {
-    return () => {
-      onRefresh();
-    };
-  }, []);
+  navigation.addListener("focus", () => {
+    onRefresh();
+  });
+
+  navigation.addListener("blur", () => {
+    dispatch(dataReset());
+  });
 
   useEffect(() => {
     console.log(livePage, normalPage);

@@ -8,27 +8,32 @@ import AuctionBidInformation from "../Molecules/Description/auctionBidInformatio
 import ImageSkeleton from "../Molecules/Cards/imageSkeleton";
 import AuctionBidSkeleton from "../Molecules/Cards/auctionBidSkeleton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import AuctionNull from "../Molecules/Description/auctionNull";
 import PagerView from "react-native-pager-view";
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
 
 const AuctionDetail = ({ route }) => {
+  const auctionItem = route.params.item;
+  const reqItem = route.params.reqItem;
   const isLoading = useSelector((state: RootState) => state.detail.isLoading);
   const dispatch = useDispatch();
+  const [item, setItem] = useState(auctionItem);
 
   const onStartLoadData = (id: number) => {
     dispatch(loadDataAsync(id));
   };
 
-  const item = route.params.item;
-  const reqItem = route.params.reqItem;
-
   let scrollRef: any = useRef();
 
   useEffect(() => {
     onStartLoadData(item.id);
-    console.warn(item.id);
   }, []);
+
+  const getItemDetail = () => {
+    dispatch(loadDataAsync(reqItem));
+    setItem(route.params.item);
+  };
 
   return (
     <KeyboardAwareScrollView
@@ -42,21 +47,22 @@ const AuctionDetail = ({ route }) => {
         />
       }
     >
-      {isLoading ? (
+      {/* {isLoading ? (
         <View style={styles.box}>
           <PagerView style={{ flex: 1 }}>
             <ImageSkeleton />
           </PagerView>
         </View>
-      ) : (
-        <AuctionBidInformation item={item} />
-      )}
+      ) : ( */}
+      {item.bidding ? <AuctionBidInformation item={item} /> : <AuctionNull />}
 
-      {isLoading ? (
+      {/* )} */}
+
+      {/* {isLoading ? (
         <AuctionBidSkeleton />
-      ) : (
-        <Action item={item} reqItem={reqItem} />
-      )}
+      ) : ( */}
+      <Action item={item} reqItem={reqItem} getItemDetail={getItemDetail} />
+      {/* )} */}
     </KeyboardAwareScrollView>
   );
 };

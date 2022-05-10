@@ -22,6 +22,7 @@ type Props = {
   navigation: any;
   route: object;
   item: any;
+  reqItem: number;
 };
 interface Form {
   title: string;
@@ -65,7 +66,7 @@ const ItemUpdate = (props: Props) => {
           startTime: item.startTime,
           endTime: item.endTime,
           auctionType: item.auctionType,
-          itemCategories: item.itemCtegoryName,
+          itemCategories: item.itemCategoryName,
         },
       }));
       setValue({
@@ -168,11 +169,14 @@ const ItemUpdate = (props: Props) => {
     const formData = new FormData();
 
     if (images.length > 0) {
-      formData.append("imageUrls", images);
+      for (var i = 0; i < images.length; i++) {
+        const image: any = images[i];
+        formData.append("imageUrls", image);
+      }
     }
 
     for (var i = 0; i < imgForm.length; i++) {
-      const trimmedURI = imgForm[i].uri.replace("file://", "");
+      const trimmedURI = imgForm[i].uri;
       const fileName = trimmedURI.split("/").pop();
       const item: any = {
         height: imgForm[i].height,
@@ -204,7 +208,7 @@ const ItemUpdate = (props: Props) => {
     } else if (form.form.startTime === "" && form.form.endTime === "") {
       Alert.alert("경매 시간을 설정해주세요.");
     } else {
-      const result = await updateAuction(47, formData);
+      const result = await updateAuction(props.reqItem, formData);
       if (result.statusCode === 201) {
         if (result.data.auctionType === "NORMAL") {
           navigation.navigate("auctionDetail", {
@@ -216,7 +220,7 @@ const ItemUpdate = (props: Props) => {
           });
         }
       } else {
-        Alert.alert("경매 물품 등록에 실패하였습니다.");
+        Alert.alert("경매 물품 수정에 실패하였습니다.");
       }
       console.warn(result);
     }
@@ -270,12 +274,12 @@ const ItemUpdate = (props: Props) => {
         >
           {select ? "경매 시작 날짜" : "경매 종료 날짜"}
         </Text>
-        <DateTime
+        {/* <DateTime
           getSelectInformation={getDateTime}
           navigation={props.navigation}
           route={props.route}
           item={item}
-        />
+        /> */}
       </View>
       <Border style={styles.border} />
       <TextInput
