@@ -51,8 +51,6 @@ public class BiddingServiceImpl implements BiddingService {
             throw new NotAllowedBiddingItemException("이건 일반 경매 api >.<");
         }
 
-//        Bidding lastBidding = biddingRepository.findTop1ByItemSeqOrderBySeqDesc(itemSeq).orElse(null);
-
         if (item.getBuyer() != null) {
             if (item.getBuyer().equals(member)) {
                 throw new NotAllowedBiddingItemException("직전에 입찰한 경매입니다.");
@@ -114,6 +112,10 @@ public class BiddingServiceImpl implements BiddingService {
 
         bidding.successBidding(successBiddingDto.getIsHammered());
         item.successBiddingItem(successTime, successBiddingDto.getIsHammered(), bidding.getBuyer());
+
+        // 낙찰 후 grade 상승
+        item.getBuyer().updateReview(5f);
+        item.getMember().updateReview(5f);
 
         MemberSimpleInfoDto memberSimpleInfoDto = MemberSimpleInfoDto.builder()
                 .seq(bidding.getBuyer().getSeq())
