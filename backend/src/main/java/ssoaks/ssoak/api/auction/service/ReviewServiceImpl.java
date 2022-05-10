@@ -10,8 +10,6 @@ import ssoaks.ssoak.api.auction.repository.ItemRepository;
 import ssoaks.ssoak.api.member.entity.Member;
 import ssoaks.ssoak.api.member.service.MemberService;
 
-import java.util.Optional;
-
 @Slf4j
 @Transactional
 @Service
@@ -29,19 +27,21 @@ public class ReviewServiceImpl implements ReviewService{
 
         Item item = itemRepository.findBySeq(itemSeq)
                 .orElseThrow(() -> new IllegalStateException("물품 조회 실패"));
+        if (item.getBuyer() == null) {
+            return false;
+        }
 
         Float grade = updateGrade(reviewDto.getReview());
 
-
-        // seller가 리뷰를 작성한 멤버일 경우
         if (item.getMember().getSeq().equals(member.getSeq())) {
             item.updateSellerReview(reviewDto.getReview());
-            // seller점수 +3
-            // buyer점수는 분기치기
+            member.updateReview(3f);
+            item.getBuyer().updateReview(grade);
         } else if (item.getBuyer().getSeq().equals(member.getSeq())) {
             item.updateBuyerReview(reviewDto.getReview());
+            member.updateReview(3f);
+            item.getMember().updateReview(grade);
         }
-
         return true;
     }
 

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class ReqSearchDto {
 
     private String keyword;
-    private String AuctionType;
+    private String auctionType;
     private String category;
     private Integer startPrice;
     private Integer endPrice;

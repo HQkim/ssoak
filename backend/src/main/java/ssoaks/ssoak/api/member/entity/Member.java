@@ -98,4 +98,9 @@ public class Member {
     public void changeLoginTime(LocalDateTime loginTime) {
         this.loginTime = loginTime;
     }
+
+    public void updateReview(Float point) {
+        this.grade += point;
+    }
+
 }
