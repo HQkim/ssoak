@@ -12,7 +12,7 @@ import Border from "../../Atoms/Borders/border";
 import RadioButton from "../../Molecules/Buttons/radioButton";
 import DropDown from "../../Molecules/Buttons/dropDown";
 import DateTime from "../../Molecules/Times/dateTime";
-import { uction } from "../../../apis/auctionApi";
+import { createAuction } from "../../../apis/auctionApi";
 import { useNavigation } from "@react-navigation/native";
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
@@ -62,6 +62,7 @@ const ItemCreationInput = (props: Props) => {
       content: "",
     });
     setSelect(true);
+    console.warn(form);
   }, []);
 
   const onSelect = (info: boolean | string) => {
