@@ -82,7 +82,7 @@ const ItemUpdate = (props: Props) => {
       } else {
         setSelect(true);
       }
-    }, []),
+    }, [])
   );
 
   const { title, content, startPrice } = value.value;
@@ -179,9 +179,7 @@ const ItemUpdate = (props: Props) => {
       const trimmedURI = imgForm[i].uri;
       const fileName = trimmedURI.split("/").pop();
       const item: any = {
-        height: imgForm[i].height,
-        type: imgForm[i].type,
-        width: imgForm[i].width,
+        type: "image/jpeg",
         uri: trimmedURI,
         name: fileName,
       };

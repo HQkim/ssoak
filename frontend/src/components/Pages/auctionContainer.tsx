@@ -45,8 +45,14 @@ const AuctionDetail = ({ route }) => {
         />
       }
     >
-      {item.bidding ? <AuctionBidInformation item={item} /> : <AuctionNull />}
-      <Action item={item} reqItem={reqItem} getItemDetail={getItemDetail} />
+      {isLoading ? null : item.bidding ? (
+        <AuctionBidInformation item={item} />
+      ) : (
+        <AuctionNull />
+      )}
+      {isLoading ? null : (
+        <Action item={item} reqItem={reqItem} getItemDetail={getItemDetail} />
+      )}
     </KeyboardAwareScrollView>
   );
 };
