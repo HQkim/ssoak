@@ -28,7 +28,6 @@ import jwt_decode, { JwtPayload } from "jwt-decode";
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
 const AuctionDescription = ({ item, reqItem }) => {
-  console.warn(item);
   const [showMore, setShowMore] = useState(false);
   const [showDivider, setShowDivier] = useState<boolean>(true);
   const itemInformation = useSelector((state: RootState) => state.detail.item);
@@ -38,10 +37,6 @@ const AuctionDescription = ({ item, reqItem }) => {
   const navigation = useNavigation();
   const [select, setSelect] = useState(false);
   const [token, setToken] = useState<any>();
-
-  const date = new Date();
-  let timeInfo = JSON.stringify(date);
-  let temp = timeInfo.replace(".000Z", "");
 
   const getToken = async () => {
     const tokenSeq: string = await AsyncStorage.getItem("accessToken");
@@ -132,18 +127,19 @@ const AuctionDescription = ({ item, reqItem }) => {
           </View>
         </View>
         {token === undefined ? null : item.seller.seq === token ? (
-          <TouchableOpacity
+          // <TouchableOpacity
+          //   onPress={onSelect}
+          //   style={{ marginHorizontal: ScreenWidth / 16 }}
+          // >
+          <AntDesign
+            name="ellipsis1"
+            size={24}
+            color="black"
+            style={styles.dropdown}
             onPress={onSelect}
-            style={{ marginHorizontal: ScreenWidth / 16 }}
-          >
-            <AntDesign
-              name="ellipsis1"
-              size={24}
-              color="black"
-              style={styles.dropdown}
-            />
-          </TouchableOpacity>
-        ) : isLiked ? (
+          />
+        ) : // </TouchableOpacity>
+        isLiked ? (
           <Ionicons
             name={"heart"}
             size={ScreenWidth / 9}
