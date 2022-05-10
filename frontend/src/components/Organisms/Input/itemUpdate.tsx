@@ -82,7 +82,7 @@ const ItemUpdate = (props: Props) => {
       } else {
         setSelect(true);
       }
-    }, [])
+    }, []),
   );
 
   const { title, content, startPrice } = value.value;
@@ -195,7 +195,7 @@ const ItemUpdate = (props: Props) => {
     formData.append("endTime", form.form.endTime);
     formData.append("auctionType", form.form.auctionType);
     formData.append("itemCategories", form.form.itemCategories);
-    console.warn(formData);
+    // console.warn(formData);
 
     if (imgForm.length < 1 && images.length < 1) {
       Alert.alert("이미지를 업로드해주세요.");
@@ -222,7 +222,7 @@ const ItemUpdate = (props: Props) => {
       } else {
         Alert.alert("경매 물품 수정에 실패하였습니다.");
       }
-      console.warn(result);
+      // console.warn(result);
     }
   };
   return (

@@ -62,7 +62,7 @@ const ItemCreationInput = (props: Props) => {
       content: "",
     });
     setSelect(true);
-    console.warn(form);
+    // console.warn(form);
   }, []);
 
   const onSelect = (info: boolean | string) => {
@@ -172,7 +172,7 @@ const ItemCreationInput = (props: Props) => {
     formData.append("endTime", form.form.endTime);
     formData.append("auctionType", form.form.auctionType);
     formData.append("itemCategories", form.form.itemCategories);
-    console.warn(formData);
+    // console.warn(formData);
     if (imgForm.length < 1) {
       Alert.alert("이미지를 업로드해주세요.");
     } else if (
@@ -200,7 +200,7 @@ const ItemCreationInput = (props: Props) => {
       } else {
         Alert.alert("경매 물품 등록에 실패하였습니다.");
       }
-      console.warn(result);
+      // console.warn(result);
     }
   };
   return (

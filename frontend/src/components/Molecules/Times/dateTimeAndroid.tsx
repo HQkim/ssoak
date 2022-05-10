@@ -24,11 +24,9 @@ const dateTimeAndroid = ({ functions, states, date }) => {
             borderRadius: 5,
           }}
         >
-          {date(
-            <Text>{`${date.getFullYear()}. ${
-              date.getMonth() + 1
-            }. ${date.getDate()}.`}</Text>,
-          )}
+          <Text>{`${date.getFullYear()}. ${
+            date.getMonth() + 1
+          }. ${date.getDate()}.`}</Text>
         </TouchableOpacity>
       </View>
       <View style={{ flex: 1, flexDirection: "row" }}>
@@ -42,11 +40,9 @@ const dateTimeAndroid = ({ functions, states, date }) => {
             borderRadius: 5,
           }}
         >
-          {date(
-            <Text>{`${date.getHours() < 10 ? "0" : ""}${date.getHours()}: ${
-              date.getMinutes() < 10 ? "0" : ""
-            }${date.getMinutes()}`}</Text>,
-          )}
+          <Text>{`${date.getHours() < 10 ? "0" : ""}${date.getHours()}: ${
+            date.getMinutes() < 10 ? "0" : ""
+          }${date.getMinutes()}`}</Text>
         </TouchableOpacity>
         <View style={{ flex: 1 }} />
       </View>
