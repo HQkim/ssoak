@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Getter
 @NoArgsConstructor
 public class ReqChatDto {
@@ -12,6 +14,7 @@ public class ReqChatDto {
     private Long buyerSeq;
     private String content;
     private Long senderSeq;
+    private Map<String, String> something;
 
     @Builder
     public ReqChatDto(Long itemSeq, Long sellerSeq, Long buyerSeq, String content, Long senderSeq) {

@@ -59,10 +59,10 @@ public class ChatRepositoryImpl implements ChatRepositoryCustom{
                 ))
                 .from(chat)
                 .where(chat.seller.seq.eq(memberSeq).or(chat.buyer.seq.eq(memberSeq)))
-                .groupBy(chat.item)
+                .groupBy(chat.roomId)
                 .offset((long) (pageable.getPageNumber() - 1) * pageable.getPageSize())
                 .limit(pageable.getPageSize())
-                .orderBy(chat.createdDate.desc())
+                .orderBy(chat.createdDate.asc())
                 .fetch();
 
         return fetch;

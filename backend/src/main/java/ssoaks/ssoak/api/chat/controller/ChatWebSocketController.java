@@ -13,10 +13,13 @@ import ssoaks.ssoak.api.chat.dto.response.ResLiveAuctionOpeningDto;
 import ssoaks.ssoak.api.chat.exception.NotAcceptableBiddingException;
 import ssoaks.ssoak.api.chat.service.ChatService;
 import ssoaks.ssoak.api.chat.service.LiveAuctionMessageService;
+import ssoaks.ssoak.api.member.entity.Member;
 import ssoaks.ssoak.api.member.repository.MemberRepository;
 import ssoaks.ssoak.api.member.service.MemberService;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -49,16 +52,21 @@ public class ChatWebSocketController {
             ResLiveAuctionMessageDto resLiveAuctionMessageDto = liveAuctionMessageService.sendAuctionMessage(reqLiveAuctionMessageDto);
             template.convertAndSend("/topic/" + reqLiveAuctionMessageDto.getItemSeq(), resLiveAuctionMessageDto);
         } catch (IllegalArgumentException | NotAcceptableBiddingException e) {
+            Member member = memberRepository.findBySeq((Long) reqLiveAuctionMessageDto.getUser().get("_id")).orElse(null);
+            Map<String, Object> resUser = new HashMap<String, Object>();
+            Map<String, Object> reqUser = reqLiveAuctionMessageDto.getUser();
+            resUser.put("_id",reqUser.get("_id"));
+            resUser.put("name", member.getNickname());
+            resUser.put("avatar", member.getProfileImageUrl());
             ResLiveAuctionMessageDto resLiveAuctionMessageDto = ResLiveAuctionMessageDto.builder()
+                    ._id(reqLiveAuctionMessageDto.get_id())
                     .itemSeq(reqLiveAuctionMessageDto.getItemSeq())
-                    .memberNickname(memberRepository.findBySeq(reqLiveAuctionMessageDto.getMemberSeq()).orElse(null).getNickname())
-//                    .memberNickname(member.getNickname())
-                    .messageType(reqLiveAuctionMessageDto.getMessageType())
-                    .content(e.getMessage())
-                    .createdAt(LocalDateTime.now())
+                    .createdAt(reqLiveAuctionMessageDto.getCreatedAt())
+                    .type(reqLiveAuctionMessageDto.getType())
+                    .user(resUser)
                     .build();
             template.convertAndSend("/topic/" + reqLiveAuctionMessageDto.getItemSeq() +
-                    "_" + reqLiveAuctionMessageDto.getMemberSeq(), resLiveAuctionMessageDto);
+                    "_" + member.getSeq(), resLiveAuctionMessageDto);
         } catch (Exception e) {
             e.printStackTrace();
         }
