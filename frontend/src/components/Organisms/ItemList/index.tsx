@@ -2,22 +2,28 @@ import { StyleSheet, View, Dimensions, TouchableOpacity } from "react-native";
 import React from "react";
 import AuctionTypeTag from "../../Atoms/Tags/auctionTypeTag";
 import ItemInforms from "../../Molecules/ItemInfo/itemInforms";
+import { useNavigation } from "@react-navigation/native";
 
 type Props = {
   items: Array<object>;
-  navigation: any;
-  route: object;
 };
 
 const randomImage = require("../../../../assets/temp.jpg");
 const { height: ScreenHeight } = Dimensions.get("window");
 const { width: ScreenWidth } = Dimensions.get("window");
 
-const Index = ({ items, containerStyle, navigation, route }) => {
-  const goItemDetail = (id: number) => {
-    navigation.navigate("auctionDetail", {
-      id: id,
-    });
+const Index = ({ items, containerStyle }) => {
+  const navigation: any = useNavigation();
+  const goDetail = (item) => {
+    if (item.auctionType == "NORMAL") {
+      navigation.navigate("auctionDetail", {
+        id: item.itemSeq,
+      });
+    } else {
+      navigation.navigate("detail", {
+        id: item.itemSeq,
+      });
+    }
   };
 
   return (
@@ -25,7 +31,7 @@ const Index = ({ items, containerStyle, navigation, route }) => {
       {items &&
         items.map((item, index) => (
           <View key={index} style={{ marginTop: 20 }}>
-            <TouchableOpacity onPress={() => goItemDetail(item.itemSeq)}>
+            <TouchableOpacity onPress={() => goDetail(item)}>
               <AuctionTypeTag
                 styles={{ tag: styles.auctionTypeTag }}
                 text={item.auctionType == "LIVE" ? "실시간" : "일반"}

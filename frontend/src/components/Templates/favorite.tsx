@@ -15,6 +15,8 @@ import { getFavoriteItems } from "../../apis/ItemApi";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { likeItem } from "../../apis/auctionApi";
 import { cancelLikeItem } from "../../apis/auctionApi";
+import { ScrollView } from "react-native-gesture-handler";
+import Likes from "../Molecules/Buttons/likes";
 
 type Props = {
   navigation: any;
@@ -32,29 +34,32 @@ const { width: ScreenWidth } = Dimensions.get("window");
 const Favorite = (props: Props) => {
   const [heart, setHeart] = useState(true);
   const [items, setItems] = useState<Items | null | any>([]);
+  const navigation: any = useNavigation();
   const getData = async () => {
     const response = await getFavoriteItems();
     setItems(response);
   };
   const goDetail = (item) => {
     if (item.auctionType == "NORMAL") {
-      props.navigation.navigate("auctionDetail", {
+      navigation.navigate("auctionDetail", {
         id: item.itemSeq,
       });
     } else {
-      props.navigation.navigate("detail", {
+      navigation.navigate("detail", {
         id: item.itemSeq,
       });
     }
   };
 
   const pressHeart = async (item) => {
-    if (item.isLike == true) {
-      setHeart(false);
+    if (item.isLiked == true) {
       await cancelLikeItem(item.itemSeq);
+      item.isLiked = false;
+      setHeart(false);
     } else {
-      setHeart(true);
       await likeItem(item.itemSeq);
+      item.isLiked = true;
+      setHeart(true);
     }
   };
 
@@ -66,11 +71,11 @@ const Favorite = (props: Props) => {
   );
 
   return (
-    <View>
+    <ScrollView>
       {items &&
         items.map((item, index) => (
           <View key={index} style={styles.favListContainer}>
-            <TouchableOpacity onPress={() => goDetail(item.itemSeq)}>
+            <TouchableOpacity onPress={() => goDetail(item)}>
               <View>
                 <AuctionTypeTag
                   styles={{ tag: styles.auctionTypeTag }}
@@ -84,6 +89,8 @@ const Favorite = (props: Props) => {
                     style={{
                       width: ScreenHeight / 10,
                       height: ScreenHeight / 10,
+                      borderColor: "#d7d4d4",
+                      borderWidth: 1,
                     }}
                   />
                 </View>
@@ -119,13 +126,14 @@ const Favorite = (props: Props) => {
                     justifyContent: "flex-end",
                   }}
                 >
-                  <TouchableOpacity onPress={() => pressHeart(item)}>
-                    {item.isLike === true ? (
+                  {/* <TouchableOpacity onPress={() => pressHeart(item)}>
+                    {item.isLiked === true ? (
                       <Ionicons name="heart" size={24} color="#EA759A" />
                     ) : (
                       <Ionicons name="heart-outline" size={24} color="black" />
                     )}
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
+                  <Likes item={item} />
                 </View>
               </View>
               <View
@@ -170,7 +178,7 @@ const Favorite = (props: Props) => {
             </TouchableOpacity>
           </View>
         ))}
-    </View>
+    </ScrollView>
   );
 };
 

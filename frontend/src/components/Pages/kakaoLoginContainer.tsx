@@ -16,17 +16,6 @@ const KakaoLoginContainer = ({ navigation }: any) => {
       var request_code = data.substring(condition + exp.length);
 
       dispatch(loginRequestAction(request_code));
-      // await kakaoLogin(request_code)
-      //   .then((res) => {
-      //     if (res) {
-      //       // navigation.navigate("Profile");
-      //     } else {
-      //       alert("Check your Information");
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
     }
   };
 

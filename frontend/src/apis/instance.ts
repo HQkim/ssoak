@@ -26,7 +26,7 @@ instance.interceptors.request.use(
   },
   (err) => {
     return Promise.reject(err);
-  },
+  }
 );
 fileInstance.interceptors.request.use(
   async (config: any) => {
@@ -36,7 +36,7 @@ fileInstance.interceptors.request.use(
   },
   (err) => {
     return Promise.reject(err);
-  },
+  }
 );
 
 export const noHeaderInstance = axios.create({
