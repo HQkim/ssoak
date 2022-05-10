@@ -9,7 +9,6 @@ type Props = {};
 
 const MainChat = (props: Props) => {
   const [connected, setConnected] = useState(false);
-  console.log(navigator);
   const [offset, setOffset] = useState(0);
   useEffect(() => {
     Platform.OS === "ios" && setOffset(80);
@@ -28,22 +27,45 @@ const MainChat = (props: Props) => {
       });
     }
   };
+  const [token, setToken] = useState<any>("");
+  const getToken = async () => {
+    await AsyncStorage.getItem("accessToken", (err, res) => {
+      setToken(res);
+    });
+  };
+  useEffect(() => {
+    getToken();
+  }, []);
+
+  useEffect(() => {
+    connect();
+  }, [token]);
+
+  console.log();
 
   const connect = () => {
     client = new StompJs.Client({
-      brokerURL: "ws://k6a207.p.ssafy.io:5000/api/v1/ws",
+      brokerURL: "wss://k6a207.p.ssafy.io/api/v1/ws",
+      // connectHeaders: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+
       debug: function (str) {
-        console.log(str);
+        console.log(str, "onDebug");
       },
-      reconnectDelay: 5000, //자동 재 연결
+      reconnectDelay: 1000, //자동 재 연결
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
     });
 
+    client.beforeConnect = (message) => {
+      console.log(message, "beforeConnect");
+    };
+
     client.onConnect = function (frame) {
       subscribe();
       setConnected(true);
-      // console.log(frame, "onConnected");
+      console.log(frame, "onConnected");
     };
 
     client.onStompError = function (frame) {
@@ -55,13 +77,18 @@ const MainChat = (props: Props) => {
 
   const disconnect = () => {
     if (client != null) {
-      if (client.connected) client.deactivate();
+      if (connected) {
+        client.deactivate();
+        setConnected(false);
+      }
     }
   };
+
   const [messages, setMessages] = useState<IMessage[]>([]);
+
   const onSend = useCallback((messages = []) => {
     // console.log(client, connected, messages);
-    console.log(messages);
+    console.log(messages, client != null, !connected);
     if (client != null) {
       if (!connected) return;
       client.publish({
@@ -75,27 +102,22 @@ const MainChat = (props: Props) => {
   }, []);
 
   useEffect(() => {
-    console.log(messages);
-  }, [messages]);
-
-  useEffect(() => {
-    console.log(connected);
+    console.log(connected, "connected Changed");
   }, [connected]);
   useEffect(() => {
-    connect();
     setMessages([
-      {
-        _id: 1,
-        itemSeq: 1,
-        text: "Hello developer",
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: "React Native",
-          avatar: "https://placeimg.com/140/140/any",
-        },
-        type: 1,
-      },
+      // {
+      //   _id: 1,
+      //   itemSeq: 1,
+      //   text: "Hello developer",
+      //   createdAt: new Date(),
+      //   user: {
+      //     _id: 2,
+      //     name: "React Native",
+      //     avatar: "https://placeimg.com/140/140/any",
+      //   },
+      //   type: 1,
+      // },
     ]);
     return () => disconnect();
   }, []);

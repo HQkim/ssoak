@@ -2,7 +2,7 @@
 import { delay, put, call, takeEvery, takeLatest } from "redux-saga/effects";
 import { detailAuction } from "../../apis/auctionApi";
 import axios from "axios";
-const BASE_URL = "http://k6a207.p.ssafy.io:5000/api/v1";
+const BASE_URL = "https://k6a207.p.ssafy.io/api/v1";
 // actions
 const LOAD_DATA = "detail/LOAD_DATA" as const;
 const LOAD_DATA_ASYNC = "detail/LOAD_DATA_ASYNC" as const;

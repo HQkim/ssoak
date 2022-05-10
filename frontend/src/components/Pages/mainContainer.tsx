@@ -8,6 +8,7 @@ import {
   dataFetchAsync,
   dataReset,
   dataFetchAsyncWithoutLoader,
+  dataFetchFirstAsync,
 } from "../../store/modules/mainLoader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -17,8 +18,8 @@ type Props = {
 };
 
 const MainContainer = ({ navigation, route }: Props) => {
-  const isLoading = useSelector(
-    (state: RootState) => state.mainLoader.isLoading
+  const { isLoading, normalPageAvailable, livePageAvailable } = useSelector(
+    (state: RootState) => state.mainLoader,
   );
 
   // const data = useSelector((state: RootState) => state.mainLoader.data);
@@ -29,23 +30,28 @@ const MainContainer = ({ navigation, route }: Props) => {
 
   const onRefresh = () => {
     dispatch(dataReset());
-    dispatch(dataFetchAsync({ keyword: "LIVE", page: 1 }));
-    dispatch(dataFetchAsync({ keyword: "NORMAL", page: 1 }));
+    dispatch(dataFetchFirstAsync());
     setNormalPage(2);
     setLivePage(2);
   };
 
-  // const onScrollLive = (e) => {
-  //   dispatch(dataFetchAsyncWithoutLoader({ keyword: "LIVE", page: livePage }));
-  //   setLivePage(livePage + 1);
-  // };
+  const onScrollLive = () => {
+    if (livePageAvailable) {
+      dispatch(
+        dataFetchAsyncWithoutLoader({ keyword: "LIVE", page: livePage }),
+      );
+      setLivePage(livePage + 1);
+    }
+  };
 
-  // const onScrollNormal = () => {
-  //   dispatch(
-  //     dataFetchAsyncWithoutLoader({ keyword: "NORMAL", page: normalPage }),
-  //   );
-  //   setNormalPage(normalPage + 1);
-  // };
+  const onScrollNormal = () => {
+    if (normalPageAvailable) {
+      dispatch(
+        dataFetchAsyncWithoutLoader({ keyword: "NORMAL", page: normalPage }),
+      );
+      setNormalPage(normalPage + 1);
+    }
+  };
 
   navigation.addListener("focus", () => {
     onRefresh();
@@ -59,12 +65,21 @@ const MainContainer = ({ navigation, route }: Props) => {
     console.log(livePage, normalPage);
   }, [livePage, normalPage]);
 
+  const getToken = async () => {
+    const token = await AsyncStorage.getItem("accessToken", (err, res) => {
+      console.log(res);
+    });
+  };
+  useEffect(() => {
+    // console.log(getToken());
+  }, []);
+
   return (
     <Main
-      onRefresh={() => onRefresh()}
+      onRefresh={onRefresh}
       navigation={navigation}
-      // onScrollLive={(e) => onScrollLive(e)}
-      // onScrollNormal={(e) => onScrollNormal(e)}
+      onScrollLive={onScrollLive}
+      onScrollNormal={onScrollNormal}
     />
   );
 };

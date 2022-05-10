@@ -5,9 +5,8 @@ import { useFocusEffect } from "@react-navigation/native";
 
 const { height: ScreenHeight } = Dimensions.get("window");
 
-const DropDown = ({ getSelectInformation, navigation, itemCategory }) => {
+const DropDown = ({ getSelectInformation, itemCategory }) => {
   const [defaultValue, setDefaultValue] = useState(itemCategory);
-  console.warn(defaultValue);
 
   const onClickCategory = (category) => {
     getSelectInformation(category);

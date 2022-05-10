@@ -42,8 +42,15 @@ const ProfileContainer = ({ navigation, route }: Props) => {
   const [font, setFont] = useState(false);
   const [profile, setProfile] = useState<Profile | null | any>([]);
   const [editStatus, setEditStatus] = useState(false);
+  const isLoading = useSelector(
+    (state: RootState) => state.mainLoader.isLoading,
+  );
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
+
+  // const onStartLoading = (state: boolean) => {
+  //   dispatch(dataFetchAsync(state));
+  // };
 
   const getAccessToken = async () => {
     try {
@@ -76,11 +83,12 @@ const ProfileContainer = ({ navigation, route }: Props) => {
       return () => {
         setEditStatus(false);
       };
-    }, [])
+    }, []),
   );
 
   useEffect(() => {
     navigation.addListener("focus", () => {
+      // onStartLoading(false);
       getAccessToken();
     });
     async function loadFonts() {

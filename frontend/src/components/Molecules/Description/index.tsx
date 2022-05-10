@@ -15,6 +15,7 @@ import GeneralButton from "../../Atoms/Buttons/generalButton";
 import NumberFormat from "react-number-format";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { biddingAuction } from "../../../apis/auctionApi";
 type Props = {};
 
 const index = ({ item, descStyle, titleStyle }) => {
@@ -37,9 +38,26 @@ const index = ({ item, descStyle, titleStyle }) => {
   }, []);
 
   useEffect(() => {
+    console.log(bidRightNow, bidAssignValue);
+  }, [bidRightNow, bidAssignValue]);
+
+  const bidding = async (text: string) => {
+    const formData = new FormData();
+    if (text === "immediately") {
+      formData.append("biddingPrice", bidRightNow);
+    } else {
+      formData.append("biddingPrice", bidAssignValue);
+    }
+    const hammer: any = false;
+    formData.append("isHammered", hammer);
+    const response = await biddingAuction(item.id, formData);
+  };
+
+  useEffect(() => {
     setBidRightNow(String((Number(currentCost) * 1.1).toFixed()));
     setBidAssignValue(String(Number(currentCost) + Number(item.biddingUnit)));
   }, [currentCost]);
+
   const handleMoreClick = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setShowMore(!showMore);
@@ -64,11 +82,55 @@ const index = ({ item, descStyle, titleStyle }) => {
   }, []);
 
   const handlebidRightNow = () => {
-    Alert.alert("왜 눌렀슈?" + bidRightNow);
+    Alert.alert(
+      "지정가 입찰",
+      `${bidAssignValue
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원에 입찰하시겠습니까?`,
+      [
+        {
+          text: "아니오",
+          style: "cancel",
+        },
+        {
+          text: "예",
+          onPress: () => bidding("immediately"),
+        },
+      ],
+    );
   };
 
   const handlebidAssignValue = () => {
-    Alert.alert("이건 또 왜 눌렀슈?" + bidAssignValue);
+    if (Number(currentCost) * 1.1 <= Number(bidAssignValue)) {
+      Alert.alert(
+        "지정가 입찰",
+        `${bidAssignValue
+          .toString()
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원에 입찰하시겠습니까?`,
+        [
+          {
+            text: "아니오",
+            style: "cancel",
+          },
+          {
+            text: "예",
+            onPress: () => bidding("input"),
+          },
+        ],
+      );
+    } else {
+      Alert.alert(
+        "입찰 금액 오류",
+        `최소 입찰 금액인 ${
+          Number(currentCost) * 1.1
+        }원부터 \n입찰할 수 있습니다.`,
+        [
+          {
+            text: "닫기",
+          },
+        ],
+      );
+    }
   };
   return (
     <>

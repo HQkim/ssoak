@@ -55,7 +55,7 @@ const { height: ScreenHeight } = Dimensions.get("window");
 const { width: ScreenWidth } = Dimensions.get("window");
 
 const Profile = (props: Props) => {
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
 
   const logout = async () => {
     await AsyncStorage.removeItem("accessToken");
@@ -63,7 +63,7 @@ const Profile = (props: Props) => {
     props.navigation.navigate("main");
   };
   const [image, setImage] = useState<Item | null | any>(
-    props.profile.profileImageUrl
+    props.profile.profileImageUrl,
   );
   const [file, setFile] = useState<File | null | any>([]);
   const [name, setName] = useState("");
@@ -91,7 +91,7 @@ const Profile = (props: Props) => {
       };
       formData.append("profileImage", item);
       await editKakaoProfile(formData).then(() =>
-        props.setProfile({ ...props.profile, profileImageUrl: uri })
+        props.setProfile({ ...props.profile, profileImageUrl: uri }),
       );
     }
   };

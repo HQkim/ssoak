@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
 import { Provider } from "react-redux";
@@ -18,6 +19,13 @@ const store = createStore(
 sagaMiddleware.run(rootSaga);
 
 export default function App() {
+  useEffect(() => {
+    if (typeof TextEncoder !== "function") {
+      const TextEncodingPolyfill = require("text-encoding");
+      TextEncoder = TextEncodingPolyfill.TextEncoder;
+      TextDecoder = TextEncodingPolyfill.TextDecoder;
+    }
+  }, []);
   return (
     <Provider store={store}>
       <LoadingContainer />
