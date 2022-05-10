@@ -1,8 +1,9 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { View } from "react-native";
+import { ProgressViewIOS, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import * as Device from "expo-device";
 import DateTimeAndroid from "./dateTimeAndroid";
+import { useFocusEffect } from "@react-navigation/native";
 
 type Props = {
   navigation: any;
@@ -16,6 +17,7 @@ const DateTime = (props: Props) => {
   const [timeOpen, setTimeOpen] = useState(false);
   const [date, setDate] = useState(new Date());
   const [minimumDate, setMinimumDate] = useState(new Date());
+  const [selectDate, setSelectDate] = useState(props.item);
 
   const onChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
@@ -36,9 +38,9 @@ const DateTime = (props: Props) => {
     props.getSelectInformation(time, dateTime);
   };
 
-  useEffect(() => {
-    const unsubscribe = props.navigation.addListener("focus", () => {
-      if (props.item === 0) {
+  useFocusEffect(
+    React.useCallback(() => {
+      if (props.item === 0 || props.item === 1) {
         setDate(new Date());
       } else if (props.item != 0) {
         const startDateTime = props.item.startTime;
@@ -50,9 +52,8 @@ const DateTime = (props: Props) => {
         }
       }
       setMinimumDate(new Date());
-    });
-    return unsubscribe;
-  }, [props.navigation]);
+    }, [])
+  );
 
   useEffect(() => {
     if (Device.osName === "iOS") {

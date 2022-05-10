@@ -37,9 +37,9 @@ const ItemCreationInput = (props: Props) => {
   }
 
   const [form, setForm] = useState<Form | null | any>([]);
-  console.warn(form, 888);
   const [value, setValue] = useState<Form | null | any>([]);
   const [select, setSelect] = useState(true);
+  const [dateTime, setDateTime] = useState(0);
   const navigation = useNavigation();
 
   const { title, content, startPrice } = value;
@@ -149,6 +149,7 @@ const ItemCreationInput = (props: Props) => {
   const onCancel = () => {
     props.resetImage();
     resetData();
+    setDateTime(1);
     navigation.navigate("main");
   };
 
@@ -248,7 +249,7 @@ const ItemCreationInput = (props: Props) => {
           getSelectInformation={getDateTime}
           navigation={props.navigation}
           route={props.route}
-          item={0}
+          item={dateTime}
         />
       </View>
       <Border style={styles.border} />
@@ -306,7 +307,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     backgroundColor: "#0176B7",
     borderRadius: 5,
-    width: ScreenWidth / 1.8,
+    width: ScreenWidth / 2,
     height: ScreenHeight / 17,
     justifyContent: "center",
     alignItems: "center",

@@ -48,7 +48,6 @@ const AuctionDescription = ({ item, reqItem }) => {
     const decodedToken = jwt_decode<JwtPayload>(tokenSeq);
     const myToken = Number(decodedToken.sub);
     setToken(myToken);
-    console.warn(typeof item.seller.seq, typeof token);
   };
 
   const onSelect = () => {
@@ -62,6 +61,7 @@ const AuctionDescription = ({ item, reqItem }) => {
   const onUpdate = () => {
     navigation.navigate("itemModification", {
       params: item,
+      reqItem: reqItem,
     });
   };
 

@@ -18,6 +18,7 @@ type Props = {
   navigation: any;
   route: object;
   item: any;
+  reqItem: number;
 };
 
 const ItemModification = (props: Props) => {
@@ -30,6 +31,7 @@ const ItemModification = (props: Props) => {
               navigation={props.navigation}
               route={props.route}
               item={props.item}
+              reqItem={props.reqItem}
             />
           </SafeAreaView>
         </View>

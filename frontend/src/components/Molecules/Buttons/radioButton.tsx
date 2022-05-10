@@ -18,7 +18,6 @@ const RadioButton = (props: Props) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      console.warn(props.auctionType);
       const auctionType = props.auctionType;
       if (auctionType === "NORMAL") {
         setSelect(false);
