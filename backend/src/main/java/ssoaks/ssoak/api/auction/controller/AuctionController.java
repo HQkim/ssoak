@@ -190,11 +190,11 @@ public class AuctionController {
     @PostMapping("/{itemSeq}/review")
     public ResponseEntity<BaseResponseDTO> auctionReview(@PathVariable("itemSeq") Long itemSeq,
                                                          ReqAuctionReviewDto reqAuctionReviewDto) {
-        log.debug("일반경매 낙찰 seq- {} , dto- {}", itemSeq, reqAuctionReviewDto);
+        log.debug("경매 리뷰 seq- {} , dto- {}", itemSeq, reqAuctionReviewDto);
         try{
             Boolean review = reviewService.updateReview(itemSeq, reqAuctionReviewDto);
             if (!review) {
-                return ResponseEntity.status(409).body(new BaseResponseDTO(409, "리뷰 생성 실패"));
+                return ResponseEntity.status(403).body(new BaseResponseDTO(403, "구매자 없으면 리뷰 못하지!"));
             }
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());

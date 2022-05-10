@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import ssoaks.ssoak.api.auction.dto.request.ReqSearchDto;
 import ssoaks.ssoak.api.auction.dto.response.*;
 import ssoaks.ssoak.api.auction.entity.Item;
+import ssoaks.ssoak.api.auction.enums.AuctionType;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -185,6 +186,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                 .select(item.count().intValue())
                 .from(item)
                 .where(item.auctionType.stringValue().eq(keyword)
+                        .and(item.startTime.before(LocalDateTime.now()))
                         .and(item.endTime.after(LocalDateTime.now())))
                 .fetchOne();
 
@@ -289,6 +291,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                                 .and(item.endTime.after(LocalDateTime.now()))
                                 .and(item.title.contains(searchDto.getKeyword()))
                                 .or(item.content.contains(searchDto.getKeyword())),
+                        auctionTypeEq(searchDto.getAuctionType()),
                         categoryEq(searchDto.getCategory()),
                         timeBetween(searchDto.getStartTime(), searchDto.getEndTime()),
                         priceBetween(searchDto.getStartPrice(), searchDto.getEndPrice())
@@ -323,6 +326,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                                 .and(item.endTime.after(LocalDateTime.now()))
                                 .and(item.title.contains(searchDto.getKeyword()))
                                 .or(item.content.contains(searchDto.getKeyword())),
+                        auctionTypeEq(searchDto.getAuctionType()),
                         categoryEq(searchDto.getCategory()),
                         timeBetween(searchDto.getStartTime(), searchDto.getEndTime()),
                         priceBetween(searchDto.getStartPrice(), searchDto.getEndPrice())
@@ -340,6 +344,10 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
             }
         }
         return query.fetch();
+    }
+
+    private BooleanExpression auctionTypeEq(String auctionType) {
+        return hasText(auctionType) ? item.auctionType.stringValue().eq(auctionType) : null;
     }
 
     private BooleanExpression categoryEq(String categoryParam) {
