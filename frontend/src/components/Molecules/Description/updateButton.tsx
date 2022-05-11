@@ -15,7 +15,7 @@ const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
 const UpdateButton = ({ item, reqItem }) => {
   const [isLiked, setIsLiked] = useState(item.isLike);
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
   const [select, setSelect] = useState(false);
   const [token, setToken] = useState<any>();
 

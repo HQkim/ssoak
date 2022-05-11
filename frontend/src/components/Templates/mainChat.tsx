@@ -45,7 +45,7 @@ const MainChat = (props: Props) => {
 
   const connect = () => {
     client = new StompJs.Client({
-      brokerURL: "wss://k6a207.p.ssafy.io/api/v1/ws",
+      brokerURL: "wss://k6a207.p.ssafy.io/socket",
       // connectHeaders: {
       //   Authorization: `Bearer ${token}`,
       // },
@@ -87,8 +87,8 @@ const MainChat = (props: Props) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
 
   const onSend = useCallback((messages = []) => {
-    // console.log(client, connected, messages);
-    console.log(messages, client != null, !connected);
+    console.log(client, connected, messages);
+    // console.log(messages);
     if (client != null) {
       if (!connected) return;
       client.publish({
@@ -106,18 +106,18 @@ const MainChat = (props: Props) => {
   }, [connected]);
   useEffect(() => {
     setMessages([
-      // {
-      //   _id: 1,
-      //   itemSeq: 1,
-      //   text: "Hello developer",
-      //   createdAt: new Date(),
-      //   user: {
-      //     _id: 2,
-      //     name: "React Native",
-      //     avatar: "https://placeimg.com/140/140/any",
-      //   },
-      //   type: 1,
-      // },
+      {
+        _id: 1,
+        itemSeq: 1,
+        text: "Hello developer",
+        createdAt: new Date(),
+        user: {
+          _id: 2,
+          name: "React Native",
+          avatar: "https://placeimg.com/140/140/any",
+        },
+        type: 1,
+      },
     ]);
     return () => disconnect();
   }, []);
