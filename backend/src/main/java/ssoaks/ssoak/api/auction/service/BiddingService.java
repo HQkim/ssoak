@@ -8,4 +8,6 @@ public interface BiddingService {
     BiddingSimpleInfoDto createBidding(Long itemSeq, ReqBiddingRegisterDto registerBiddingDto);
 
     BiddingSimpleInfoDto successBidding(Long itemSeq, ReqBiddingRegisterDto successBiddingDto);
+
+    void checkFinishedBidding();
 }

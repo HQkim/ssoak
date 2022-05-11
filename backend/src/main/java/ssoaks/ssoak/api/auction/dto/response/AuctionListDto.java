@@ -30,7 +30,6 @@ public class AuctionListDto {
 
     @Builder
     @QueryProjection
-
     public AuctionListDto(Long itemSeq, String title, Integer startPrice, LocalDateTime startTime, LocalDateTime endTime, AuctionType auctionType, Integer biddingCount, Integer biddingPrice, String imageUrl, Long sellerSeq, String sellerNickname, String sellerprofile, String category) {
         this.itemSeq = itemSeq;
         this.title = title;

@@ -27,7 +27,7 @@ public class ReviewServiceImpl implements ReviewService{
 
         Item item = itemRepository.findBySeq(itemSeq)
                 .orElseThrow(() -> new IllegalStateException("물품 조회 실패"));
-        if (item.getBuyer() == null) {
+        if (item.getBuyer() == null || item.getIsFinished().equals(true)) {
             return false;
         }
 

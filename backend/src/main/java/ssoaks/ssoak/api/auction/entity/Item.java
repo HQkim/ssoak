@@ -57,6 +57,9 @@ public class Item extends BaseModifiedEntity {
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isSold;
 
+    @Column(columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean isFinished;
+
     @Column(columnDefinition = "INT UNSIGNED")
     private Float sellerReview;
 
@@ -88,7 +91,7 @@ public class Item extends BaseModifiedEntity {
     @Builder
     public Item(String title, String content, Integer startPrice, Integer biddingUnit,
                 Integer biddingPrice, Integer biddingCount, LocalDateTime startTime,
-                LocalDateTime endTime, AuctionType auctionType, Boolean isSold, Member member) {
+                LocalDateTime endTime, AuctionType auctionType, Member member) {
         this.title = title;
         this.content = content;
         this.startPrice = startPrice;
@@ -98,11 +101,12 @@ public class Item extends BaseModifiedEntity {
         this.startTime = startTime;
         this.endTime = endTime;
         this.auctionType = auctionType;
-        this.isSold = isSold;
+        this.isSold = false;
         this.member = member;
         this.buyer = null;
         this.sellerReview = null;
         this.buyerReview = null;
+        this.isFinished = false;
     }
 
 
@@ -128,6 +132,16 @@ public class Item extends BaseModifiedEntity {
         this.endTime = endTime;
         this.isSold = isSold;
         this.buyer = buyer;
+        this.isFinished = true;
+    }
+
+    public void successBiddingScheduler() {
+        this.isSold = true;
+        this.isFinished = true;
+    }
+
+    public void failBiddingScheduler() {
+        this.isFinished = true;
     }
 
     public void updateSellerReview(Float sellerReview) {

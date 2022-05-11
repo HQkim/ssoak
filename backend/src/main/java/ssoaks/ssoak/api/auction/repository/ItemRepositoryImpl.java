@@ -5,6 +5,8 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import ssoaks.ssoak.api.auction.dto.request.FinishBiddingDto;
+import ssoaks.ssoak.api.auction.dto.request.QFinishBiddingDto;
 import ssoaks.ssoak.api.auction.dto.request.ReqSearchDto;
 import ssoaks.ssoak.api.auction.dto.response.*;
 import ssoaks.ssoak.api.auction.entity.Item;
@@ -345,6 +347,45 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
         }
         return query.fetch();
     }
+
+    @Override
+    public List<FinishBiddingDto> getSuccessfulAuction() {
+        List<FinishBiddingDto> auctionListDtos = queryFactory
+                .select(new QFinishBiddingDto(
+                        item.seq,
+                        item.biddingCount,
+                        item.isSold,
+                        item.isFinished
+                ))
+                .from(item)
+                .where(item.isSold.eq(false)
+                        .and(item.isFinished.eq(false))
+                        .and(item.endTime.before(LocalDateTime.now()))
+                                .and(item.biddingCount.goe(1))
+                        )
+                .fetch();
+        return auctionListDtos;
+    }
+
+    @Override
+    public List<FinishBiddingDto> getFiledAuction() {
+        List<FinishBiddingDto> auctionListDtos = queryFactory
+                .select(new QFinishBiddingDto(
+                        item.seq,
+                        item.biddingCount,
+                        item.isSold,
+                        item.isFinished
+                ))
+                .from(item)
+                .where(item.isSold.eq(false)
+                        .and(item.isFinished.eq(false))
+                        .and(item.endTime.before(LocalDateTime.now()))
+                        .and(item.biddingCount.eq(0))
+                )
+                .fetch();
+        return auctionListDtos;
+    }
+
 
     private BooleanExpression auctionTypeEq(String auctionType) {
         return hasText(auctionType) ? item.auctionType.stringValue().eq(auctionType) : null;
