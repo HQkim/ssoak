@@ -11,7 +11,12 @@ export const searchItem = async (item) => {
         auctionType: "NORMAL",
       },
     });
-    console.log(response.data);
+    if (response.data.statusCode === 200) {
+      console.log("물품 조회 성공", response.data.data.auctionList);
+      return response.data.data.auctionList;
+    } else if (response.data.statusCode === 409) {
+      console.log("데이터 형식 에러");
+    }
   } catch (e) {
     console.log(e);
   }

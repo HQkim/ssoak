@@ -19,9 +19,9 @@ const { width: ScreenWidth } = Dimensions.get("window");
 
 const OrderBy = (props: Props) => {
   const [selectOrder, setSelectOrder] = useState(true);
-  const onSelectOrder = () => {
+  const onSelectOrder = async () => {
     setSelectOrder(!selectOrder);
-    props.getSelectInformation(selectOrder);
+    await props.getSelectInformation(selectOrder);
   };
   return (
     <View>

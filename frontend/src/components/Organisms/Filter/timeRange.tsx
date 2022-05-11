@@ -6,7 +6,8 @@ import FilterStartDateTimeAndroid from "../../Molecules/Times/filterStartDateTim
 import FilterEndDateTimeAndroid from "../../Molecules/Times/filterEndDateTimeAndroid";
 
 type Props = {
-  getSelectInformation: Function;
+  getSelectstInformation: Function;
+  getSelectetInformation: Function;
   navigation: any;
   route: object;
 };
@@ -22,34 +23,39 @@ const { width: ScreenWidth } = Dimensions.get("window");
 const TimeRange = (props: Props) => {
   const [startDateOpen, setStartDateOpen] = useState(false);
   const [endDateOpen, setEndDateOpen] = useState(false);
+  const [startMinuteOpen, setStartMinuteOpen] = useState(false);
+  const [endMinuteOpen, setEndMinuteOpen] = useState(false);
+
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [minimumDate, setMinimumDate] = useState(new Date());
-  const [timeRange, setTimeRange] = useState<timeType | any | null>();
+  const [startMinute, setStartMinute] = useState(new Date());
+  const [endMinute, setEndMinute] = useState(new Date());
 
-  const onChangeStart = (event: any, selectedDate: any) => {
+  const [minimumDate, setMinimumDate] = useState(new Date());
+
+  const onChangeStart = async (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
     Device.osName === "Android" && setStartDateOpen(false);
+    Device.osName === "Android" && setStartMinuteOpen(false);
     selectedDate !== undefined && setStartDate(currentDate);
     const now = new Date(selectedDate);
     now.setHours(now.getHours() + 9);
     let timeInformation = JSON.stringify(now);
-    let tmp = timeInformation.replace(".000Z", "");
-    let time = JSON.parse(tmp);
+    const result = timeInformation.substring(20, 25);
+    const tmp = timeInformation.replace(result, "");
+    const time = JSON.parse(tmp);
     now.setMinutes(now.getMinutes() + 30);
-    let timeInfo = JSON.stringify(now);
-    let temp = timeInfo.replace(".000Z", "");
-    let dateTime = JSON.parse(temp);
-    setTimeRange({
-      startDate: currentDate,
-      endDate: endDate,
-    });
-    props.getSelectInformation(timeRange);
+    const timeInfo = JSON.stringify(now);
+    const result2 = timeInfo.substring(20, 25);
+    const temp = timeInfo.replace(result2, "");
+    const dateTime = JSON.parse(temp);
+    await props.getSelectstInformation(dateTime, time);
   };
 
-  const onChangeEnd = (event: any, selectedDate: any) => {
+  const onChangeEnd = async (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
     Device.osName === "Android" && setEndDateOpen(false);
+    Device.osName === "Android" && setEndMinuteOpen(false);
     selectedDate !== undefined && setEndDate(currentDate);
     const now = new Date(selectedDate);
     now.setHours(now.getHours() + 9);
@@ -60,21 +66,15 @@ const TimeRange = (props: Props) => {
     let timeInfo = JSON.stringify(now);
     let temp = timeInfo.replace(".000Z", "");
     let dateTime = JSON.parse(temp);
-    setTimeRange({
-      startDate: startDate,
-      endDate: currentDate,
-    });
-    props.getSelectInformation(timeRange);
+    await props.getSelectetInformation(dateTime, time);
   };
 
-  console.log(timeRange);
-
-  useEffect(() => {
-    const unsubscribe = props.navigation.addListener("focus", () => {
-      setMinimumDate(new Date());
-    });
-    return unsubscribe;
-  }, [props.navigation]);
+  // useEffect(() => {
+  //   const unsubscribe = props.navigation.addListener("focus", () => {
+  //     // setMinimumDate(new Date());
+  //   });
+  //   return unsubscribe;
+  // }, [props.navigation]);
 
   return (
     <View>
@@ -84,9 +84,10 @@ const TimeRange = (props: Props) => {
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         {Device.osName === "Android" && (
           <FilterStartDateTimeAndroid
-            functions={{ setStartDateOpen }}
-            states={{ startDateOpen }}
+            functions={{ setStartDateOpen, setStartMinuteOpen }}
+            states={{ startDateOpen, startMinuteOpen }}
             date={startDate}
+            // time={startMinute}
           />
         )}
         {startDateOpen && (
@@ -101,13 +102,25 @@ const TimeRange = (props: Props) => {
             style={{ flex: 2 }}
           />
         )}
+        {startMinuteOpen && (
+          <DateTimePicker
+            testID="dateTimePickerStart"
+            value={startDate}
+            mode={"time"}
+            is24Hour={true}
+            minimumDate={minimumDate}
+            locale="ko-KR"
+            onChange={onChangeStart}
+            style={{ flex: 1 }}
+          />
+        )}
         <View>
           <Text>~</Text>
         </View>
         {Device.osName === "Android" && (
           <FilterEndDateTimeAndroid
-            functions={{ setEndDateOpen }}
-            states={{ endDateOpen }}
+            functions={{ setEndDateOpen, setEndMinuteOpen }}
+            states={{ endDateOpen, endMinuteOpen }}
             date={endDate}
           />
         )}
@@ -121,6 +134,18 @@ const TimeRange = (props: Props) => {
             locale="ko-KR"
             onChange={onChangeEnd}
             style={{ flex: 2 }}
+          />
+        )}
+        {endMinuteOpen && (
+          <DateTimePicker
+            testID="dateTimePickerEnd"
+            value={endDate}
+            mode={"time"}
+            is24Hour={true}
+            minimumDate={minimumDate}
+            locale="ko-KR"
+            onChange={onChangeEnd}
+            style={{ flex: 1 }}
           />
         )}
       </View>

@@ -32,8 +32,9 @@ const { width: ScreenWidth } = Dimensions.get("window");
 interface Form {
   auctionType: string;
   categories: string;
-  orderType: string;
-  priceRange: Array<number>;
+  sort: string;
+  startPrice: number;
+  endPrice: number;
   startTime: Date;
   endTime: Date;
 }
@@ -43,11 +44,11 @@ const Filter = (props: Props) => {
   const {
     auctionType,
     categories,
-    orderType,
-    priceRange,
+    sort,
+    startPrice,
+    endPrice,
     startTime,
     endTime,
-    timeRange,
   } = form;
   const [select, setSelect] = useState(true);
   const [selectOrder, setSelectOrder] = useState(true);
@@ -61,7 +62,7 @@ const Filter = (props: Props) => {
         }));
       } else {
         setForm((prevState: any) => ({
-          form: { ...prevState.form, auctionType: "LIVE_NORMAL" },
+          form: { ...prevState.form, auctionType: "LIVE" },
         }));
       }
     }
@@ -71,38 +72,51 @@ const Filter = (props: Props) => {
       }));
     }
   };
+  console.log(form, "test1111111111111111111111111");
   // 정렬 필터 함수
   const onSelectOrder = (info: boolean) => {
     setSelectOrder(info);
     if (info === true) {
       setForm((prevState: any) => ({
-        form: { ...prevState.form, orderType: "RECENT" },
+        form: { ...prevState.form, sort: "biddingCount" },
       }));
     } else {
       setForm((prevState: any) => ({
-        form: { ...prevState.form, orderType: "POPULAR" },
+        form: { ...prevState.form, sort: "createdDate" },
       }));
     }
   };
 
   // 가격 범위 필터 함수
-  const onSelectPrice = (info: Array<object>) => {
+  const onSelectStartPrice = (info: number) => {
     setForm((prevState: any) => ({
-      form: { ...prevState.form, priceRange: info },
+      form: { ...prevState.form, startPrice: info },
+    }));
+  };
+
+  const onSelectEndPrice = (info: number) => {
+    setForm((prevState: any) => ({
+      form: { ...prevState.form, endPrice: info },
     }));
   };
 
   // 시작 시간 필터 함수
-  const onSelectTime = (info: Array<object>) => {
+  const onSelectStartTime = (info: string) => {
     setForm((prevState: any) => ({
-      form: { ...prevState.form, timeRange: info },
+      form: { ...prevState.form, startTime: info },
+    }));
+  };
+
+  const onSelectEndTime = (info: string) => {
+    setForm((prevState: any) => ({
+      form: { ...prevState.form, endTime: info },
     }));
   };
 
   // 필터 적용 함수
   const applyFilters = () => {
-    console.log(form);
-    console.log(form.form.timeRange);
+    // console.log(form);
+    // console.log(form.form.timeRange);
 
     if (form.form.priceRange.startPrice > form.form.priceRange.endPrice) {
       Alert.alert("가격범위를 확인해주세요");
@@ -123,7 +137,7 @@ const Filter = (props: Props) => {
       form: {
         auctionType: "LIVE_NORMAL",
         categories: "",
-        orderType: "RECENT",
+        sort: "createdDate",
         startPrice: "",
         endPrice: "",
         startTime: "",
@@ -138,7 +152,7 @@ const Filter = (props: Props) => {
         form: {
           auctionType: "LIVE_NORMAL",
           categories: "",
-          orderType: "RECENT",
+          sort: "createdDate",
           startPrice: "",
           endPrice: "",
           startTime: "",
@@ -180,14 +194,16 @@ const Filter = (props: Props) => {
       </View>
       <View style={{ marginTop: 10 }}>
         <PriceRange
-          getSelectInformation={onSelectPrice}
+          getSelectInspformation={onSelectStartPrice}
+          getSelectInepformation={onSelectEndPrice}
           navigation={props.navigation}
           route={props.route}
         />
       </View>
       <View style={{ marginTop: 10 }}>
         <TimeRange
-          getSelectInformation={onSelectTime}
+          getSelectstInformation={onSelectStartTime}
+          getSelectetInformation={onSelectEndTime}
           navigation={props.navigation}
           route={props.route}
         />

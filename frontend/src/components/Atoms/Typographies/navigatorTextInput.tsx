@@ -7,17 +7,16 @@ type Props = {
   style: object;
   text: any;
   setText: Function;
+  setItems: any;
 };
 
 const { width: ScreenWidth } = Dimensions.get("window");
-const { height: ScreenHeight } = Dimensions.get("window");
 
 const NavigatorTextInput = (props: Props) => {
-  // const keyword = props.text;
   const searchKeyword = async (text) => {
     const keyword = text;
-    console.log(keyword);
-    await searchItem(keyword);
+    const result = await searchItem(keyword);
+    props.setItems(result);
   };
 
   return (

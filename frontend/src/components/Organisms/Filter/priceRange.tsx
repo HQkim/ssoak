@@ -2,7 +2,8 @@ import { StyleSheet, Text, View, Dimensions, TextInput } from "react-native";
 import React, { useState } from "react";
 
 type Props = {
-  getSelectInformation: Function;
+  getSelectInspformation: Function;
+  getSelectInepformation: Function;
   navigation: any;
   route: object;
 };
@@ -18,30 +19,13 @@ const { width: ScreenWidth } = Dimensions.get("window");
 const PriceRange = (props: Props) => {
   const [startPrice, setStartPrice] = useState<number | any | null>("");
   const [endPrice, setEndPrice] = useState<number | any | null>("");
-  const [priceRange, setPriceRange] = useState<PriceType | any | null>([]);
   const inputStartPrice = (text) => {
     setStartPrice(text);
-    // setPriceRange((prev: any) => [
-    //   { startPrice: text },
-    //   { endPrice: endPrice },
-    // ]);
-    setPriceRange({
-      startPrice: startPrice,
-      endPrice: endPrice,
-    });
-    props.getSelectInformation(priceRange);
+    props.getSelectInspformation(text);
   };
   const inputEndPrice = (text) => {
     setEndPrice(text);
-    // setPriceRange((prev: any) => [
-    //   { startPrice: startPrice },
-    //   { endPrice: text },
-    // ]);
-    setPriceRange({
-      startPrice: startPrice,
-      endPrice: text,
-    });
-    props.getSelectInformation(priceRange);
+    props.getSelectInepformation(text);
   };
 
   return (
