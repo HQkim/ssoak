@@ -55,11 +55,13 @@ export default Index;
 
 const styles = StyleSheet.create({
   auctionTypeTag: {
-    fontSize: 15,
     width: ScreenWidth / 6,
+    height: ScreenHeight / 33,
     backgroundColor: "#F8A33E",
     borderRadius: ScreenWidth / 12,
-    textAlign: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    alignItems: "center",
   },
   textAreaDate: {
     borderRadius: 20,

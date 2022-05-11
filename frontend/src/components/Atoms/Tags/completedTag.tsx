@@ -1,12 +1,13 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Dimensions } from "react-native";
 import React from "react";
 
 type Props = {};
+const { width: ScreenWidth } = Dimensions.get("window");
 
 const CompletedTag = ({ styles, text }) => {
   return (
-    <View>
-      <Text style={styles.tag}>{text}</Text>
+    <View style={styles.tag}>
+      <Text style={{ fontSize: ScreenWidth / 30 }}>{text}</Text>
     </View>
   );
 };
