@@ -1,18 +1,24 @@
 import { StyleSheet, Dimensions, TextInput } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import NavigatorTitle from "../../Atoms/Typographies/navigatorTitle";
 import NavigatorTextInput from "../../Atoms/Typographies/navigatorTextInput";
 import SearchContainer from "../../Pages/searchContainer";
 import FilterContainer from "../../Pages/filterContainer";
+import { searchItem } from "../../../apis/categoryApi";
 
 type Props = {};
+
+type Items = {
+  items: Array<object>;
+};
 
 const Stack = createStackNavigator();
 const { width: ScreenWidth } = Dimensions.get("window");
 const { height: ScreenHeight } = Dimensions.get("window");
 const SearchStackNavigator = (props: Props) => {
   const [text, setText] = useState("");
+  const [items, setItems] = useState<Items | null | any>([]);
   return (
     <Stack.Navigator
       screenOptions={{
@@ -24,7 +30,7 @@ const SearchStackNavigator = (props: Props) => {
         headerTintColor: "black",
       }}
     >
-      <Stack.Screen
+      {/* <Stack.Screen
         name="search"
         component={SearchContainer}
         options={{
@@ -34,6 +40,28 @@ const SearchStackNavigator = (props: Props) => {
               style={styles.NavigatorTextInput}
               setText={setText}
               text={text}
+            />
+          ),
+        }}
+      /> */}
+      <Stack.Screen
+        name="search"
+        children={({ navigation }) => (
+          <SearchContainer
+            text={text}
+            setText={setText}
+            navigation={navigation}
+            items={items}
+          />
+        )}
+        options={{
+          headerTitleAlign: "center",
+          headerTitle: (props) => (
+            <NavigatorTextInput
+              style={styles.NavigatorTextInput}
+              setText={setText}
+              text={text}
+              setItems={setItems}
             />
           ),
         }}
@@ -47,7 +75,6 @@ const SearchStackNavigator = (props: Props) => {
             <NavigatorTitle title={"검색 필터"} style={styles.navigatorTitle} />
           ),
         }}
-        /// <reference path="search" />
       />
     </Stack.Navigator>
   );
