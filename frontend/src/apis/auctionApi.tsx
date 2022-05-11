@@ -53,3 +53,11 @@ export const biddingAuction = async (itemSeq, formData) => {
   );
   return response.data;
 };
+
+export const hammerAuction = async (itemSeq, formData) => {
+  const response = await fileInstance.post(
+    `/auctions/${itemSeq}/hammered`,
+    formData
+  );
+  return response.data;
+};
