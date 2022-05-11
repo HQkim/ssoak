@@ -38,12 +38,4 @@ public class Image extends BaseModifiedEntity {
         this.imageUrl = imageUrl;
     }
 
-    // 기존 이미지  - FILE -> imageURl은 내가생성해..그럼 url을 가지고 있겠지. 수정
-    // list에서 수정 되지 않은 값 -> front가 줘야 함
-    // 수정된 값 -> File로 보내줘야겠지...
-
-    // 기존  a b c - 1 -> findAllByItemSeq 로 찾아와
-    // 수정 a b d e - 1  -> .contains로 abde를 검색
-    // (ab가 나와 -> c가 없네!? 그럼 c 삭제 ,
-    // + d, e 는 추가
 }

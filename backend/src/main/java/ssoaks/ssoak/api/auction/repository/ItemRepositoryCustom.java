@@ -1,6 +1,7 @@
 package ssoaks.ssoak.api.auction.repository;
 
 import org.springframework.data.domain.Pageable;
+import ssoaks.ssoak.api.auction.dto.request.FinishBiddingDto;
 import ssoaks.ssoak.api.auction.dto.request.ReqSearchDto;
 import ssoaks.ssoak.api.auction.dto.response.AuctionListDto;
 import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
@@ -26,4 +27,9 @@ public interface ItemRepositoryCustom {
 
     Integer countSearchItemsByKeyword(ReqSearchDto searchDto, Pageable pageable);
     List<AuctionListDto> getSearchItemsByKeyword(ReqSearchDto searchDto, Pageable pageable);
+
+    List<FinishBiddingDto> getSuccessfulAuction();
+    List<FinishBiddingDto> getFiledAuction();
+
+
 }

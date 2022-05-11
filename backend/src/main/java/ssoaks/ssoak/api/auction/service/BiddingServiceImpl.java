@@ -3,8 +3,10 @@ package ssoaks.ssoak.api.auction.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ssoaks.ssoak.api.auction.dto.request.FinishBiddingDto;
 import ssoaks.ssoak.api.auction.dto.request.ReqBiddingRegisterDto;
 import ssoaks.ssoak.api.auction.dto.response.BiddingSimpleInfoDto;
 import ssoaks.ssoak.api.auction.entity.Bidding;
@@ -19,6 +21,8 @@ import ssoaks.ssoak.api.member.entity.Member;
 import ssoaks.ssoak.api.member.service.MemberService;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -129,5 +133,31 @@ public class BiddingServiceImpl implements BiddingService {
                 .biddingCount(item.getBiddingCount())
                 .buyer(memberSimpleInfoDto)
                 .build();
+    }
+
+    @Override
+    @Transactional
+    @Scheduled(cron = "10 * * * * *")
+    public void checkFinishedBidding() {
+        log.debug("=========BiddingScheduler=========");
+        List<FinishBiddingDto> successfulAuction = itemRepository.getSuccessfulAuction();
+        System.out.println("=============successfulAuction===========");
+        for (FinishBiddingDto finishBiddingDto : successfulAuction) {
+            Item item = itemRepository.findBySeq(finishBiddingDto.getItemSeq()).orElse(null);
+            if (item != null){
+                item.successBiddingScheduler();
+                item.getBuyer().updateReview(5f);
+                item.getMember().updateReview(5f);
+            }
+        }
+
+        List<FinishBiddingDto> filedAuction = itemRepository.getFiledAuction();
+        System.out.println("=========failedBidding===========");
+        for (FinishBiddingDto finishBiddingDto : filedAuction) {
+            Item item = itemRepository.findBySeq(finishBiddingDto.getItemSeq()).orElse(null);
+            if (item != null){
+                item.failBiddingScheduler();
+            }
+        }
     }
 }

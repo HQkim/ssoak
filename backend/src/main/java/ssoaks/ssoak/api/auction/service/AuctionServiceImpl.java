@@ -75,7 +75,6 @@ public class AuctionServiceImpl implements AuctionService {
                 .startTime(startTime)
                 .endTime(endTime)
                 .auctionType(itemRegisterRequestDto.getAuctionType())
-                .isSold(false)
                 .member(member)
                 .build();
         itemRepository.save(item);
@@ -116,7 +115,6 @@ public class AuctionServiceImpl implements AuctionService {
                 .startTime(LocalDateTime.now())
                 .endTime(LocalDateTime.now())
                 .auctionType(AuctionType.NORMAL)
-                .isSold(false)
                 .member(member)
                 .build();
         itemRepository.save(item);
