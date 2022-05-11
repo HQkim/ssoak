@@ -38,7 +38,9 @@ const Action = ({ item, reqItem, getItemDetail }) => {
       const hammer: any = true;
       formData.append("isHammered", hammer);
       const result = await hammerAuction(reqItem, formData);
-      console.warn(result);
+      if (result.statusCode === 201) {
+        Alert.alert("낙찰이 완료되었습니다.")
+      }
     }
   };
 
