@@ -38,11 +38,11 @@ const Search = (props: Props) => {
     React.useCallback(() => {
       saveData(props.items);
       return () => {};
-    }, [])
+    }, []),
   );
 
   useEffect(() => {
-    console.log(props.items, "testtttttttttttttttttttttttt");
+    setData(props.items);
   }, [props]);
 
   return (
