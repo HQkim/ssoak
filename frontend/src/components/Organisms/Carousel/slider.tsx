@@ -94,10 +94,7 @@ const Slider: any = ({ data, handleClickItem }) => {
                         justifyContent: "center",
                       }}
                     >
-                      <Text
-                        numberOfLines={1}
-                        style={{ fontSize: ScreenWidth / 20 }}
-                      >
+                      <Text numberOfLines={1} style={{ fontSize: 20 }}>
                         {item.title}
                       </Text>
                     </View>
@@ -144,6 +141,8 @@ const Slider: any = ({ data, handleClickItem }) => {
                           width: 20,
                           height: 20,
                           borderRadius: 9999,
+                          borderWidth: 1,
+                          borderColor: "#444",
                         }}
                       />
                       <Text style={{ marginLeft: 5 }}>

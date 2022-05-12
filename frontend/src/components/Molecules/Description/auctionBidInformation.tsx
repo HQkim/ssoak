@@ -12,7 +12,7 @@ const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
 const AuctionBidInformation = ({ item }) => {
   const mainImage = item.itemImages[0];
-  const time = new Date(item.bidding.biddingDate);
+  const time = new Date(item.bidding?.biddingDate);
   time.setHours(time.getHours() + 9);
 
   return (
@@ -20,11 +20,11 @@ const AuctionBidInformation = ({ item }) => {
       <View style={styles.boxContainer}>
         <Text style={styles.textContainer}>현재 입찰자</Text>
         <Image
-          source={{ uri: item.bidding.buyer.profileImageUrl }}
+          source={{ uri: item.bidding?.buyer.profileImageUrl }}
           style={styles.profileContainer}
         ></Image>
         <View style={styles.cardContainer}>
-          <Text style={styles.titleStyle}>{item.bidding.buyer.nickname}</Text>
+          <Text style={styles.titleStyle}>{item.bidding?.buyer.nickname}</Text>
           <View style={{ alignItems: "center" }}>
             <Image
               source={{ uri: mainImage }}
@@ -32,7 +32,7 @@ const AuctionBidInformation = ({ item }) => {
             ></Image>
             <Text style={styles.title2Style}>현재 입찰가</Text>
             <Text style={styles.priceStyle}>
-              {item.bidding.biddingPrice
+              {item.bidding?.biddingPrice
                 .toString()
                 .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
               원

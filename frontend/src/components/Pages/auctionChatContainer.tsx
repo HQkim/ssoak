@@ -18,7 +18,7 @@ const AuctionChatContainer = (props: Props) => {
           setUserAvatar(res.data.profileImageUrl);
           setUserId(res.data.seq);
         });
-      },
+      }
     );
   };
 
@@ -31,6 +31,7 @@ const AuctionChatContainer = (props: Props) => {
       userId={userId}
       userAvatar={userAvatar}
       item={props.route.params.item}
+      onStartLoadData={props.route.params.onStartLoadData}
     />
   );
   // return <></>;

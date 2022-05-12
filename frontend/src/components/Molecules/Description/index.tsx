@@ -7,6 +7,7 @@ import {
   TextInput,
   Alert,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import React, { useCallback, useState, useEffect } from "react";
 import MoreButton from "../../Atoms/Buttons/moreButton";
@@ -19,6 +20,8 @@ import { biddingAuction } from "../../../apis/auctionApi";
 import UpdateButton from "./updateButton";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import jwt_decode, { JwtPayload } from "jwt-decode";
+import { loadDataAsync } from "../../../store/modules/detail";
+import { useDispatch } from "react-redux";
 type Props = {};
 
 const index = ({ item, descStyle, titleStyle }) => {
@@ -29,9 +32,11 @@ const index = ({ item, descStyle, titleStyle }) => {
   const [bidAssignValue, setBidAssignValue] = useState<string>("15000");
   const [biddingBuyer, setBiddingBuyer] = useState<any>({});
   const [userId, setUserId] = useState();
-
+  const dispatch = useDispatch();
   const navigation = useNavigation();
-
+  const onLoadData = () => {
+    dispatch(loadDataAsync(item.itemSeq));
+  };
   useEffect(() => {
     if (item.bidding !== null) {
       setCurrentCost(item.bidding.biddingPrice);
@@ -45,7 +50,6 @@ const index = ({ item, descStyle, titleStyle }) => {
 
       setUserId(decodedToken.sub);
     });
-    console.log(item);
   }, []);
 
   const bidding = async (text: string) => {
@@ -57,13 +61,18 @@ const index = ({ item, descStyle, titleStyle }) => {
     }
     const hammer: any = false;
     formData.append("isHammered", hammer);
-    const response = await biddingAuction(item.id, formData);
-    console.log(response);
+    try {
+      const response = await biddingAuction(item.itemSeq, formData);
+    } catch {
+      Alert.alert("입찰에 실패했습니다.");
+    } finally {
+      onLoadData();
+    }
   };
 
   useEffect(() => {
     setBidRightNow(String((Number(currentCost) * 1.1).toFixed()));
-    setBidAssignValue(String(Number(currentCost) + Number(item.biddingUnit)));
+    setBidAssignValue(String((Number(currentCost) * 1.1).toFixed()));
   }, [currentCost]);
 
   const handleMoreClick = () => {
@@ -216,8 +225,33 @@ const index = ({ item, descStyle, titleStyle }) => {
               style={styles.textArea}
               textAlign="center"
             />
-            <View style={{ flex: 1, flexDirection: "row" }}>
-              <View style={{ flex: 0.2 }} />
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {item.bidding ? (
+                <>
+                  <Image
+                    source={{ uri: item.bidding?.buyer.profileImageUrl }}
+                    style={{
+                      width: 20,
+                      height: 20,
+                      borderWidth: 1,
+                      borderRadius: 9999,
+                      borderColor: "#444",
+                      marginRight: 5,
+                    }}
+                  />
+
+                  <Text>{item.bidding?.buyer.nickname}</Text>
+                </>
+              ) : (
+                <></>
+              )}
             </View>
           </View>
           <View
@@ -350,7 +384,7 @@ const styles = StyleSheet.create({
   },
   information: {
     flex: 1,
-    fontSize: 22,
+    fontSize: 18,
   },
   itemInformationContainer: {
     flex: 1,
@@ -365,7 +399,7 @@ const styles = StyleSheet.create({
     flex: 1.5,
     borderRadius: 20,
     borderWidth: 0.5,
-    height: 24,
+    height: 30,
   },
   bidButton: {
     flex: 0.9,
@@ -373,7 +407,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#0176B7",
-    height: 26,
+    height: 30,
     borderRadius: 20,
     borderWidth: 0.5,
   },

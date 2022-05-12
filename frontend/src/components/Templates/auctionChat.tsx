@@ -40,7 +40,7 @@ import { biddingAuction } from "../../apis/auctionApi";
 type Props = {};
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
-const AuctionChat = ({ userId, userAvatar, item }) => {
+const AuctionChat = ({ userId, userAvatar, item, onStartLoadData }) => {
   const [currentCost, setCurrentCost] = useState();
   const [bidRightNow, setBidRightNow] = useState<string>("15000");
   const [bidAssignValue, setBidAssignValue] = useState<string>("15000");
@@ -61,7 +61,7 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
   }, []);
 
   useEffect(() => {
-    setCurrentCost(item.startPrice);
+    setCurrentCost(item.bidding ? item.bidding.biddingPrice : item.startPrice);
   }, []);
 
   useEffect(() => {
@@ -98,7 +98,7 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
       const myUserRef = ref(database, `users/${userId}`);
 
       const auctionChatroom = await get(
-        ref(database, `auctionChatrooms/${itemId}`),
+        ref(database, `auctionChatrooms/${itemId}`)
       );
       if (!auctionChatroom) {
         set(ref(database, `auctionChatrooms/${itemId}`), {
@@ -166,10 +166,9 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
             const hammer: any = false;
             formData.append("isHammered", hammer);
             try {
-              console.log(formData);
-              const res = await biddingAuction(item.itemSeq, formData);
-              console.log(res);
-              if (giftedChatRef) {
+              const result = await biddingAuction(item.itemSeq, formData);
+
+              if (result.statusCode === 201) {
                 onSend([
                   {
                     _id: `${new Date()}${userId}${bidRightNow}`,
@@ -192,7 +191,7 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
           text: "아니오",
           onPress: () => {},
         },
-      ],
+      ]
     );
   };
 
@@ -231,7 +230,7 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
 
       setMessages((prevMessages) => GiftedChat.append(prevMessages, msg));
     },
-    [fetchMessages, myData?.userId, itemId],
+    [fetchMessages, myData?.userId, itemId]
   );
 
   const renderMessages = useCallback(
@@ -264,7 +263,7 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
           }))
         : [];
     },
-    [myData?.avatar, myData?.userId, itemId, messages],
+    [myData?.avatar, myData?.userId, itemId, messages]
   );
   useEffect(() => {
     Platform.OS === "ios" && setOffset(40);

@@ -58,7 +58,7 @@ const UpdateButton = ({ item, reqItem }) => {
   };
   return (
     <View>
-      {token === undefined ? null : item.seller.seq === token ? (
+      {token === undefined ? null : item?.seller.seq === token ? (
         <AntDesign
           name="ellipsis1"
           size={24}

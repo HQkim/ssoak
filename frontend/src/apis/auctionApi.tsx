@@ -48,10 +48,12 @@ export const getList = async ({ keyword, page }) => {
 };
 
 export const biddingAuction = async (itemSeq, formData) => {
+  console.log(itemSeq, formData);
   const response = await fileInstance.post(
     `/auctions/${itemSeq}/bidding`,
     formData
   );
+  console.log(response);
   return response.data;
 };
 
