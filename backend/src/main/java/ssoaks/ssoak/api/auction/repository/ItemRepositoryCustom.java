@@ -26,4 +26,10 @@ public interface ItemRepositoryCustom {
 
     Integer countSearchItemsByKeyword(ReqSearchDto searchDto, Pageable pageable);
     List<AuctionListDto> getSearchItemsByKeyword(ReqSearchDto searchDto, Pageable pageable);
+<<<<<<< Updated upstream
+=======
+
+    List<FinishBiddingDto> getSuccessfulAuction();
+    List<FinishBiddingDto> getFailedAuction();
+>>>>>>> Stashed changes
 }

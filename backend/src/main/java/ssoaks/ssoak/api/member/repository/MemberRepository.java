@@ -7,7 +7,7 @@ import ssoaks.ssoak.api.member.entity.Member;
 
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
 
     @Query("select m from Member m where m.isDeleted=false and m.kakaoId=:kakaoId")
     Optional<Member> findByKakaoId(@Param("kakaoId") String kakaoId);

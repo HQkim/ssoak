@@ -8,7 +8,6 @@ import org.springframework.data.domain.Sort;
 import ssoaks.ssoak.api.auction.dto.request.ReqSearchDto;
 import ssoaks.ssoak.api.auction.dto.response.*;
 import ssoaks.ssoak.api.auction.entity.Item;
-import ssoaks.ssoak.api.auction.enums.AuctionType;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -17,7 +16,6 @@ import java.util.List;
 
 
 import static org.springframework.util.StringUtils.hasText;
-import static ssoaks.ssoak.api.auction.entity.QBidding.bidding;
 import static ssoaks.ssoak.api.auction.entity.QCategory.category;
 import static ssoaks.ssoak.api.auction.entity.QItem.item;
 import static ssoaks.ssoak.api.auction.entity.QItemCategory.itemCategory;
@@ -346,6 +344,48 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
         return query.fetch();
     }
 
+<<<<<<< Updated upstream
+=======
+    @Override
+    public List<FinishBiddingDto> getSuccessfulAuction() {
+        List<FinishBiddingDto> auctionListDtos = queryFactory
+                .select(new QFinishBiddingDto(
+                        item.seq,
+                        item.biddingCount,
+                        item.isSold,
+                        item.isFinished
+                ))
+                .from(item)
+                .where(item.isSold.eq(false)
+                        .and(item.isFinished.eq(false))
+                        .and(item.endTime.before(LocalDateTime.now()))
+                                .and(item.biddingCount.goe(1))
+                        )
+                .fetch();
+        return auctionListDtos;
+    }
+
+    @Override
+    public List<FinishBiddingDto> getFailedAuction() {
+        List<FinishBiddingDto> auctionListDtos = queryFactory
+                .select(new QFinishBiddingDto(
+                        item.seq,
+                        item.biddingCount,
+                        item.isSold,
+                        item.isFinished
+                ))
+                .from(item)
+                .where(item.isSold.eq(false)
+                        .and(item.isFinished.eq(false))
+                        .and(item.endTime.before(LocalDateTime.now()))
+                        .and(item.biddingCount.eq(0))
+                )
+                .fetch();
+        return auctionListDtos;
+    }
+
+
+>>>>>>> Stashed changes
     private BooleanExpression auctionTypeEq(String auctionType) {
         return hasText(auctionType) ? item.auctionType.stringValue().eq(auctionType) : null;
     }

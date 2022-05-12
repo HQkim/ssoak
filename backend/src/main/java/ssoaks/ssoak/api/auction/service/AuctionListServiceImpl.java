@@ -53,7 +53,7 @@ public class AuctionListServiceImpl implements AuctionListService {
     @Override
     public ResAuctionListDto searchAuctionList(Pageable pageable, ReqSearchDto reqSearchDto) {
         log.debug("searchAuctionList reqSearchDto - {}, page-{}", reqSearchDto, pageable);
-        Member member = memberService.getMemberByAuthentication();
+//        Member member = memberService.getMemberByAuthentication();
 
         Integer totalCount = itemRepository.countSearchItemsByKeyword(reqSearchDto, pageable);
         List<AuctionListDto> searchItems = itemRepository.getSearchItemsByKeyword(reqSearchDto, pageable);

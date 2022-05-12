@@ -14,8 +14,10 @@ import ssoaks.ssoak.api.auction.exception.FailBiddingException;
 import ssoaks.ssoak.api.auction.exception.NotAllowedBiddingItemException;
 import ssoaks.ssoak.api.auction.repository.BiddingRepository;
 import ssoaks.ssoak.api.auction.repository.ItemRepository;
+import ssoaks.ssoak.api.member.dto.response.LiveAuctionAlarmDto;
 import ssoaks.ssoak.api.member.dto.response.MemberSimpleInfoDto;
 import ssoaks.ssoak.api.member.entity.Member;
+import ssoaks.ssoak.api.member.repository.MemberRepository;
 import ssoaks.ssoak.api.member.service.MemberService;
 
 import java.time.LocalDateTime;
@@ -32,6 +34,8 @@ public class BiddingServiceImpl implements BiddingService {
     private final BiddingRepository biddingRepository;
 
     private final ItemRepository itemRepository;
+
+    private final MemberRepository memberRepository;
 
     @Transactional
     @Override
@@ -130,4 +134,46 @@ public class BiddingServiceImpl implements BiddingService {
                 .buyer(memberSimpleInfoDto)
                 .build();
     }
+<<<<<<< Updated upstream
+=======
+
+    @Override
+    @Transactional
+//    @Scheduled(cron = "10 * * * * *")
+    public void checkFinishedBidding() {
+        log.debug("=========BiddingScheduler=========");
+        List<FinishBiddingDto> successfulAuction = itemRepository.getSuccessfulAuction();
+        System.out.println("=============successfulAuction===========");
+        for (FinishBiddingDto finishBiddingDto : successfulAuction) {
+            Item item = itemRepository.findBySeq(finishBiddingDto.getItemSeq()).orElse(null);
+            if (item != null){
+                item.successBiddingScheduler();
+                item.getBuyer().updateReview(5f);
+                item.getMember().updateReview(5f);
+            }
+        }
+
+        List<FinishBiddingDto> filedAuction = itemRepository.getFailedAuction();
+        System.out.println("=========failedBidding===========");
+        for (FinishBiddingDto finishBiddingDto : filedAuction) {
+            Item item = itemRepository.findBySeq(finishBiddingDto.getItemSeq()).orElse(null);
+            if (item != null){
+                item.failBiddingScheduler();
+            }
+        }
+    }
+
+    @Override
+    @Scheduled(cron = "10 * * * * *")
+    public void liveAuctionAlarm() {
+        List<LiveAuctionAlarmDto> members = memberRepository.getLikedLiveAuctionMember();
+        System.out.println("====liveAuction =======");
+        for (LiveAuctionAlarmDto member : members) {
+            System.out.println("===========");
+            System.out.println(member);
+        }
+    }
+
+
+>>>>>>> Stashed changes
 }
