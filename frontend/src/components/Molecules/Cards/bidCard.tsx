@@ -44,6 +44,7 @@ const BidCard = ({
     }
     const hammer: any = false;
     formData.append("isHammered", hammer);
+    console.log(formData);
     const result = await biddingAuction(reqItem, formData);
     getItemDetail();
   };

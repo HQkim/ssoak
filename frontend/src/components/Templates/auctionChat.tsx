@@ -36,6 +36,7 @@ import {
   update,
 } from "firebase/database";
 import { useNavigation } from "@react-navigation/native";
+import { biddingAuction } from "../../apis/auctionApi";
 type Props = {};
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
@@ -53,7 +54,7 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [userData, setUserData] = useState([]);
   const giftedChatRef = useRef();
-  const [itemId, setItemId] = useState(4);
+  const [itemId, setItemId] = useState(item.itemSeq);
 
   useEffect(() => {
     Platform.OS === "ios" && setOffset(50);
@@ -157,20 +158,33 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
       [
         {
           text: "예",
-          onPress: () => {
-            if (giftedChatRef) {
-              onSend([
-                {
-                  _id: `${new Date()}${userId}${bidRightNow}`,
-                  createdAt: new Date(),
-                  user: {
-                    _id: userId,
+          onPress: async () => {
+            const formData = new FormData();
+            const bid = Number(bidRightNow);
+            formData.append("biddingPrice", bid);
+
+            const hammer: any = false;
+            formData.append("isHammered", hammer);
+            try {
+              console.log(formData);
+              const res = await biddingAuction(item.itemSeq, formData);
+              console.log(res);
+              if (giftedChatRef) {
+                onSend([
+                  {
+                    _id: `${new Date()}${userId}${bidRightNow}`,
+                    createdAt: new Date(),
+                    user: {
+                      _id: userId,
+                    },
+                    type: "bid",
+                    price: `${bidRightNow}`,
+                    text: `${bidRightNow}원에 입찰했습니다.`,
                   },
-                  type: "bid",
-                  price: `${bidRightNow}`,
-                  text: `${bidRightNow}원에 입찰했습니다.`,
-                },
-              ]);
+                ]);
+              }
+            } catch (error) {
+              console.log(error);
             }
           },
         },
