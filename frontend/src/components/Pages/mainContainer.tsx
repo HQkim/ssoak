@@ -19,8 +19,9 @@ type Props = {
 
 const MainContainer = ({ navigation, route }: Props) => {
   const { isLoading, normalPageAvailable, livePageAvailable } = useSelector(
-    (state: RootState) => state.mainLoader,
+    (state: RootState) => state.mainLoader
   );
+  const { item } = useSelector((state: RootState) => state.detail);
 
   // const data = useSelector((state: RootState) => state.mainLoader.data);
 
@@ -38,7 +39,7 @@ const MainContainer = ({ navigation, route }: Props) => {
   const onScrollLive = () => {
     if (livePageAvailable) {
       dispatch(
-        dataFetchAsyncWithoutLoader({ keyword: "LIVE", page: livePage }),
+        dataFetchAsyncWithoutLoader({ keyword: "LIVE", page: livePage })
       );
       setLivePage(livePage + 1);
     }
@@ -47,32 +48,31 @@ const MainContainer = ({ navigation, route }: Props) => {
   const onScrollNormal = () => {
     if (normalPageAvailable) {
       dispatch(
-        dataFetchAsyncWithoutLoader({ keyword: "NORMAL", page: normalPage }),
+        dataFetchAsyncWithoutLoader({ keyword: "NORMAL", page: normalPage })
       );
       setNormalPage(normalPage + 1);
     }
   };
-
-  navigation.addListener("focus", () => {
-    onRefresh();
-  });
-
-  navigation.addListener("blur", () => {
-    dispatch(dataReset());
-  });
-
   useEffect(() => {
-    console.log(livePage, normalPage);
-  }, [livePage, normalPage]);
+    onRefresh();
+  }, []);
+  // navigation.addListener("focus", () => {
+  //   console.log(item, "################");
+  // });
+
+  // navigation.addListener("blur", () => {
+  //   dispatch(dataReset());
+  // });
+
+  // useEffect(() => {
+  //   console.log(livePage, normalPage);
+  // }, [livePage, normalPage]);
 
   const getToken = async () => {
     const token = await AsyncStorage.getItem("accessToken", (err, res) => {
       console.log(res);
     });
   };
-  useEffect(() => {
-    // console.log(getToken());
-  }, []);
 
   return (
     <Main

@@ -25,6 +25,7 @@ const AuctionDescription = ({ item, reqItem }) => {
 
   const onTextLayout = useCallback((e) => {
     setShowDivier(e.nativeEvent.lines.length < 2);
+    // console.log(item)
   }, []);
 
   const handleMoreClick = () => {
@@ -61,13 +62,13 @@ const AuctionDescription = ({ item, reqItem }) => {
         >
           <Image
             source={{
-              uri: item.seller.profileImageUrl,
+              uri: item?.seller?.profileImageUrl,
             }}
             style={styles.imgContainer}
           />
           <View style={{ marginLeft: 10 }}>
             <Text style={{ fontWeight: "100", marginBottom: 2 }}>판매자</Text>
-            <Text style={styles.typography}>{item.seller.nickname}</Text>
+            <Text style={styles.typography}>{item?.seller?.nickname}</Text>
           </View>
         </View>
         <UpdateButton item={item} reqItem={reqItem} />

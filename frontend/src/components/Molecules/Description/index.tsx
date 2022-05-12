@@ -7,6 +7,7 @@ import {
   TextInput,
   Alert,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import React, { useCallback, useState, useEffect } from "react";
 import MoreButton from "../../Atoms/Buttons/moreButton";
@@ -16,6 +17,11 @@ import NumberFormat from "react-number-format";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { biddingAuction } from "../../../apis/auctionApi";
+import UpdateButton from "./updateButton";
+import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import jwt_decode, { JwtPayload } from "jwt-decode";
+import { loadDataAsync } from "../../../store/modules/detail";
+import { useDispatch } from "react-redux";
 type Props = {};
 
 const index = ({ item, descStyle, titleStyle }) => {
@@ -25,9 +31,12 @@ const index = ({ item, descStyle, titleStyle }) => {
   const [bidRightNow, setBidRightNow] = useState<string>("15000");
   const [bidAssignValue, setBidAssignValue] = useState<string>("15000");
   const [biddingBuyer, setBiddingBuyer] = useState<any>({});
-
+  const [userId, setUserId] = useState();
+  const dispatch = useDispatch();
   const navigation = useNavigation();
-
+  const onLoadData = () => {
+    dispatch(loadDataAsync(item.itemSeq));
+  };
   useEffect(() => {
     if (item.bidding !== null) {
       setCurrentCost(item.bidding.biddingPrice);
@@ -35,27 +44,35 @@ const index = ({ item, descStyle, titleStyle }) => {
     } else {
       setCurrentCost(item.startPrice);
     }
-  }, []);
 
-  useEffect(() => {
-    console.log(bidRightNow, bidAssignValue);
-  }, [bidRightNow, bidAssignValue]);
+    AsyncStorageLib.getItem("accessToken", (err, res: any) => {
+      const decodedToken: any = jwt_decode<JwtPayload>(res);
+
+      setUserId(decodedToken.sub);
+    });
+  }, []);
 
   const bidding = async (text: string) => {
     const formData = new FormData();
     if (text === "immediately") {
-      formData.append("biddingPrice", bidRightNow);
+      formData.append("biddingPrice", Number(bidRightNow));
     } else {
-      formData.append("biddingPrice", bidAssignValue);
+      formData.append("biddingPrice", Number(bidAssignValue));
     }
     const hammer: any = false;
     formData.append("isHammered", hammer);
-    const response = await biddingAuction(item.id, formData);
+    try {
+      const response = await biddingAuction(item.itemSeq, formData);
+    } catch {
+      Alert.alert("입찰에 실패했습니다.");
+    } finally {
+      onLoadData();
+    }
   };
 
   useEffect(() => {
     setBidRightNow(String((Number(currentCost) * 1.1).toFixed()));
-    setBidAssignValue(String(Number(currentCost) + Number(item.biddingUnit)));
+    setBidAssignValue(String((Number(currentCost) * 1.1).toFixed()));
   }, [currentCost]);
 
   const handleMoreClick = () => {
@@ -65,7 +82,8 @@ const index = ({ item, descStyle, titleStyle }) => {
 
   const onHandleChatOpen = () => {
     navigation.navigate("auctionChat", {
-      id: item.id,
+      id: item.itemSeq,
+      item: item,
     });
   };
 
@@ -96,12 +114,12 @@ const index = ({ item, descStyle, titleStyle }) => {
           text: "예",
           onPress: () => bidding("immediately"),
         },
-      ],
+      ]
     );
   };
 
   const handlebidAssignValue = () => {
-    if (Number(currentCost) * 1.1 <= Number(bidAssignValue)) {
+    if (Number(currentCost) * 1.1 - 0.5 <= Number(bidAssignValue)) {
       Alert.alert(
         "지정가 입찰",
         `${bidAssignValue
@@ -116,7 +134,7 @@ const index = ({ item, descStyle, titleStyle }) => {
             text: "예",
             onPress: () => bidding("input"),
           },
-        ],
+        ]
       );
     } else {
       Alert.alert(
@@ -128,22 +146,35 @@ const index = ({ item, descStyle, titleStyle }) => {
           {
             text: "닫기",
           },
-        ],
+        ]
       );
     }
   };
   return (
     <>
-      {item && (
+      {
         <View style={{ paddingBottom: Dimensions.get("window").height / 20 }}>
-          <Text style={styles.type}>
-            {item.auctionType === "NORMAL" ? "일반 경매" : "실시간 경매"}
-          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Text style={styles.type}>
+              {item.auctionType === "NORMAL" ? "일반 경매" : "실시간 경매"}
+            </Text>
+            {userId == item.seller?.seq ? (
+              <UpdateButton item={item} reqItem={item.itemSeq} />
+            ) : (
+              <View />
+            )}
+          </View>
           <Text style={titleStyle} numberOfLines={2}>
             {item.title}
           </Text>
           <View style={styles.badges}>
-            <Text style={styles.typography}>{item.seller.nickname}</Text>
+            <Text style={styles.typography}>{item.seller?.nickname}</Text>
             <Text style={styles.typography}>
               최소 입찰가 :{" "}
               {item.biddingUnit
@@ -194,8 +225,33 @@ const index = ({ item, descStyle, titleStyle }) => {
               style={styles.textArea}
               textAlign="center"
             />
-            <View style={{ flex: 1, flexDirection: "row" }}>
-              <View style={{ flex: 0.2 }} />
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {item.bidding ? (
+                <>
+                  <Image
+                    source={{ uri: item.bidding?.buyer.profileImageUrl }}
+                    style={{
+                      width: 20,
+                      height: 20,
+                      borderWidth: 1,
+                      borderRadius: 9999,
+                      borderColor: "#444",
+                      marginRight: 5,
+                    }}
+                  />
+
+                  <Text>{item.bidding?.buyer.nickname}</Text>
+                </>
+              ) : (
+                <></>
+              )}
             </View>
           </View>
           <View
@@ -292,7 +348,7 @@ const index = ({ item, descStyle, titleStyle }) => {
             <View style={{ flex: 1 }} />
           </View>
         </View>
-      )}
+      }
     </>
   );
 };
@@ -328,7 +384,7 @@ const styles = StyleSheet.create({
   },
   information: {
     flex: 1,
-    fontSize: 22,
+    fontSize: 18,
   },
   itemInformationContainer: {
     flex: 1,
@@ -343,7 +399,7 @@ const styles = StyleSheet.create({
     flex: 1.5,
     borderRadius: 20,
     borderWidth: 0.5,
-    height: 24,
+    height: 30,
   },
   bidButton: {
     flex: 0.9,
@@ -351,7 +407,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#0176B7",
-    height: 26,
+    height: 30,
     borderRadius: 20,
     borderWidth: 0.5,
   },

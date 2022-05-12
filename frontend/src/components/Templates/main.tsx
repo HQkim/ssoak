@@ -131,7 +131,7 @@ const Main = (props: Props) => {
           initialLayout={{ width: layout.width }}
         />
       </View>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" backgroundColor={"#719DD7"} />
     </SafeAreaView>
   );
 };
@@ -151,6 +151,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   scrollView: {
-    flex: 15,
+    flex: 20,
   },
 });

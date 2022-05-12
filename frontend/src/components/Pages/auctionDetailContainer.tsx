@@ -31,18 +31,31 @@ const AutionDetailContainer = (props: Props) => {
   const onStartLoadData = (id: number) => {
     dispatch(loadDataAsync(id));
   };
-
-  // useEffect(() => {
+  // props.navigation.addListener("focus", () => {
   //   onStartLoadData(props.route.params.id);
-  // }, []);
+  // });
+  function isEmptyObject(param) {
+    return Object.keys(param).length === 0 && param.constructor === Object;
+  }
 
-  props.navigation.addListener("focus", () => {
+  useEffect(() => {
+    if (isEmptyObject(item)) {
+      onStartLoadData(props.route.params.id);
+    }
+  }, [item]);
+  useEffect(() => {
+    console.log(item);
     onStartLoadData(props.route.params.id);
-  });
 
-  props.navigation.addListener("blur", () => {
-    dispatch(dataReset());
-  });
+    return () => {
+      console.log("reset normal");
+      dispatch(dataReset());
+    };
+  }, []);
+
+  // props.navigation.addListener("blur", () => {
+  //   dispatch(dataReset());
+  // });
 
   let scrollRef: any = useRef();
   return (

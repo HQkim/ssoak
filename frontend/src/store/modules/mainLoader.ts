@@ -57,14 +57,13 @@ export const dataFetchAsyncWithoutLoader = (payload: any) => ({
 
 //middleware
 function* mainSagaLoader(action: any) {
-  console.log(action);
   yield put(dataFetch(true));
   try {
     const data = yield call(getList, {
       keyword: action.payload.keyword,
       page: action.payload.page,
     });
-    yield delay(1000);
+    // yield delay(1000);
     yield put(dataFetchComplete(data.data.auctionList, action.payload.keyword));
   } catch (e) {
     // console.log(e);
@@ -98,7 +97,7 @@ function* mainFirstFetchSagaLoader(action: any) {
         }),
       ),
     );
-    yield delay(1000);
+    // yield delay(1000);
 
     yield put(
       dataFetchComplete(
