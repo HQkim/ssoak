@@ -63,7 +63,8 @@
     "sockjs": "^0.3.24",
     "sockjs-client": "^1.6.0",
     "text-encoding": "^0.7.0",
-    "unimodules-permissions-interface": "^6.1.0"
+    "unimodules-permissions-interface": "^6.1.0",
+    "firebase": "9.6.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

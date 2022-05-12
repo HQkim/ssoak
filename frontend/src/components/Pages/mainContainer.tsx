@@ -61,9 +61,9 @@ const MainContainer = ({ navigation, route }: Props) => {
     dispatch(dataReset());
   });
 
-  useEffect(() => {
-    console.log(livePage, normalPage);
-  }, [livePage, normalPage]);
+  // useEffect(() => {
+  //   console.log(livePage, normalPage);
+  // }, [livePage, normalPage]);
 
   const getToken = async () => {
     const token = await AsyncStorage.getItem("accessToken", (err, res) => {

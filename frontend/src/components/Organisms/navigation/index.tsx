@@ -22,7 +22,6 @@ type ButtonProps = {
 const Tab = createBottomTabNavigator();
 
 const index = ({ navigation, route }: any) => {
-  console.log(route);
   return (
     <Tab.Navigator
       screenOptions={(props: any) => ({

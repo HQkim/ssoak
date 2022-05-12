@@ -37,10 +37,6 @@ const index = ({ item, descStyle, titleStyle }) => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log(bidRightNow, bidAssignValue);
-  }, [bidRightNow, bidAssignValue]);
-
   const bidding = async (text: string) => {
     const formData = new FormData();
     if (text === "immediately") {
@@ -65,7 +61,8 @@ const index = ({ item, descStyle, titleStyle }) => {
 
   const onHandleChatOpen = () => {
     navigation.navigate("auctionChat", {
-      id: item.id,
+      id: item.itemSeq,
+      item: item,
     });
   };
 

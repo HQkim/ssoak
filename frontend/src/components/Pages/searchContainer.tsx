@@ -10,9 +10,6 @@ type Props = {
 };
 
 const SearchContainer = ({ navigation, text, items }: Props) => {
-  useEffect(() => {
-    console.log(items.length);
-  }, [items]);
   return (
     <ScrollView style={styles.searchContainer}>
       <Search

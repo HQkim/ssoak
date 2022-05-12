@@ -25,7 +25,7 @@ const MainStackNavigator = (props: Props) => {
     >
       <Stack.Screen
         name="chatList"
-        component={ChatListContainer}
+        component={ChatContainer}
         options={{ headerShown: false, title: "메인 화면" }}
       />
       <Stack.Screen

@@ -14,7 +14,7 @@ type Props = {};
 const Slider: any = ({ data, handleClickItem }) => {
   const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
   const { item } = data;
-  console.log(item);
+
   return (
     <>
       {item && (

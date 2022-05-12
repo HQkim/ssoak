@@ -57,7 +57,6 @@ export const dataFetchAsyncWithoutLoader = (payload: any) => ({
 
 //middleware
 function* mainSagaLoader(action: any) {
-  console.log(action);
   yield put(dataFetch(true));
   try {
     const data = yield call(getList, {
