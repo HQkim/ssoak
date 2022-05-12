@@ -33,7 +33,7 @@ const Slider: any = ({ data, handleClickItem }) => {
               height: 2,
             },
           }}
-          onPress={() => console.log(item)}
+          onPress={() => handleClickItem(item)}
         >
           <View
             style={{
