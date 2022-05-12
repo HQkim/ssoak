@@ -1,22 +1,101 @@
-import { StyleSheet, View, Dimensions, Text } from "react-native";
-import React from "react";
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  Text,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import AuctionBid from "../Molecules/Description/auctionBid";
 import CountDown from "../Atoms/Typographies/countDown";
+import jwt_decode, { JwtPayload } from "jwt-decode";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { hammerAuction } from "../../apis/auctionApi";
 
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
 const Action = ({ item, reqItem, getItemDetail }) => {
+  const [token, setToken] = useState<any>();
+  const [sold, setSold] = useState(item.isSold);
+
+  const getToken = async () => {
+    const tokenSeq: string = await AsyncStorage.getItem("accessToken");
+    const decodedToken = jwt_decode<JwtPayload>(tokenSeq);
+    const myToken = Number(decodedToken.sub);
+    setToken(myToken);
+  };
+
+  const onHammer = async () => {
+    if (item.bidding === null) {
+      Alert.alert("입찰 정보가 없습니다.");
+    } else {
+      const formData = new FormData();
+      const price = Number(item.bidding.biddingPrice);
+      const itemPrice: any = price;
+      formData.append("biddingPrice", itemPrice);
+      const hammer: any = true;
+      formData.append("isHammered", hammer);
+      const result = await hammerAuction(reqItem, formData);
+      if (result.statusCode === 201) {
+        Alert.alert("낙찰이 완료되었습니다.");
+        setSold(true);
+      }
+    }
+  };
+
+  const onHammered = () => {
+    Alert.alert("이미 낙찰이 완료된 제품입니다.");
+  };
+
+  useEffect(() => {
+    getToken();
+  }, []);
+
   return (
     <View>
       <Text style={styles.timeStyle}>
         경매 종료 시간 :{" "}
         <CountDown style={styles.timeStyle} endTime={item.endTime} />
       </Text>
-      <Text style={styles.titleStyle}>입찰 참여하기</Text>
-      <Text style={styles.descriptionStyle}>
-        입찰 참여 시 취소할 수 없습니다. 확인 후 입찰해주세요.
-      </Text>
-      <AuctionBid item={item} reqItem={reqItem} getItemDetail={getItemDetail} />
+
+      {token === item.seller.seq ? (
+        <View>
+          <Text style={styles.titleStyle}>물품 낙찰하기</Text>
+          <Text style={styles.descriptionStyle}>
+            낙찰 시 해당 물품의 경매가 종료됩니다.
+          </Text>
+          <View style={{ padding: 20 }}>
+            {sold === true ? (
+              <TouchableOpacity
+                style={styles.buttonContainer}
+                onPress={onHammered}
+              >
+                <Text style={styles.textContainer}>낙찰완료</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={styles.buttonContainer}
+                onPress={onHammer}
+              >
+                <Text style={styles.textContainer}>낙찰하기</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+      ) : (
+        <View>
+          <Text style={styles.titleStyle}>입찰 참여하기</Text>
+          <Text style={styles.descriptionStyle}>
+            입찰 참여 시 취소할 수 없습니다. 확인 후 입찰해주세요.
+          </Text>
+          <AuctionBid
+            item={item}
+            reqItem={reqItem}
+            getItemDetail={getItemDetail}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -44,5 +123,18 @@ const styles = StyleSheet.create({
     color: "#747474",
     paddingLeft: 20,
     paddingRight: 20,
+  },
+  buttonContainer: {
+    backgroundColor: "#0176B7",
+    width: "100%",
+    borderRadius: 5,
+    height: ScreenHeight / 17,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  textContainer: {
+    color: "#ffffff",
+    fontWeight: "200",
+    fontSize: ScreenHeight / 40,
   },
 });

@@ -62,7 +62,6 @@ const ItemCreationInput = (props: Props) => {
       content: "",
     });
     setSelect(true);
-    console.warn(form);
   }, []);
 
   const onSelect = (info: boolean | string) => {
@@ -160,7 +159,7 @@ const ItemCreationInput = (props: Props) => {
       const item: any = {
         type: imgForm[i].type,
         uri: imgForm[i].uri,
-        name: imgForm[i].name,
+        name: imgForm[i].name + "jpg",
       };
       formData.append("images", item);
     }
@@ -172,7 +171,7 @@ const ItemCreationInput = (props: Props) => {
     formData.append("endTime", form.form.endTime);
     formData.append("auctionType", form.form.auctionType);
     formData.append("itemCategories", form.form.itemCategories);
-    // console.warn(formData);
+
     if (imgForm.length < 1) {
       Alert.alert("이미지를 업로드해주세요.");
     } else if (
@@ -211,11 +210,7 @@ const ItemCreationInput = (props: Props) => {
         route={props.route}
         auctionType={form === [] ? null : null}
       />
-      <DropDown
-        getSelectInformation={onSelect}
-        navigation={props.navigation}
-        itemCategory={0}
-      />
+      <DropDown getSelectInformation={onSelect} itemCategory={0} />
       <TextInput
         placeholder={"글 제목"}
         value={title}
