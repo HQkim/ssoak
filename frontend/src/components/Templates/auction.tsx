@@ -16,9 +16,8 @@ import { hammerAuction } from "../../apis/auctionApi";
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
 const Action = ({ item, reqItem, getItemDetail }) => {
-  console.warn(reqItem);
-  console.warn(item.bidding === null);
   const [token, setToken] = useState<any>();
+  const [sold, setSold] = useState(item.isSold);
 
   const getToken = async () => {
     const tokenSeq: string = await AsyncStorage.getItem("accessToken");
@@ -27,7 +26,7 @@ const Action = ({ item, reqItem, getItemDetail }) => {
     setToken(myToken);
   };
 
-  const onHammerd = async () => {
+  const onHammer = async () => {
     if (item.bidding === null) {
       Alert.alert("입찰 정보가 없습니다.");
     } else {
@@ -39,9 +38,14 @@ const Action = ({ item, reqItem, getItemDetail }) => {
       formData.append("isHammered", hammer);
       const result = await hammerAuction(reqItem, formData);
       if (result.statusCode === 201) {
-        Alert.alert("낙찰이 완료되었습니다.")
+        Alert.alert("낙찰이 완료되었습니다.");
+        setSold(true);
       }
     }
+  };
+
+  const onHammered = () => {
+    Alert.alert("이미 낙찰이 완료된 제품입니다.");
   };
 
   useEffect(() => {
@@ -62,12 +66,21 @@ const Action = ({ item, reqItem, getItemDetail }) => {
             낙찰 시 해당 물품의 경매가 종료됩니다.
           </Text>
           <View style={{ padding: 20 }}>
-            <TouchableOpacity
-              style={styles.buttonContainer}
-              onPress={onHammerd}
-            >
-              <Text style={styles.textContainer}>낙찰하기</Text>
-            </TouchableOpacity>
+            {sold === true ? (
+              <TouchableOpacity
+                style={styles.buttonContainer}
+                onPress={onHammered}
+              >
+                <Text style={styles.textContainer}>낙찰완료</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={styles.buttonContainer}
+                onPress={onHammer}
+              >
+                <Text style={styles.textContainer}>낙찰하기</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       ) : (
