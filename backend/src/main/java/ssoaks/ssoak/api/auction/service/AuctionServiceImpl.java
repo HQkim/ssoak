@@ -178,6 +178,7 @@ public class AuctionServiceImpl implements AuctionService {
         Integer cntLike = likeRepository.countLikeByItemSeq(itemSeq);
 
         ResItemDto resItemDto = ResItemDto.builder()
+                .itemSeq(item.getSeq())
                 .title(item.getTitle())
                 .content(item.getContent())
                 .startPrice(item.getStartPrice())

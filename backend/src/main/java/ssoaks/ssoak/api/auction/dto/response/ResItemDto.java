@@ -14,7 +14,7 @@ import java.util.List;
 @ToString
 public class ResItemDto {
 
-
+    private Long itemSeq;
     private String title;
     private String content;
     private Integer startPrice;
@@ -34,11 +34,12 @@ public class ResItemDto {
 
     @QueryProjection
     @Builder
-    public ResItemDto(String title, String content, Integer startPrice, Integer biddingUnit,
+    public ResItemDto(Long itemSeq, String title, String content, Integer startPrice, Integer biddingUnit,
                       LocalDateTime startTime, LocalDateTime endTime, AuctionType auctionType,
                       Boolean isSold, Boolean isLike, Integer likeCount, String itemCategoryName,
                       Integer itemCategorySeq, List<String> itemImages, MemberSimpleInfoDto member,
                       BiddingSimpleInfoDto bidding, MemberSimpleInfoDto seller) {
+        this.itemSeq = itemSeq;
         this.title = title;
         this.content = content;
         this.startPrice = startPrice;
