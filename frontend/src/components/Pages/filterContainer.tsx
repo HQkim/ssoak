@@ -7,6 +7,8 @@ type Props = {
   text: string;
   setItems: Function;
   route: object;
+  form: any;
+  setForm: Function;
 };
 
 const { height: ScreenHeight } = Dimensions.get("window");
@@ -27,6 +29,8 @@ const FilterContainer = (props: Props) => {
         text={props.text}
         setItems={props.setItems}
         route={props.route}
+        propForm={props.form}
+        propSetForm={props.setForm}
       />
     </ScrollView>
   );

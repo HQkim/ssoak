@@ -7,18 +7,22 @@ type Props = {
   text: string;
   setText: any;
   items: any;
+  form: any;
+  setForm: Function;
 };
 
-const SearchContainer = ({ navigation, text, items }: Props) => {
+const SearchContainer = ({ navigation, text, items, form, setForm }: Props) => {
   return (
-    <ScrollView style={styles.searchContainer}>
+    <View style={styles.searchContainer}>
       <Search
         style={styles.searchTemplate}
         navigation={navigation}
         text={text}
         items={items}
+        form={form}
+        setForm={setForm}
       />
-    </ScrollView>
+    </View>
   );
 };
 
@@ -32,5 +36,6 @@ const styles = StyleSheet.create({
   searchTemplate: {
     marginLeft: 20,
     marginRight: 20,
+    height: "100%",
   },
 });

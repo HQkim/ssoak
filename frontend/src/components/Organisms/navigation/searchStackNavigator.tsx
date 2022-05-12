@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions, TextInput } from "react-native";
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import NavigatorTitle from "../../Atoms/Typographies/navigatorTitle";
 import NavigatorTextInput from "../../Atoms/Typographies/navigatorTextInput";
@@ -15,12 +15,54 @@ type Items = {
   items: Array<object>;
 };
 
+interface Form {
+  keyword: string;
+  page: number;
+  auctionType: string;
+  category: string;
+  sort: string;
+  startPrice: number;
+  endPrice: number;
+  startTime: string;
+  endTime: string;
+}
+
 const Stack = createStackNavigator();
 const { width: ScreenWidth } = Dimensions.get("window");
 const { height: ScreenHeight } = Dimensions.get("window");
 const SearchStackNavigator = (props: Props) => {
   const [text, setText] = useState("");
   const [items, setItems] = useState<Items | null | any>([]);
+  const [initPage, setInitPage] = useState(1);
+  const [form, setForm] = useState<Form | null | any>([]);
+  const {
+    keyword,
+    page,
+    auctionType,
+    category,
+    sort,
+    startPrice,
+    endPrice,
+    startTime,
+    endTime,
+  } = form;
+
+  useEffect(() => {
+    setForm((prev: any) => ({
+      form: {
+        keyword: "",
+        page: "",
+        auctionType: "",
+        category: "",
+        sort: "",
+        startPrice: "",
+        endPrice: "",
+        startTime: "",
+        endTime: "",
+      },
+    }));
+  }, []);
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -40,6 +82,8 @@ const SearchStackNavigator = (props: Props) => {
             setText={setText}
             navigation={navigation}
             items={items}
+            form={form}
+            setForm={setForm}
           />
         )}
         options={{
@@ -50,19 +94,24 @@ const SearchStackNavigator = (props: Props) => {
               setText={setText}
               text={text}
               setItems={setItems}
+              page={initPage}
+              setPage={setInitPage}
+              form={form}
+              setForm={setForm}
             />
           ),
         }}
       />
       <Stack.Screen
         name="filter"
-        // component={FilterContainer}
         children={({ navigation }) => (
           <FilterContainer
             text={text}
             navigation={navigation}
             setItems={setItems}
             route={props.route}
+            form={form}
+            setForm={setForm}
           />
         )}
         options={{

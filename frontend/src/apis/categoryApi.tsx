@@ -5,7 +5,7 @@ export const searchItem = async (item) => {
     const response = await instance.get("/auctions/search", {
       params: {
         keyword: item.keyword,
-        page: 1,
+        page: item.page,
         size: 10,
         sort: item.sort,
         auctionType: item.auctionType,

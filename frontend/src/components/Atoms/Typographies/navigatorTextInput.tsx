@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TextInput, Dimensions } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { searchItem } from "../../../apis/categoryApi";
 
@@ -8,16 +8,36 @@ type Props = {
   text: any;
   setText: Function;
   setItems: any;
+  page: number;
+  setPage: Function;
+  form: any;
+  setForm: Function;
 };
+
+interface Form {
+  keyword: string;
+  page: number;
+}
 
 const { width: ScreenWidth } = Dimensions.get("window");
 
 const NavigatorTextInput = (props: Props) => {
+  const [test, setTest] = useState([]);
   const searchKeyword = async (text) => {
-    const keyword = text;
-    const result = await searchItem(keyword);
+    console.log(props.form.form);
+    const result = await searchItem(props.form.form);
+
     props.setItems(result);
+    // props.setPage((prev) => prev + 1);
+    props.form.form.page = props.page + 1;
   };
+
+  useEffect(() => {
+    if (props.text) {
+      props.form.form.keyword = props.text;
+      props.form.form.page = 1;
+    }
+  }, [props.text]);
 
   return (
     <View>
