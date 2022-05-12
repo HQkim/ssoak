@@ -24,6 +24,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { editKakaoProfile } from "../../apis/auth";
+import * as Font from "expo-font";
 
 type Props = {
   navigation: any | undefined;
@@ -56,6 +57,17 @@ const { width: ScreenWidth } = Dimensions.get("window");
 
 const Profile = (props: Props) => {
   const navigation: any = useNavigation();
+  const [font, setFont] = useState(false);
+
+  useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync({
+        DoHyeonRegular: require("../../../assets/fonts/DoHyeon-Regular.ttf"),
+      });
+      setFont(true);
+    }
+    loadFonts();
+  }, []);
 
   const logout = async () => {
     await AsyncStorage.removeItem("accessToken");
@@ -110,70 +122,39 @@ const Profile = (props: Props) => {
   };
 
   return (
-    <View>
-      <ScrollView>
+    <View style={{ backgroundColor: "#fffff" }}>
+      <ScrollView style={{ backgroundColor: "#fffff" }}>
         <View
           style={{
-            height: ScreenHeight / 3,
+            height: ScreenHeight / 2.3,
             backgroundColor: "#719DD7",
           }}
         >
           <View
             style={{
+              flexDirection: "row",
+              width: "100%",
               justifyContent: "center",
-              flex: 1,
+              marginTop: ScreenHeight / 8,
             }}
           >
-            <View
-              style={{
-                flexDirection: "row",
-                width: "100%",
-                justifyContent: "center",
-              }}
-            >
-              <View style={{ flex: 2 }}></View>
-              <View
-                style={{
-                  flex: 4,
-                  flexDirection: "row",
-                  justifyContent: "center",
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 40,
-                  }}
-                >
-                  쏙
-                </Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  flex: 2,
-                }}
-              >
-                <View style={{ flex: 1 }}>
-                  <Fontisto name="bell" size={20} color="black" />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate("setting")}
-                  >
-                    <Ionicons name="settings-outline" size={20} color="black" />
-                  </TouchableOpacity>
-                </View>
-              </View>
+            {font ? <Text style={styles.fontStyle}>Profile</Text> : null}
+
+            {/* <View style={{ flex: 1 }}>
+                <Fontisto name="bell" size={20} color="black" />
+              </View> */}
+            <View>
+              <TouchableOpacity onPress={() => navigation.navigate("setting")}>
+                <Ionicons name="settings-outline" size={20} color="black" />
+              </TouchableOpacity>
             </View>
           </View>
         </View>
         <View
           style={{
-            height: ScreenHeight / 3,
             backgroundColor: "#ffff",
             alignItems: "center",
-            zIndex: 1,
+            // zIndex: 1,
           }}
         >
           <TouchableOpacity onPress={pickImage}>
@@ -183,7 +164,7 @@ const Profile = (props: Props) => {
                 height: ScreenHeight / 6,
                 borderRadius: ScreenHeight / 12,
                 position: "relative",
-                marginTop: -ScreenHeight / 12,
+                marginTop: -ScreenHeight / 5,
                 borderColor: "#d7d4d4",
                 borderWidth: 1,
               }}
@@ -191,28 +172,33 @@ const Profile = (props: Props) => {
             />
             <Feather
               name="camera"
-              size={24}
-              color="black"
+              size={28}
+              color="#0000009c"
               style={{
                 position: "absolute",
-                right: ScreenWidth / 30,
+                right: ScreenWidth / 60,
                 marginTop: -ScreenHeight / 12,
               }}
             />
           </TouchableOpacity>
-          <View style={{ alignItems: "center", marginTop: ScreenHeight / 50 }}>
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: ScreenHeight / 20,
+            }}
+          >
             {props.editStatus == false ? (
               <TouchableOpacity onPress={editName}>
-                <View style={{ flexDirection: "row" }}>
+                <View style={{ flexDirection: "row", padding: 5 }}>
                   <TextInput
                     style={{
                       fontSize: 20,
-                      padding: 10,
-                      fontWeight: "bold",
-                      color: "black",
+                      fontWeight: "200",
+                      marginRight: 5,
                     }}
                     editable={false}
-                    textAlign="center"
+                    // textAlign="center"
                     value={props.profile.nickname}
                     maxLength={5}
                   />
@@ -225,10 +211,10 @@ const Profile = (props: Props) => {
                   <TextInput
                     style={{
                       fontSize: 20,
-                      padding: 10,
-                      fontWeight: "bold",
+                      fontWeight: "200",
                       // position: "relative",
                       color: "black",
+                      width: "50%",
                       borderBottomWidth: 1,
                     }}
                     editable={true}
@@ -238,7 +224,6 @@ const Profile = (props: Props) => {
                     onChangeText={setName}
                     defaultValue={props.profile.nickname}
                   />
-
                   <AntDesign
                     name="checkcircleo"
                     size={24}
@@ -248,107 +233,96 @@ const Profile = (props: Props) => {
                 </View>
               </>
             )}
-            <Text style={{ fontSize: 15, padding: 7, fontWeight: "bold" }}>
-              {props.profile.email}
+            <Text style={{ fontSize: 20, fontWeight: "200", padding: 5 }}>
+              Email : {props.profile.email}
             </Text>
-            <Text style={{ fontSize: 15, padding: 7, fontWeight: "bold" }}>
-              {props.profile.grade}
+            <Text style={{ fontSize: 20, fontWeight: "200", padding: 5 }}>
+              Point : {props.profile.grade}
             </Text>
           </View>
         </View>
         <View style={{ backgroundColor: "#ffff" }}>
-          <View style={styles.divider}></View>
-          <View style={{ height: ScreenWidth, backgroundColor: "#ffff" }}>
-            <View style={styles.viewSquare}>
-              <TouchableOpacity onPress={() => navigation.navigate("favorite")}>
-                <View style={styles.viewShadow}>
-                  <View></View>
-                  <Ionicons
-                    name="heart"
-                    size={ScreenWidth / 5}
-                    color="#EA759A"
-                  />
-                  <Text>찜한목록</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("onsale")}>
-                <View style={styles.viewShadow}>
-                  <View></View>
-                  <Ionicons
-                    name="cart"
-                    size={ScreenWidth / 5}
-                    color="#98ADFA"
-                  />
-                  <Text>판매중 목록</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.viewSquare}>
-              <TouchableOpacity onPress={() => navigation.navigate("purchase")}>
-                <View style={styles.viewShadow}>
-                  <View></View>
-                  <Ionicons
-                    name="briefcase"
-                    size={ScreenWidth / 5}
-                    color="#DF7A1D"
-                  />
-                  <Text>구매완료 목록</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("history")}>
-                <View style={styles.viewShadow}>
-                  <View></View>
-                  <FontAwesome5
-                    name="inbox"
-                    size={ScreenWidth / 5}
-                    color="#AEF5B5"
-                  />
-                  <Text>판매이력 목록</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+          <View style={styles.divider} />
+          <View style={styles.viewSquare}>
+            <TouchableOpacity onPress={() => navigation.navigate("favorite")}>
+              <View style={styles.viewShadow}>
+                <View></View>
+                <Ionicons name="heart" size={ScreenWidth / 5} color="#EA759A" />
+                <Text>찜한목록</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("onsale")}>
+              <View style={styles.viewShadow}>
+                <View></View>
+                <Ionicons name="cart" size={ScreenWidth / 5} color="#98ADFA" />
+                <Text>판매중 목록</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.viewSquare}>
+            <TouchableOpacity onPress={() => navigation.navigate("purchase")}>
+              <View style={styles.viewShadow}>
+                <View></View>
+                <Ionicons
+                  name="briefcase"
+                  size={ScreenWidth / 5}
+                  color="#DF7A1D"
+                />
+                <Text>구매완료 목록</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("history")}>
+              <View style={styles.viewShadow}>
+                <View></View>
+                <FontAwesome5
+                  name="inbox"
+                  size={ScreenWidth / 5}
+                  color="#AEF5B5"
+                />
+                <Text>판매이력 목록</Text>
+              </View>
+            </TouchableOpacity>
           </View>
           <View style={styles.divider}></View>
         </View>
-        <View style={{ height: ScreenHeight / 2, backgroundColor: "#ffff" }}>
-          <View style={{ marginTop: ScreenHeight / 20 }}>
-            <View style={styles.informView}>
-              <Ionicons name="document-text-outline" size={24} color="black" />
-              <Text style={{ fontSize: 15, padding: 15 }}>이용약관</Text>
-            </View>
-            <View style={styles.informView}>
-              <AntDesign name="profile" size={24} color="black" />
-              <Text style={{ fontSize: 15, padding: 15 }}>
-                내부정보관리규정
-              </Text>
-            </View>
-            <View style={styles.informView}>
-              <Ionicons
-                name="information-circle-outline"
-                size={24}
-                color="black"
-              />
-              <Text style={{ fontSize: 15, padding: 15 }}>
-                개인정보처리방침
-              </Text>
-            </View>
-            <View style={styles.informView}>
-              <AntDesign name="sound" size={24} color="black" />
-              <Text style={{ fontSize: 15, padding: 15 }}>공지사항</Text>
-            </View>
-            <TouchableOpacity onPress={logout}>
-              <View style={styles.informView}>
-                <MaterialIcons name="logout" size={24} color="black" />
-                <Text style={{ fontSize: 15, padding: 15 }}>로그아웃</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate("setting")}>
-              <View style={styles.informView}>
-                <Ionicons name="settings-outline" size={20} color="black" />
-                <Text style={{ fontSize: 15, padding: 15 }}>설정</Text>
-              </View>
-            </TouchableOpacity>
+        <View
+          style={{
+            height: ScreenHeight / 2,
+            backgroundColor: "#ffff",
+          }}
+        >
+          <View style={styles.informView}>
+            <Ionicons name="document-text-outline" size={24} color="black" />
+            <Text style={{ fontSize: 18, padding: 15 }}>이용약관</Text>
           </View>
+          <View style={styles.informView}>
+            <AntDesign name="profile" size={24} color="black" />
+            <Text style={{ fontSize: 18, padding: 15 }}>내부정보관리규정</Text>
+          </View>
+          <View style={styles.informView}>
+            <Ionicons
+              name="information-circle-outline"
+              size={24}
+              color="black"
+            />
+            <Text style={{ fontSize: 18, padding: 15 }}>개인정보처리방침</Text>
+          </View>
+          <View style={styles.informView}>
+            <AntDesign name="sound" size={24} color="black" />
+            <Text style={{ fontSize: 18, padding: 15 }}>공지사항</Text>
+          </View>
+          <TouchableOpacity onPress={logout}>
+            <View style={styles.informView}>
+              <MaterialIcons name="logout" size={24} color="black" />
+              <Text style={{ fontSize: 18, padding: 15 }}>로그아웃</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("setting")}>
+            <View style={styles.informView}>
+              <Ionicons name="settings-outline" size={24} color="black" />
+              <Text style={{ fontSize: 18, padding: 15 }}>설정</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
@@ -370,26 +344,32 @@ const styles = StyleSheet.create({
     marginTop: ScreenHeight / 5,
     marginBottom: ScreenHeight / 20,
   },
+  fontStyle: {
+    fontSize: 40,
+    fontFamily: "DoHyeonRegular",
+    marginLeft: 10,
+  },
   title: {
     fontSize: ScreenHeight / 30,
     color: "#ffff",
-    fontFamily: "DoHyeonRegular",
+    fontFamily: "OpenSansMedium",
   },
   mainTitle: {
     fontSize: ScreenHeight / 15,
     color: "#ffff",
     marginTop: ScreenHeight / 100,
     marginBottom: ScreenHeight / 20,
-    fontFamily: "DoHyeonRegular",
+    fontFamily: "OpenSansMedium",
   },
   viewSquare: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    marginTop: ScreenHeight / 25,
+    padding: 10,
   },
   viewShadow: {
-    width: ScreenHeight / 5,
-    height: ScreenHeight / 5,
+    width: ScreenHeight / 5.5,
+    height: ScreenHeight / 5.5,
+    padding: 10,
     borderRadius: ScreenHeight / 40,
     shadowColor: "black",
     shadowOpacity: 0.26,
@@ -403,12 +383,11 @@ const styles = StyleSheet.create({
   informView: {
     flexDirection: "row",
     alignItems: "center",
-    marginLeft: ScreenWidth / 14,
+    marginLeft: ScreenWidth / 13,
   },
   divider: {
     borderBottomColor: "#d7d4d4",
     borderBottomWidth: 1,
-    marginLeft: ScreenHeight / 20,
-    marginRight: ScreenHeight / 20,
+    margin: ScreenHeight / 20,
   },
 });

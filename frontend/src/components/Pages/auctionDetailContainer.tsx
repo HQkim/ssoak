@@ -40,6 +40,10 @@ const AutionDetailContainer = (props: Props) => {
     onStartLoadData(props.route.params.id);
   });
 
+  props.navigation.addListener("blur", () => {
+    dispatch(dataReset());
+  });
+
   let scrollRef: any = useRef();
   return (
     <KeyboardAwareScrollView

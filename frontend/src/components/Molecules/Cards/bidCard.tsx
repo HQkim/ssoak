@@ -6,6 +6,7 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -46,7 +47,11 @@ const BidCard = ({
     formData.append("isHammered", hammer);
     console.log(formData);
     const result = await biddingAuction(reqItem, formData);
-    getItemDetail();
+    if (result.statusCode === 201) {
+      getItemDetail();
+    } else {
+      Alert.alert("입찰 금액을 확인해주세요.");
+    }
   };
 
   return (
@@ -72,7 +77,7 @@ const BidCard = ({
       {edit === false ? (
         <TouchableOpacity
           style={styles.buttonContainer}
-          onPress={() => bidding("input")}
+          onPress={() => bidding("immediately")}
         >
           <Text style={styles.textStyle2}>{button}</Text>
         </TouchableOpacity>
