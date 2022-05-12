@@ -4,11 +4,15 @@ export const searchItem = async (item) => {
   try {
     const response = await instance.get("/auctions/search", {
       params: {
-        keyword: item,
+        keyword: item.keyword,
         page: 1,
         size: 10,
-        sort: "createdDate",
-        auctionType: "NORMAL",
+        sort: item.sort,
+        auctionType: item.auctionType,
+        startPrice: item.startPrice,
+        endPrice: item.endPrice,
+        startTime: item.startTime,
+        endTime: item.endTime,
       },
     });
     if (response.data.statusCode === 200) {
