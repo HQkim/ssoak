@@ -7,7 +7,9 @@ import SearchContainer from "../../Pages/searchContainer";
 import FilterContainer from "../../Pages/filterContainer";
 import { searchItem } from "../../../apis/categoryApi";
 
-type Props = {};
+type Props = {
+  route: object;
+};
 
 type Items = {
   items: Array<object>;
@@ -30,20 +32,6 @@ const SearchStackNavigator = (props: Props) => {
         headerTintColor: "black",
       }}
     >
-      {/* <Stack.Screen
-        name="search"
-        component={SearchContainer}
-        options={{
-          headerTitleAlign: "center",
-          headerTitle: (props) => (
-            <NavigatorTextInput
-              style={styles.NavigatorTextInput}
-              setText={setText}
-              text={text}
-            />
-          ),
-        }}
-      /> */}
       <Stack.Screen
         name="search"
         children={({ navigation }) => (
@@ -68,7 +56,15 @@ const SearchStackNavigator = (props: Props) => {
       />
       <Stack.Screen
         name="filter"
-        component={FilterContainer}
+        // component={FilterContainer}
+        children={({ navigation }) => (
+          <FilterContainer
+            text={text}
+            navigation={navigation}
+            setItems={setItems}
+            route={props.route}
+          />
+        )}
         options={{
           headerTitleAlign: "center",
           headerTitle: (props) => (

@@ -34,15 +34,8 @@ const Search = (props: Props) => {
     setData(data);
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      saveData(props.items);
-      return () => {};
-    }, [])
-  );
-
   useEffect(() => {
-    console.log(props.items, "testtttttttttttttttttttttttt");
+    saveData(props.items);
   }, [props]);
 
   return (
