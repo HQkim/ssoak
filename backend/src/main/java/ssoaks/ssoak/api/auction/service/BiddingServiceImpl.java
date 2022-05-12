@@ -51,9 +51,10 @@ public class BiddingServiceImpl implements BiddingService {
             // 종료시간이 현재보다 앞이면 이미 종료되었으므로 안됨
         } else if (item.getEndTime().isBefore(LocalDateTime.now()) | item.getIsSold().equals(true)) {
             throw new NotAllowedBiddingItemException("이미 종료된 경매입니다.");
-        } else if (item.getAuctionType() == AuctionType.LIVE) {
-            throw new NotAllowedBiddingItemException("이건 일반 경매 api >.<");
         }
+//        else if (item.getAuctionType() == AuctionType.LIVE) {
+//            throw new NotAllowedBiddingItemException("이건 일반 경매 api >.<");
+//        }
 
         if (item.getBuyer() != null) {
             if (item.getBuyer().equals(member)) {
