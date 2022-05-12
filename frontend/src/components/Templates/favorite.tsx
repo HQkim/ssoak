@@ -101,38 +101,33 @@ const Favorite = (props: Props) => {
                   <View
                     style={{
                       flexDirection: "row",
+                      alignItems: "center",
                     }}
                   >
                     <CompletedTag
                       styles={{ tag: styles.completedTypeTag }}
                       text={item.isSold == true ? "거래완료" : "진행중"}
                     />
-                    <Text>참여자 : </Text>
-                    <TextInput
-                      editable={false}
-                      maxLength={3}
-                      value={item.biddingCount
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                      style={styles.textArea}
-                      textAlign="center"
-                    />
+                    <View style={{ flexDirection: "row" }}>
+                      <Text>참여자 : </Text>
+                      <TextInput
+                        editable={false}
+                        maxLength={3}
+                        value={item.biddingCount
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        style={styles.textArea}
+                        textAlign="center"
+                      />
+                    </View>
                   </View>
                 </View>
                 <View
                   style={{
-                    // flex: 1,
                     flexDirection: "row",
                     justifyContent: "flex-end",
                   }}
                 >
-                  {/* <TouchableOpacity onPress={() => pressHeart(item)}>
-                    {item.isLiked === true ? (
-                      <Ionicons name="heart" size={24} color="#EA759A" />
-                    ) : (
-                      <Ionicons name="heart-outline" size={24} color="black" />
-                    )}
-                  </TouchableOpacity> */}
                   <Likes item={item} />
                 </View>
               </View>
@@ -143,7 +138,13 @@ const Favorite = (props: Props) => {
                   justifyContent: "space-between",
                 }}
               >
-                <View style={{ flexDirection: "row", flex: 1 }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
                   <Text>시초가 : </Text>
                   <TextInput
                     editable={false}
@@ -155,7 +156,14 @@ const Favorite = (props: Props) => {
                     textAlign="center"
                   />
                 </View>
-                <View style={{ flexDirection: "row", flex: 1, marginLeft: 19 }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    flex: 1,
+                    marginLeft: 19,
+                    alignItems: "center",
+                  }}
+                >
                   <Text>{item.isSold == true ? "낙찰가 : " : "입찰가 : "}</Text>
                   <TextInput
                     editable={false}

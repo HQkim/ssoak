@@ -109,7 +109,7 @@ const TimeRange = (props: Props) => {
             </TouchableOpacity>
           </View>
           {selectTime == true ? (
-            <View style={{ flex: 2 }}>
+            <View style={{ flex: 1.8 }}>
               {Device.osName === "Android" && (
                 <FilterStartDateTimeAndroid
                   functions={{ setStartDateOpen, setStartMinuteOpen }}
@@ -117,28 +117,32 @@ const TimeRange = (props: Props) => {
                   date={startDate}
                 />
               )}
-              {startDateOpen && (
-                <DateTimePicker
-                  testID="dateTimePickerStart"
-                  value={startDate}
-                  mode={"date"}
-                  is24Hour={true}
-                  minimumDate={minimumDate}
-                  locale="ko-KR"
-                  onChange={onChangeStart}
-                />
-              )}
-              {startMinuteOpen && (
-                <DateTimePicker
-                  testID="dateTimePickerStart"
-                  value={startDate}
-                  mode={"time"}
-                  is24Hour={true}
-                  minimumDate={minimumDate}
-                  locale="ko-KR"
-                  onChange={onChangeStart}
-                />
-              )}
+              <View style={{ flexDirection: "row" }}>
+                {startDateOpen && (
+                  <DateTimePicker
+                    testID="dateTimePickerStart"
+                    value={startDate}
+                    mode={"date"}
+                    is24Hour={true}
+                    minimumDate={minimumDate}
+                    locale="ko-KR"
+                    onChange={onChangeStart}
+                    style={{ flex: 2 }}
+                  />
+                )}
+                {startMinuteOpen && (
+                  <DateTimePicker
+                    testID="dateTimePickerStart"
+                    value={startDate}
+                    mode={"time"}
+                    is24Hour={true}
+                    minimumDate={minimumDate}
+                    locale="ko-KR"
+                    onChange={onChangeStart}
+                    style={{ flex: 2 }}
+                  />
+                )}
+              </View>
             </View>
           ) : null}
         </View>
@@ -162,7 +166,7 @@ const TimeRange = (props: Props) => {
             </TouchableOpacity>
           </View>
           {selectTime == true ? (
-            <View style={{ flex: 2 }}>
+            <View style={{ flex: 1.8 }}>
               {Device.osName === "Android" && (
                 <FilterEndDateTimeAndroid
                   functions={{ setEndDateOpen, setEndMinuteOpen }}
@@ -170,30 +174,32 @@ const TimeRange = (props: Props) => {
                   date={endDate}
                 />
               )}
-              {endDateOpen && (
-                <DateTimePicker
-                  testID="dateTimePickerEnd"
-                  value={endDate}
-                  mode={"date"}
-                  is24Hour={true}
-                  minimumDate={minimumDate}
-                  locale="ko-KR"
-                  onChange={onChangeEnd}
-                  style={{ flex: 2 }}
-                />
-              )}
-              {endMinuteOpen && (
-                <DateTimePicker
-                  testID="dateTimePickerEnd"
-                  value={endDate}
-                  mode={"time"}
-                  is24Hour={true}
-                  minimumDate={minimumDate}
-                  locale="ko-KR"
-                  onChange={onChangeEnd}
-                  style={{ flex: 1 }}
-                />
-              )}
+              <View style={{ flexDirection: "row" }}>
+                {endDateOpen && (
+                  <DateTimePicker
+                    testID="dateTimePickerEnd"
+                    value={endDate}
+                    mode={"date"}
+                    is24Hour={true}
+                    minimumDate={minimumDate}
+                    locale="ko-KR"
+                    onChange={onChangeEnd}
+                    style={{ flex: 2 }}
+                  />
+                )}
+                {endMinuteOpen && (
+                  <DateTimePicker
+                    testID="dateTimePickerEnd"
+                    value={endDate}
+                    mode={"time"}
+                    is24Hour={true}
+                    minimumDate={minimumDate}
+                    locale="ko-KR"
+                    onChange={onChangeEnd}
+                    style={{ flex: 2 }}
+                  />
+                )}
+              </View>
             </View>
           ) : null}
         </View>
