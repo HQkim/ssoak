@@ -192,9 +192,11 @@ const Slider: any = ({ data, handleClickItem }) => {
                 최소 입찰호가 :{" "}
                 {item.bidding
                   ? Number(item.bidding.biddingPrice / 10)
+                      .toFixed()
                       .toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   : Number(item.startPrice / 10)
+                      .toFixed()
                       .toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                 원

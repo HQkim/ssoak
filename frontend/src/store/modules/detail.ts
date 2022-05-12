@@ -25,12 +25,10 @@ export const loadSuccess = (payload: any) => ({
 
 //middleware
 function* loadDataSaga(action: any) {
-  console.log(action);
   yield put(loadData(true));
   try {
     const result = yield call(detailAuction, action.payload);
-    console.log(result);
-    yield delay(1000);
+
     yield put(loadSuccess(result));
   } catch (error) {
     // yield put(loadError(error.response))
@@ -47,7 +45,7 @@ export function* detailSaga() {
 //reducer
 function detail(
   state: DetailState = initialState,
-  action: DetailAction,
+  action: DetailAction
 ): DetailState {
   switch (action.type) {
     case LOAD_DATA:
