@@ -184,7 +184,7 @@ const Filter = (props: Props) => {
       console.log(form.form.startTime, typeof form.form.startTime, "이상해");
       const result = await searchItem(form.form);
       console.log(result);
-      // props.setItems(result);
+      // props.setItems(result)
     }
   };
 
