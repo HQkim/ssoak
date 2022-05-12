@@ -73,9 +73,6 @@ const MainContainer = ({ navigation, route }: Props) => {
       console.log(res);
     });
   };
-  useEffect(() => {
-    console.log(getToken());
-  }, []);
 
   return (
     <Main

@@ -2,10 +2,11 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
   Dimensions,
   Image,
+  Pressable,
 } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Countdown, { zeroPad } from "react-countdown";
@@ -32,7 +33,7 @@ const Slider: any = ({ data, handleClickItem }) => {
               height: 2,
             },
           }}
-          onPress={() => handleClickItem(item)}
+          onPress={() => console.log(item)}
         >
           <View
             style={{
@@ -74,7 +75,7 @@ const Slider: any = ({ data, handleClickItem }) => {
                       <View style={{ flex: 1 }} />
                       <View
                         style={{
-                          flex: 1,
+                          flex: 2,
                           backgroundColor: "#F8A33E",
                           width: ScreenWidth / 4,
                           height: ScreenWidth / 20,
@@ -201,7 +202,7 @@ const Slider: any = ({ data, handleClickItem }) => {
                 원
               </Text>
               <Text>
-                <Countdown
+                {/* <Countdown
                   date={item.endTime}
                   intervalDelay={0}
                   precision={0}
@@ -216,7 +217,7 @@ const Slider: any = ({ data, handleClickItem }) => {
                       {zeroPad(minutes)}분 {zeroPad(seconds)}초
                     </Text>
                   )}
-                />
+                /> */}
               </Text>
             </View>
           </View>
