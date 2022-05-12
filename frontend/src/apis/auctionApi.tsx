@@ -47,8 +47,10 @@ export const getList = async ({ keyword, page }) => {
 };
 
 export const biddingAuction = async (itemSeq, formData) => {
+  console.log(formData);
   const response = await instance.post(
     `/auctions/${itemSeq}/bidding`,
     formData,
   );
+  return response;
 };

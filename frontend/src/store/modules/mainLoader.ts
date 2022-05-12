@@ -63,7 +63,7 @@ function* mainSagaLoader(action: any) {
       keyword: action.payload.keyword,
       page: action.payload.page,
     });
-    yield delay(1000);
+    // yield delay(1000);
     yield put(dataFetchComplete(data.data.auctionList, action.payload.keyword));
   } catch (e) {
     // console.log(e);
@@ -97,7 +97,7 @@ function* mainFirstFetchSagaLoader(action: any) {
         }),
       ),
     );
-    yield delay(1000);
+    // yield delay(1000);
 
     yield put(
       dataFetchComplete(
