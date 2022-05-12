@@ -28,6 +28,9 @@ const { width: ScreenWidth } = Dimensions.get("window");
 
 const onSale = (props: Props) => {
   const [items, setItems] = useState<Items | null | any>([]);
+  const [currentTime, setCurrentTime] = useState<any | undefined | object>(
+    new Date()
+  );
   const navigation: any = useNavigation();
   const getData = async () => {
     const response = await getOnSaleItems();
@@ -49,6 +52,9 @@ const onSale = (props: Props) => {
   useFocusEffect(
     React.useCallback(() => {
       getData();
+      // const time = new Date();
+      // console.log(time);
+      // setCurrentTime(time)
       return () => {};
     }, [])
   );
@@ -80,11 +86,14 @@ const onSale = (props: Props) => {
                     {item.title}
                   </Text>
                   <View>
-                    <Text>{item.isCompleted}</Text>
                     <View style={{ flexDirection: "row" }}>
                       <CompletedTag
                         styles={{ tag: styles.completedTypeTag }}
-                        text={"진행중"}
+                        text={
+                          currentTime < new Date(item.startTime)
+                            ? "예약중"
+                            : "진행중"
+                        }
                       />
                       <Text>참여자 : </Text>
                       <TextInput
