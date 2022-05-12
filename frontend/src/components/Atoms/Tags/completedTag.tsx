@@ -7,7 +7,14 @@ const { width: ScreenWidth } = Dimensions.get("window");
 const CompletedTag = ({ styles, text }) => {
   return (
     <View style={styles.tag}>
-      <Text style={{ fontSize: ScreenWidth / 30 }}>{text}</Text>
+      <Text
+        style={{
+          fontSize: ScreenWidth / 26,
+          color: "#ffffff",
+        }}
+      >
+        {text}
+      </Text>
     </View>
   );
 };
