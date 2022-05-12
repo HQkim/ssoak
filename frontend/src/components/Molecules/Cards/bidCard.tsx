@@ -76,7 +76,7 @@ const BidCard = ({
       {edit === false ? (
         <TouchableOpacity
           style={styles.buttonContainer}
-          onPress={() => bidding("input")}
+          onPress={() => bidding("immediately")}
         >
           <Text style={styles.textStyle2}>{button}</Text>
         </TouchableOpacity>
