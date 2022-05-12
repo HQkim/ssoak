@@ -13,6 +13,7 @@ import OrderBy from "../Organisms/Filter/orderBy";
 import PriceRange from "../Organisms/Filter/priceRange";
 import TimeRange from "../Organisms/Filter/timeRange";
 import Category from "../Organisms/Filter/category";
+import { searchItem } from "../../apis/categoryApi";
 
 type Props = {
   styles: {
@@ -24,6 +25,8 @@ type Props = {
   };
   navigation: any;
   route: object;
+  text: string;
+  setItems: Function;
 };
 
 const { height: ScreenHeight } = Dimensions.get("window");
@@ -31,19 +34,19 @@ const { width: ScreenWidth } = Dimensions.get("window");
 
 interface Form {
   auctionType: string;
-  categories: string;
+  category: string;
   sort: string;
   startPrice: number;
   endPrice: number;
-  startTime: Date;
-  endTime: Date;
+  startTime: string;
+  endTime: string;
 }
 
 const Filter = (props: Props) => {
   const [form, setForm] = useState<Form | null | any>([]);
   const {
     auctionType,
-    categories,
+    category,
     sort,
     startPrice,
     endPrice,
@@ -52,6 +55,9 @@ const Filter = (props: Props) => {
   } = form;
   const [select, setSelect] = useState(true);
   const [selectOrder, setSelectOrder] = useState(true);
+  const [startString, setStartString] = useState();
+  const [endString, setEndString] = useState();
+  console.log(startString, "dkdkdkdkdkdkdkdkdkkdkdk");
   // 경매유형, 카테고리 필터 함수
   const onSelect = (info: boolean | string) => {
     if (typeof info === "boolean") {
@@ -68,11 +74,11 @@ const Filter = (props: Props) => {
     }
     if (typeof info === "string") {
       setForm((prevState: any) => ({
-        form: { ...prevState.form, categories: info },
+        form: { ...prevState.form, category: info },
       }));
     }
   };
-  console.log(form, "test1111111111111111111111111");
+
   // 정렬 필터 함수
   const onSelectOrder = (info: boolean) => {
     setSelectOrder(info);
@@ -101,42 +107,94 @@ const Filter = (props: Props) => {
   };
 
   // 시작 시간 필터 함수
-  const onSelectStartTime = (info: string) => {
+  const onSelectStartTime = (info: object) => {
     setForm((prevState: any) => ({
       form: { ...prevState.form, startTime: info },
     }));
   };
 
-  const onSelectEndTime = (info: string) => {
+  const onSelectEndTime = (info: object) => {
     setForm((prevState: any) => ({
       form: { ...prevState.form, endTime: info },
     }));
   };
 
   // 필터 적용 함수
-  const applyFilters = () => {
-    // console.log(form);
-    // console.log(form.form.timeRange);
+  const applyFilters = async (form) => {
+    // 년-월-일-시-분 비교 변수
+    const string_start = JSON.stringify(form.form.startTime).slice(0, 17);
+    const string_end = JSON.stringify(form.form.endTime).slice(0, 17);
+    const final_start = startString;
+    const final_end = endString;
+    // console.log(final_start, typeof final_start);
+    // console.log(final_end, typeof final_end);
 
-    if (form.form.priceRange.startPrice > form.form.priceRange.endPrice) {
-      Alert.alert("가격범위를 확인해주세요");
+    if (
+      form.form.startPrice &&
+      form.form.endPrice &&
+      form.form.startPrice > form.form.endPrice
+    ) {
+      Alert.alert("최대금액을 다시 설정해주세요.");
+    } else if (
+      form.form.startPrice &&
+      form.form.endPrice &&
+      form.form.startPrice == form.form.endPrice
+    ) {
+      Alert.alert("최소금액과 최대금액을 다시 설정해주세요.");
+    } else if (
+      form.form.startPrice &&
+      form.form.endPrice &&
+      form.form.startPrice == 0 &&
+      form.form.endPrice == 0
+    ) {
+      Alert.alert("최소금액과 최대금액을 다시 설정해주세요.");
+    } else if (
+      (form.form.startPrice && !form.form.endPrice) ||
+      (!form.form.startPrice && form.form.endPrice)
+    ) {
+      Alert.alert("최소금액과 최대금액 모두 입력해주세요.");
+    } else if (
+      form.form.startTime &&
+      form.form.endTime &&
+      form.form.startTime > form.form.endTime
+    ) {
+      Alert.alert("종료시간을 다시 설정해주세요.");
+    } else if (
+      form.form.startTime &&
+      form.form.endTime &&
+      string_start == string_end
+    ) {
+      Alert.alert("시작시간과 종료시간을 다시 설정해주세요.");
+    } else if (
+      (form.form.startTime && !form.form.endTime) ||
+      (!form.form.startTime && form.form.endTime)
+    ) {
+      Alert.alert("시작시간과 종료시간 모두 입력해주세요.");
+    } else {
+      console.log(final_start, typeof final_start);
+      console.log(final_end, typeof final_end);
+      setForm((prevState: any) => ({
+        form: {
+          ...prevState.form,
+          startTime: startString,
+          endTime: final_end,
+        },
+      }));
+      console.log(form, "필터적용 form");
+      console.log(form.form.startTime, typeof form.form.startTime, "이상해");
+      const result = await searchItem(form.form);
+      console.log(result);
+      // props.setItems(result);
     }
-
-    const formData = new FormData();
-    formData.append("auctionType", form.form.auctionType);
-    formData.append("categories", form.form.categories);
-    formData.append("orderType", form.form.orderType);
-    formData.append("priceRange", form.form.priceRange);
-    formData.append("timeRange", form.form.timeRange);
-    console.log(formData);
   };
 
   // 필터 초기화 함수 ==> 수정해야함
   const resetFilters = () => {
     setForm((prev: any) => ({
       form: {
-        auctionType: "LIVE_NORMAL",
-        categories: "",
+        keyword: props.text,
+        auctionType: "LIVE",
+        category: "",
         sort: "createdDate",
         startPrice: "",
         endPrice: "",
@@ -150,8 +208,9 @@ const Filter = (props: Props) => {
     const unsubscribe = props.navigation.addListener("focus", () => {
       setForm((prev: any) => ({
         form: {
-          auctionType: "LIVE_NORMAL",
-          categories: "",
+          keyword: props.text,
+          auctionType: "LIVE",
+          category: "",
           sort: "createdDate",
           startPrice: "",
           endPrice: "",
@@ -206,6 +265,8 @@ const Filter = (props: Props) => {
           getSelectetInformation={onSelectEndTime}
           navigation={props.navigation}
           route={props.route}
+          setStartString={setStartString}
+          setEndString={setEndString}
         />
       </View>
       <View style={{ marginTop: 30, height: ScreenHeight / 10 }}>
@@ -217,7 +278,7 @@ const Filter = (props: Props) => {
             <Text style={props.styles.resetText}>초기화</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={applyFilters}
+            onPress={() => applyFilters(form)}
             style={props.styles.applyContainer}
           >
             <Text style={props.styles.applyText}>필터 적용</Text>

@@ -1,15 +1,26 @@
-import { StyleSheet, Text, View, Dimensions, TextInput } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as Device from "expo-device";
 import FilterStartDateTimeAndroid from "../../Molecules/Times/filterStartDateTimeAndroid";
 import FilterEndDateTimeAndroid from "../../Molecules/Times/filterEndDateTimeAndroid";
+import RadioButton from "../../Atoms/Buttons/radioButton";
+import Typography from "../../Atoms/Typographies/typography";
 
 type Props = {
   getSelectstInformation: Function;
   getSelectetInformation: Function;
   navigation: any;
   route: object;
+  setStartString: Function;
+  setEndString: Function;
 };
 
 type timeType = {
@@ -21,6 +32,8 @@ const { height: ScreenHeight } = Dimensions.get("window");
 const { width: ScreenWidth } = Dimensions.get("window");
 
 const TimeRange = (props: Props) => {
+  const test = new Date();
+  // console.log(test.slice(0, 20));
   const [startDateOpen, setStartDateOpen] = useState(false);
   const [endDateOpen, setEndDateOpen] = useState(false);
   const [startMinuteOpen, setStartMinuteOpen] = useState(false);
@@ -35,21 +48,18 @@ const TimeRange = (props: Props) => {
 
   const onChangeStart = async (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
+    console.log(typeof currentDate, "1111111111");
     Device.osName === "Android" && setStartDateOpen(false);
     Device.osName === "Android" && setStartMinuteOpen(false);
     selectedDate !== undefined && setStartDate(currentDate);
     const now = new Date(selectedDate);
     now.setHours(now.getHours() + 9);
+    await props.getSelectstInformation(now);
     let timeInformation = JSON.stringify(now);
     const result = timeInformation.substring(20, 25);
     const tmp = timeInformation.replace(result, "");
-    const time = JSON.parse(tmp);
-    now.setMinutes(now.getMinutes() + 30);
-    const timeInfo = JSON.stringify(now);
-    const result2 = timeInfo.substring(20, 25);
-    const temp = timeInfo.replace(result2, "");
-    const dateTime = JSON.parse(temp);
-    await props.getSelectstInformation(dateTime, time);
+    console.log(tmp, "12312321");
+    await props.setStartString(tmp);
   };
 
   const onChangeEnd = async (event: any, selectedDate: any) => {
@@ -59,95 +69,134 @@ const TimeRange = (props: Props) => {
     selectedDate !== undefined && setEndDate(currentDate);
     const now = new Date(selectedDate);
     now.setHours(now.getHours() + 9);
+    await props.getSelectetInformation(now);
     let timeInformation = JSON.stringify(now);
-    let tmp = timeInformation.replace(".000Z", "");
-    let time = JSON.parse(tmp);
-    now.setMinutes(now.getMinutes() + 30);
-    let timeInfo = JSON.stringify(now);
-    let temp = timeInfo.replace(".000Z", "");
-    let dateTime = JSON.parse(temp);
-    await props.getSelectetInformation(dateTime, time);
+    const result = timeInformation.substring(20, 25);
+    const tmp = timeInformation.replace(result, "");
+    await props.setEndString(tmp);
   };
 
-  // useEffect(() => {
-  //   const unsubscribe = props.navigation.addListener("focus", () => {
-  //     // setMinimumDate(new Date());
-  //   });
-  //   return unsubscribe;
-  // }, [props.navigation]);
+  const [selectTime, setSelectTime] = useState(false);
+  const onSelectTime = async () => {
+    setSelectTime(!selectTime);
+    if (selectTime == false) {
+      setStartDate(new Date());
+      setEndDate(new Date());
+      await props.getSelectstInformation(new Date());
+      await props.getSelectetInformation(new Date());
+    } else if (selectTime == true) {
+      await props.getSelectstInformation("");
+      await props.getSelectetInformation("");
+    }
+  };
 
   return (
     <View>
       <View style={{ height: ScreenHeight / 20 }}>
-        <Text style={{ fontSize: ScreenHeight / 45 }}>시작시간</Text>
+        <Text style={{ fontSize: ScreenHeight / 45 }}>경매기간</Text>
       </View>
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        {Device.osName === "Android" && (
-          <FilterStartDateTimeAndroid
-            functions={{ setStartDateOpen, setStartMinuteOpen }}
-            states={{ startDateOpen, startMinuteOpen }}
-            date={startDate}
-            // time={startMinute}
-          />
-        )}
-        {startDateOpen && (
-          <DateTimePicker
-            testID="dateTimePickerStart"
-            value={startDate}
-            mode={"date"}
-            is24Hour={true}
-            minimumDate={minimumDate}
-            locale="ko-KR"
-            onChange={onChangeStart}
-            style={{ flex: 2 }}
-          />
-        )}
-        {startMinuteOpen && (
-          <DateTimePicker
-            testID="dateTimePickerStart"
-            value={startDate}
-            mode={"time"}
-            is24Hour={true}
-            minimumDate={minimumDate}
-            locale="ko-KR"
-            onChange={onChangeStart}
-            style={{ flex: 1 }}
-          />
-        )}
-        <View>
-          <Text>~</Text>
+      <View>
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ flex: 1 }}>
+            <TouchableOpacity
+              onPress={onSelectTime}
+              style={{ flexDirection: "row", alignItems: "center", flex: 1 }}
+            >
+              <View style={styles.radioButton}>
+                {selectTime ? <RadioButton /> : null}
+              </View>
+              <Typography title="시작시간" style={styles.fontStyle} />
+            </TouchableOpacity>
+          </View>
+          {selectTime == true ? (
+            <View style={{ flex: 2 }}>
+              {Device.osName === "Android" && (
+                <FilterStartDateTimeAndroid
+                  functions={{ setStartDateOpen, setStartMinuteOpen }}
+                  states={{ startDateOpen, startMinuteOpen }}
+                  date={startDate}
+                />
+              )}
+              {startDateOpen && (
+                <DateTimePicker
+                  testID="dateTimePickerStart"
+                  value={startDate}
+                  mode={"date"}
+                  is24Hour={true}
+                  minimumDate={minimumDate}
+                  locale="ko-KR"
+                  onChange={onChangeStart}
+                />
+              )}
+              {startMinuteOpen && (
+                <DateTimePicker
+                  testID="dateTimePickerStart"
+                  value={startDate}
+                  mode={"time"}
+                  is24Hour={true}
+                  minimumDate={minimumDate}
+                  locale="ko-KR"
+                  onChange={onChangeStart}
+                />
+              )}
+            </View>
+          ) : null}
         </View>
-        {Device.osName === "Android" && (
-          <FilterEndDateTimeAndroid
-            functions={{ setEndDateOpen, setEndMinuteOpen }}
-            states={{ endDateOpen, endMinuteOpen }}
-            date={endDate}
-          />
-        )}
-        {endDateOpen && (
-          <DateTimePicker
-            testID="dateTimePickerEnd"
-            value={endDate}
-            mode={"date"}
-            is24Hour={true}
-            minimumDate={minimumDate}
-            locale="ko-KR"
-            onChange={onChangeEnd}
-            style={{ flex: 2 }}
-          />
-        )}
-        {endMinuteOpen && (
-          <DateTimePicker
-            testID="dateTimePickerEnd"
-            value={endDate}
-            mode={"time"}
-            is24Hour={true}
-            minimumDate={minimumDate}
-            locale="ko-KR"
-            onChange={onChangeEnd}
-            style={{ flex: 1 }}
-          />
-        )}
+        <View
+          style={{
+            marginTop: 10,
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        ></View>
+        <View style={{ marginTop: 10, flexDirection: "row" }}>
+          <View style={{ flex: 1 }}>
+            <TouchableOpacity
+              onPress={onSelectTime}
+              style={{ flexDirection: "row", alignItems: "center", flex: 1 }}
+            >
+              <View style={styles.radioButton}>
+                {selectTime ? <RadioButton /> : null}
+              </View>
+              <Typography title="종료시간" style={styles.fontStyle} />
+            </TouchableOpacity>
+          </View>
+          {selectTime == true ? (
+            <View style={{ flex: 2 }}>
+              {Device.osName === "Android" && (
+                <FilterEndDateTimeAndroid
+                  functions={{ setEndDateOpen, setEndMinuteOpen }}
+                  states={{ endDateOpen, endMinuteOpen }}
+                  date={endDate}
+                />
+              )}
+              {endDateOpen && (
+                <DateTimePicker
+                  testID="dateTimePickerEnd"
+                  value={endDate}
+                  mode={"date"}
+                  is24Hour={true}
+                  minimumDate={minimumDate}
+                  locale="ko-KR"
+                  onChange={onChangeEnd}
+                  style={{ flex: 2 }}
+                />
+              )}
+              {endMinuteOpen && (
+                <DateTimePicker
+                  testID="dateTimePickerEnd"
+                  value={endDate}
+                  mode={"time"}
+                  is24Hour={true}
+                  minimumDate={minimumDate}
+                  locale="ko-KR"
+                  onChange={onChangeEnd}
+                  style={{ flex: 1 }}
+                />
+              )}
+            </View>
+          ) : null}
+        </View>
       </View>
     </View>
   );
@@ -164,5 +213,19 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: "#4A4C4E",
     paddingLeft: 15,
+  },
+  fontStyle: {
+    fontWeight: "200",
+    marginLeft: ScreenHeight / 130,
+    fontSize: ScreenHeight / 50,
+  },
+  radioButton: {
+    height: ScreenHeight / 35,
+    width: ScreenHeight / 35,
+    borderRadius: ScreenHeight / 50,
+    borderWidth: 1,
+    borderColor: "#b8b4b4",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
