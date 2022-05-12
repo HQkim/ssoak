@@ -21,6 +21,7 @@ const MainContainer = ({ navigation, route }: Props) => {
   const { isLoading, normalPageAvailable, livePageAvailable } = useSelector(
     (state: RootState) => state.mainLoader
   );
+  const { item } = useSelector((state: RootState) => state.detail);
 
   // const data = useSelector((state: RootState) => state.mainLoader.data);
 
@@ -52,14 +53,16 @@ const MainContainer = ({ navigation, route }: Props) => {
       setNormalPage(normalPage + 1);
     }
   };
-
-  navigation.addListener("focus", () => {
+  useEffect(() => {
     onRefresh();
+  }, []);
+  navigation.addListener("focus", () => {
+    console.log(item, "################");
   });
 
-  navigation.addListener("blur", () => {
-    dispatch(dataReset());
-  });
+  // navigation.addListener("blur", () => {
+  //   dispatch(dataReset());
+  // });
 
   // useEffect(() => {
   //   console.log(livePage, normalPage);

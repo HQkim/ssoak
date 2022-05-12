@@ -164,7 +164,7 @@ const index = ({ item, descStyle, titleStyle }) => {
             <Text style={styles.type}>
               {item.auctionType === "NORMAL" ? "일반 경매" : "실시간 경매"}
             </Text>
-            {userId == item.seller.seq ? (
+            {userId == item.seller?.seq ? (
               <UpdateButton item={item} reqItem={item.itemSeq} />
             ) : (
               <View />
@@ -174,7 +174,7 @@ const index = ({ item, descStyle, titleStyle }) => {
             {item.title}
           </Text>
           <View style={styles.badges}>
-            <Text style={styles.typography}>{item.seller.nickname}</Text>
+            <Text style={styles.typography}>{item.seller?.nickname}</Text>
             <Text style={styles.typography}>
               최소 입찰가 :{" "}
               {item.biddingUnit

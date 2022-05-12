@@ -23,15 +23,16 @@ const DetailContainer = (props: any) => {
   const dispatch = useDispatch();
   const [showIndicator, setShowIndicator] = useState(false);
 
-  // useEffect(() => {
-  //   onStartLoadData(props.route.params.id);
-  // }, []);
+  useEffect(() => {
+    onStartLoadData(props.route.params.id);
+  }, []);
   const navigation = useNavigation();
   useEffect(() => {
     navigation.addListener("focus", () => {
       onStartLoadData(props.route.params.id);
     });
   }, []);
+  console.log(item, "@@##@@");
   useEffect(() => {
     setShowIndicator(!isLoading);
   }, [isLoading]);
@@ -69,7 +70,7 @@ const DetailContainer = (props: any) => {
         </PagerView>
       </View>
 
-      {isLoading ? <DescriptionSkeleton /> : <Detail item={item} />}
+      {isLoading && !item ? <DescriptionSkeleton /> : <Detail item={item} />}
     </KeyboardAwareScrollView>
   );
 };
