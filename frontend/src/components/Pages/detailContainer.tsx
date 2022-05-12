@@ -10,6 +10,8 @@ import Detail from "../Templates/detail";
 import ImageSkeleton from "../Molecules/Cards/imageSkeleton";
 import DescriptionSkeleton from "../Molecules/Cards/descriptionSkeleton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import UpdateButton from "../Molecules/Description/updateButton";
+import { useNavigation } from "@react-navigation/native";
 
 type Props = {};
 
@@ -21,13 +23,19 @@ const DetailContainer = (props: any) => {
   const dispatch = useDispatch();
   const [showIndicator, setShowIndicator] = useState(false);
 
+  // useEffect(() => {
+  //   onStartLoadData(props.route.params.id);
+  // }, []);
+  const navigation = useNavigation();
   useEffect(() => {
-    onStartLoadData(props.route.params.id);
+    navigation.addListener("focus", () => {
+      onStartLoadData(props.route.params.id);
+    });
   }, []);
   useEffect(() => {
     setShowIndicator(!isLoading);
   }, [isLoading]);
-  const onStartLoadData = (id: number) => {
+  const onStartLoadData = (id: any) => {
     dispatch(loadDataAsync(id));
   };
 
@@ -60,6 +68,7 @@ const DetailContainer = (props: any) => {
           )}
         </PagerView>
       </View>
+
       {isLoading ? <DescriptionSkeleton /> : <Detail item={item} />}
     </KeyboardAwareScrollView>
   );

@@ -1,12 +1,13 @@
-import { View, Text } from "react-native";
+import { View, Text, Dimensions } from "react-native";
 import React from "react";
 
 type Props = {};
+const { width: ScreenWidth } = Dimensions.get("window");
 
 const AuctionTypeTag = ({ styles, text }) => {
   return (
-    <View>
-      <Text style={styles.tag}>{text}</Text>
+    <View style={styles.tag}>
+      <Text style={{ fontSize: ScreenWidth / 30 }}>{text}</Text>
     </View>
   );
 };

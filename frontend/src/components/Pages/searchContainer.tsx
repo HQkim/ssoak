@@ -1,16 +1,24 @@
-import { StyleSheet, View } from "react-native";
-import React from "react";
+import { StyleSheet, View, ScrollView } from "react-native";
+import React, { useEffect } from "react";
 import Search from "../Templates/search";
 
 type Props = {
   navigation: any;
+  text: string;
+  setText: any;
+  items: any;
 };
 
-const SearchContainer = ({ navigation }: Props) => {
+const SearchContainer = ({ navigation, text, items }: Props) => {
   return (
-    <View style={styles.searchContainer}>
-      <Search style={styles.searchTemplate} navigation={navigation} />
-    </View>
+    <ScrollView style={styles.searchContainer}>
+      <Search
+        style={styles.searchTemplate}
+        navigation={navigation}
+        text={text}
+        items={items}
+      />
+    </ScrollView>
   );
 };
 

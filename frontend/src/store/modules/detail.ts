@@ -31,12 +31,10 @@ export const dataReset = () => ({
 
 //middleware
 function* loadDataSaga(action: any) {
-  console.log(action);
   yield put(loadData(true));
   try {
     const result = yield call(detailAuction, action.payload);
-    console.log(result);
-    yield delay(1000);
+
     yield put(loadSuccess(result));
   } catch (error) {
     // yield put(loadError(error.response))

@@ -12,7 +12,7 @@ type Props = {
 };
 
 const CompleteCard = (props: Props) => {
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
   const handleCardClick = () => {
     if (props.item.auctionType === "NORMAL") {
       navigation.navigate("auctionDetail", {

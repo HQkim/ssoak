@@ -15,7 +15,7 @@ const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
 const UpdateButton = ({ item, reqItem }) => {
   const [isLiked, setIsLiked] = useState(item.isLike);
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
   const [select, setSelect] = useState(false);
   const [token, setToken] = useState<any>();
 
@@ -58,7 +58,7 @@ const UpdateButton = ({ item, reqItem }) => {
   };
   return (
     <View>
-      {token === undefined ? null : item.seller.seq === token ? (
+      {token === undefined ? null : item?.seller.seq === token ? (
         <AntDesign
           name="ellipsis1"
           size={24}

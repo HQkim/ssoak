@@ -177,11 +177,13 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   auctionTypeTag: {
-    fontSize: 15,
     width: ScreenWidth / 6,
+    height: ScreenHeight / 33,
     backgroundColor: "#F8A33E",
     borderRadius: ScreenWidth / 12,
-    textAlign: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    alignItems: "center",
   },
   textArea: {
     borderRadius: 20,
@@ -197,11 +199,13 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
   },
   completedTypeTag: {
-    fontSize: 15,
     width: ScreenWidth / 6,
+    height: ScreenHeight / 33,
     backgroundColor: "#C4C4C4",
     borderRadius: ScreenWidth / 12,
-    textAlign: "center",
     marginRight: ScreenWidth / 12,
+    justifyContent: "center",
+    flexDirection: "row",
+    alignItems: "center",
   },
 });

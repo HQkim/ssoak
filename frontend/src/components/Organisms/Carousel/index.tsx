@@ -8,7 +8,7 @@ const index = ({ imageUrls, style }: any) => {
 
   return (
     <>
-      {imageUrls.map((url, idx) => (
+      {imageUrls?.map((url, idx) => (
         <View style={style} key={idx}>
           <ReactNativeZoomableView
             bindToBorders={true}

@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     marginRight: Dimensions.get("window").height / 50,
   },
   title: {
-    fontSize: 30,
+    fontSize: 20,
     marginLeft: Dimensions.get("window").height / 50,
   },
 });

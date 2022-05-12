@@ -92,14 +92,14 @@ const Profile = (props: Props) => {
       setImage(result.uri);
       setFile(result);
       const formData = new FormData();
-      const trimmedURI = file.uri.replace("file://", "");
+
       const trimmedURI_android = uri;
-      const fileName = trimmedURI.split("/").pop();
+
       const fileName_android = trimmedURI_android.split("/").pop();
       const item: any = {
         type: "image/jpeg",
-        uri: Platform.OS === "ios" ? trimmedURI : trimmedURI_android,
-        name: Platform.OS === "ios" ? fileName : fileName_android,
+        uri: trimmedURI_android,
+        name: fileName_android,
       };
       formData.append("profileImage", item);
       await editKakaoProfile(formData).then(() =>

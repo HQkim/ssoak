@@ -87,9 +87,9 @@ const ImageUpdateContainer = (props: Props) => {
           </Text>
         </View>
         {image &&
-          image.map((item: any, idx: number) => {
+          image.map((item: any, idx: any) => {
             return (
-              <TouchableWithoutFeedback>
+              <TouchableWithoutFeedback key={idx}>
                 <View style={{ alignItems: "flex-end" }}>
                   <Image source={{ uri: item }} style={styles.imgContainer} />
                   <Ionicons
