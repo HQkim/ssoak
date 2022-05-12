@@ -56,9 +56,9 @@ const MainContainer = ({ navigation, route }: Props) => {
   useEffect(() => {
     onRefresh();
   }, []);
-  navigation.addListener("focus", () => {
-    console.log(item, "################");
-  });
+  // navigation.addListener("focus", () => {
+  //   console.log(item, "################");
+  // });
 
   // navigation.addListener("blur", () => {
   //   dispatch(dataReset());

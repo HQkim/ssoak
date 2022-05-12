@@ -25,7 +25,7 @@ const AuctionDescription = ({ item, reqItem }) => {
 
   const onTextLayout = useCallback((e) => {
     setShowDivier(e.nativeEvent.lines.length < 2);
-    console.log(item);
+    // console.log(item)
   }, []);
 
   const handleMoreClick = () => {

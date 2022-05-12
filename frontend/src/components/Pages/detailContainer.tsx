@@ -2,7 +2,7 @@ import { StyleSheet, View, Dimensions, RefreshControl } from "react-native";
 import React, { createRef, useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/modules";
-import { loadDataAsync } from "../../store/modules/detail";
+import { dataReset, loadDataAsync } from "../../store/modules/detail";
 import PagerView from "react-native-pager-view";
 // import ReactNativeZoomableView from "@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView";
 import Carousel from "../Organisms/Carousel";
@@ -22,17 +22,27 @@ const DetailContainer = (props: any) => {
   // const isLoading = false;
   const dispatch = useDispatch();
   const [showIndicator, setShowIndicator] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
+    console.log(item);
+  }, [item]);
+  navigation.addListener("focus", () => {
     onStartLoadData(props.route.params.id);
-  }, []);
-  const navigation = useNavigation();
+  });
+
+  navigation.addListener("blur", () => {
+    dispatch(dataReset());
+  });
   useEffect(() => {
-    navigation.addListener("focus", () => {
-      onStartLoadData(props.route.params.id);
-    });
+    onStartLoadData(props.route.params.id);
+
+    return () => {
+      dispatch(dataReset());
+    };
   }, []);
-  console.log(item, "@@##@@");
+
+  // console.log(item, "@@##@@");
   useEffect(() => {
     setShowIndicator(!isLoading);
   }, [isLoading]);
@@ -70,7 +80,7 @@ const DetailContainer = (props: any) => {
         </PagerView>
       </View>
 
-      {isLoading && !item ? <DescriptionSkeleton /> : <Detail item={item} />}
+      {isLoading ? <DescriptionSkeleton /> : <Detail item={item} />}
     </KeyboardAwareScrollView>
   );
 };
