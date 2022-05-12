@@ -23,9 +23,9 @@ const Likes = ({ item }) => {
   return (
     <TouchableOpacity onPress={() => pressHeart(item)}>
       {item.isLiked === true ? (
-        <Ionicons name="heart" size={24} color="#EA759A" />
+        <Ionicons name="heart" size={27} color="#EA759A" />
       ) : (
-        <Ionicons name="heart-outline" size={24} color="black" />
+        <Ionicons name="heart-outline" size={27} color="black" />
       )}
     </TouchableOpacity>
   );

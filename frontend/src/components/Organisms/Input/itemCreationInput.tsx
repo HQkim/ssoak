@@ -213,6 +213,7 @@ const ItemCreationInput = (props: Props) => {
       <DropDown getSelectInformation={onSelect} itemCategory={0} />
       <TextInput
         placeholder={"글 제목"}
+        placeholderTextColor="#C5C8CE"
         value={title}
         style={styles.textContainer}
         maxLength={20}
@@ -223,6 +224,7 @@ const ItemCreationInput = (props: Props) => {
       <Border style={styles.border} />
       <TextInput
         placeholder={"시초가"}
+        placeholderTextColor="#C5C8CE"
         value={startPrice}
         style={styles.textContainer}
         maxLength={7}
@@ -250,6 +252,7 @@ const ItemCreationInput = (props: Props) => {
       <Border style={styles.border} />
       <TextInput
         placeholder={"상품 상세 설명"}
+        placeholderTextColor="#C5C8CE"
         value={content}
         style={styles.descriptionContainer}
         maxLength={250}
