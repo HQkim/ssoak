@@ -59,7 +59,7 @@ function detail(
     case LOAD_SUCCESS:
       return { ...state, item: action.payload };
     case DATA_RESET:
-      return { ...state, item: {}, isLoading: true };
+      return { ...state, item: {}, isLoading: false };
     default:
       return state;
   }

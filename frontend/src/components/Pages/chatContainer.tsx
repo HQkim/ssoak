@@ -23,7 +23,7 @@ const ChatContainer = () => {
           setUserAvatar(res.data.profileImageUrl);
           setUserId(res.data.seq);
         });
-      },
+      }
     );
   };
 
@@ -40,7 +40,7 @@ const ChatContainer = () => {
     getToken();
   }, []);
   useEffect(() => {
-    console.log(userId);
+    // console.log(userId);
     if (userId) {
       onLogin();
     }
@@ -64,7 +64,7 @@ const ChatContainer = () => {
       const myUserRef = ref(database, `users/${userId}`);
       onValue(myUserRef, (snapshot) => {
         const data = snapshot.val();
-        console.log(data);
+        // console.log(data);
         setUsers(data?.friends);
         setMyData((prevData) => ({
           ...prevData,

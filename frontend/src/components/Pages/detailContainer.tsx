@@ -24,9 +24,9 @@ const DetailContainer = (props: any) => {
   const [showIndicator, setShowIndicator] = useState(false);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    console.log(item);
-  }, [item]);
+  // useEffect(() => {
+  //   console.log(item);
+  // }, [item]);
   navigation.addListener("focus", () => {
     onStartLoadData(props.route.params.id);
   });

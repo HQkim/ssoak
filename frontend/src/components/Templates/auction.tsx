@@ -59,7 +59,7 @@ const Action = ({ item, reqItem, getItemDetail }) => {
         <CountDown style={styles.timeStyle} endTime={item.endTime} />
       </Text>
 
-      {token === item.seller.seq ? (
+      {token === item?.seller.seq ? (
         <View>
           <Text style={styles.titleStyle}>물품 낙찰하기</Text>
           <Text style={styles.descriptionStyle}>
