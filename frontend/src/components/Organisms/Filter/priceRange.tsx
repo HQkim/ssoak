@@ -20,12 +20,14 @@ const PriceRange = (props: Props) => {
   const [startPrice, setStartPrice] = useState<number | any | null>("");
   const [endPrice, setEndPrice] = useState<number | any | null>("");
   const inputStartPrice = (text) => {
+    const num_startPrice = parseInt(text);
     setStartPrice(text);
-    props.getSelectInspformation(text);
+    props.getSelectInspformation(num_startPrice);
   };
   const inputEndPrice = (text) => {
+    const num_endPrice = parseInt(text);
     setEndPrice(text);
-    props.getSelectInepformation(text);
+    props.getSelectInepformation(num_endPrice);
   };
 
   return (
