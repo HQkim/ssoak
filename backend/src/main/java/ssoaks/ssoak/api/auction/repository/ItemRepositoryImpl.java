@@ -188,8 +188,9 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                 .select(item.count().intValue())
                 .from(item)
                 .where(item.auctionType.stringValue().eq(keyword)
-                        .and(item.startTime.before(LocalDateTime.now()))
-                        .and(item.endTime.after(LocalDateTime.now())))
+//                        .and(item.startTime.before(LocalDateTime.now()))
+//                        .and(item.endTime.after(LocalDateTime.now()))
+                )
                 .fetchOne();
 
     }
@@ -218,8 +219,9 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                         .join(itemCategory).on(itemCategory.item.eq(item))
                         .join(category).on(category.seq.eq(itemCategory.category.seq))
                         .where(item.auctionType.stringValue().eq(keyword)
-                                .and(item.startTime.before(LocalDateTime.now()))
-                                .and(item.endTime.after(LocalDateTime.now())))
+//                                .and(item.startTime.before(LocalDateTime.now()))
+//                                .and(item.endTime.after(LocalDateTime.now()))
+                        )
                         .groupBy(item)
                         .offset((long) (pageable.getPageNumber() - 1) * pageable.getPageSize())
                         .limit(pageable.getPageSize());
@@ -232,7 +234,9 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                 query.orderBy(item.biddingCount.desc());
             }
             else if(order.getProperty().equals("endTime")) { // 마감임박순
-                query.orderBy(item.endTime.asc());
+                query.where(item.startTime.before(LocalDateTime.now())
+                        .and(item.endTime.after(LocalDateTime.now())))
+                        .orderBy(item.endTime.asc());
             }
         }
 
