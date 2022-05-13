@@ -6,7 +6,7 @@ import ssoaks.ssoak.api.member.entity.Block;
 import java.util.Optional;
 
 
-public interface BlockRepository extends JpaRepository<Block, Long> {
+public interface BlockRepository extends JpaRepository<Block, Long>, BlockRepositoryCustom{
 
     Optional<Block> findBlockByReporterSeqAndMemberSeq(Long reporterSeq, Long memberSeq);
 

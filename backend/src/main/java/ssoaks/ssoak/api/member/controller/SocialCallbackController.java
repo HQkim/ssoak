@@ -8,7 +8,7 @@ import ssoaks.ssoak.api.member.dto.request.ReqAppleCallbackDto;
 import ssoaks.ssoak.api.member.dto.request.ReqKakaoCallbackDto;
 import ssoaks.ssoak.api.member.service.MemberService;
 import ssoaks.ssoak.api.member.service.SocialCallbackService;
-import ssoaks.ssoak.common.dto.BaseResponseDTO;
+
 
 @Slf4j
 @RestController

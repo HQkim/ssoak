@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ssoaks.ssoak.common.entity.base.BaseCreatedEntity;
-import ssoaks.ssoak.common.entity.base.BaseModifiedEntity;
 
 import javax.persistence.*;
 

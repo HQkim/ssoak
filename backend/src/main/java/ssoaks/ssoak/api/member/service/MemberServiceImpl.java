@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ssoaks.ssoak.api.auction.dto.response.ItemImageSimpleInfoDto;
 import ssoaks.ssoak.api.auction.dto.response.ItemOverviewLikedDto;
 import ssoaks.ssoak.api.auction.entity.Item;
-import ssoaks.ssoak.api.auction.repository.ImageRepository;
 import ssoaks.ssoak.api.auction.repository.ItemRepository;
 import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
 import ssoaks.ssoak.api.auction.service.AwsS3Service;
@@ -324,10 +322,22 @@ public class MemberServiceImpl implements MemberService{
                 .build();
         blockRepository.save(block);
 
+        // 신고 횟수 3번 넘어가면 멤버 익명화 및 블락처리
+        Integer countBlock = blockRepository.countBlockByMemberSeq(memberSeq);
+        if (countBlock >= 3) {
+            member.blockMember();
+        }
+
         return 200;
     }
 
+    @Override
+    public void test() {
 
+        List<Long> seqs = blockRepository.getMyBlackList(6L);
+        System.out.println("test==============: " + seqs);
+
+    }
 
 }
 
