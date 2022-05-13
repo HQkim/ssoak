@@ -8,18 +8,20 @@ const FilterEndDateTimeAndroid = ({ functions, states, date }) => {
   const { setEndDateOpen, setEndMinuteOpen } = functions;
   const { endDateOpen, endMinuteOpen } = states;
   return (
-    <View>
+    <View
+      style={{
+        flexDirection: "row",
+        flex: 1,
+      }}
+    >
       <View>
         <TouchableOpacity
           onPress={() => setEndDateOpen(!endDateOpen)}
           style={{
-            alignItems: "center",
-            borderRadius: 55,
-            borderColor: "#4A4C4E",
-            borderWidth: 0.7,
             width: ScreenWidth / 3,
-            height: ScreenWidth / 13,
-            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#A1A5AC",
+            borderRadius: 5,
           }}
         >
           {date && (
@@ -29,17 +31,14 @@ const FilterEndDateTimeAndroid = ({ functions, states, date }) => {
           )}
         </TouchableOpacity>
       </View>
-      <View>
+      <View style={{ marginLeft: 10 }}>
         <TouchableOpacity
           onPress={() => setEndMinuteOpen(!endMinuteOpen)}
           style={{
+            width: ScreenWidth / 4,
             alignItems: "center",
-            borderRadius: 55,
-            borderColor: "#4A4C4E",
-            borderWidth: 0.7,
-            width: ScreenWidth / 3,
-            height: ScreenWidth / 13,
-            justifyContent: "center",
+            backgroundColor: "#A1A5AC",
+            borderRadius: 5,
           }}
         >
           {date && (

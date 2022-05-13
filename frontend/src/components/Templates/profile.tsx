@@ -117,6 +117,7 @@ const Profile = (props: Props) => {
       const formData = new FormData();
       formData.append("nickname", name);
       await editKakaoProfile(formData);
+      props.profile.nickname = name;
       props.setEditStatus(!props.editStatus);
     }
   };
@@ -222,7 +223,7 @@ const Profile = (props: Props) => {
                     value={name}
                     maxLength={5}
                     onChangeText={setName}
-                    defaultValue={props.profile.nickname}
+                    placeholder={props.profile.nickname}
                   />
                   <AntDesign
                     name="checkcircleo"

@@ -28,6 +28,9 @@ const { width: ScreenWidth } = Dimensions.get("window");
 
 const onSale = (props: Props) => {
   const [items, setItems] = useState<Items | null | any>([]);
+  const [currentTime, setCurrentTime] = useState<any | undefined | object>(
+    new Date()
+  );
   const navigation: any = useNavigation();
   const getData = async () => {
     const response = await getOnSaleItems();
@@ -49,6 +52,9 @@ const onSale = (props: Props) => {
   useFocusEffect(
     React.useCallback(() => {
       getData();
+      // const time = new Date();
+      // console.log(time);
+      // setCurrentTime(time)
       return () => {};
     }, [])
   );
@@ -59,10 +65,18 @@ const onSale = (props: Props) => {
         items.map((item, index) => (
           <View key={index} style={styles.onSaleContainer}>
             <TouchableOpacity onPress={() => goDetail(item)}>
-              <AuctionTypeTag
-                styles={{ tag: styles.auctionTypeTag }}
-                text={item.auctionType == "LIVE" ? "실시간" : "일반"}
-              ></AuctionTypeTag>
+              <View style={{ flexDirection: "row" }}>
+                <AuctionTypeTag
+                  styles={{ tag: styles.auctionTypeTag }}
+                  text={item.auctionType == "LIVE" ? "실시간" : "일반"}
+                ></AuctionTypeTag>
+                <CompletedTag
+                  styles={{ tag: styles.completedTypeTag }}
+                  text={
+                    currentTime < new Date(item.startTime) ? "예약중" : "진행중"
+                  }
+                />
+              </View>
               <View style={{ flexDirection: "row", marginTop: 10 }}>
                 <View style={{ flex: 2 }}>
                   <Image
@@ -80,19 +94,24 @@ const onSale = (props: Props) => {
                     {item.title}
                   </Text>
                   <View>
-                    <Text>{item.isCompleted}</Text>
                     <View style={{ flexDirection: "row" }}>
-                      <CompletedTag
+                      {/* <CompletedTag
                         styles={{ tag: styles.completedTypeTag }}
-                        text={"진행중"}
-                      />
+                        text={
+                          currentTime < new Date(item.startTime)
+                            ? "예약중"
+                            : "진행중"
+                        }
+                      /> */}
                       <Text>참여자 : </Text>
                       <TextInput
                         editable={false}
-                        maxLength={3}
-                        value={item.biddingCount
-                          .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        maxLength={5}
+                        value={
+                          item.biddingCount
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 명"
+                        }
                         style={styles.textArea}
                         textAlign="center"
                       />
@@ -108,9 +127,11 @@ const onSale = (props: Props) => {
                   <TextInput
                     editable={false}
                     maxLength={7}
-                    value={item.startPrice
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                    value={
+                      item.startPrice
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
+                    }
                     style={styles.textArea}
                     textAlign="center"
                   />
@@ -120,9 +141,11 @@ const onSale = (props: Props) => {
                   <TextInput
                     editable={false}
                     maxLength={7}
-                    value={item.lastPrice
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                    value={
+                      item.lastPrice
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
+                    }
                     style={styles.textArea}
                     textAlign="center"
                   />
@@ -180,10 +203,11 @@ const styles = StyleSheet.create({
     width: ScreenWidth / 6,
     height: ScreenHeight / 33,
     backgroundColor: "#F8A33E",
-    borderRadius: ScreenWidth / 12,
+    borderRadius: 55,
     justifyContent: "center",
     flexDirection: "row",
     alignItems: "center",
+    marginRight: 5,
   },
   textArea: {
     borderRadius: 20,
@@ -201,8 +225,8 @@ const styles = StyleSheet.create({
   completedTypeTag: {
     width: ScreenWidth / 6,
     height: ScreenHeight / 33,
-    backgroundColor: "#C4C4C4",
-    borderRadius: ScreenWidth / 12,
+    backgroundColor: "#719DD7",
+    borderRadius: 55,
     marginRight: ScreenWidth / 12,
     justifyContent: "center",
     flexDirection: "row",

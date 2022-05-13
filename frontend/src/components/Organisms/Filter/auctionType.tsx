@@ -8,11 +8,13 @@ import {
 import React, { useState } from "react";
 import RadioButton from "../../Atoms/Buttons/radioButton";
 import Typography from "../../Atoms/Typographies/typography";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 type Props = {
   getSelectInformation: Function;
   navigation: any;
   route: object;
+  reset: Boolean;
 };
 const { height: ScreenHeight } = Dimensions.get("window");
 const { width: ScreenWidth } = Dimensions.get("window");
@@ -23,6 +25,13 @@ const AuctionType = (props: Props) => {
     setSelect(!select);
     props.getSelectInformation(select);
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setSelect(true);
+    }, [props.reset])
+  );
+
   return (
     <View>
       <View style={{ height: ScreenHeight / 20 }}>
