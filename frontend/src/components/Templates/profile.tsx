@@ -26,6 +26,7 @@ import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { editKakaoProfile } from "../../apis/auth";
 import * as Font from "expo-font";
+import OtherSetting from "../Templates/otherSetting";
 
 type Props = {
   navigation: any | undefined;
@@ -141,11 +142,6 @@ const Profile = (props: Props) => {
             }}
           >
             {font ? <Text style={styles.fontStyle}>Profile</Text> : null}
-            <View>
-              <TouchableOpacity onPress={() => navigation.navigate("setting")}>
-                <Ionicons name="settings-outline" size={20} color="black" />
-              </TouchableOpacity>
-            </View>
           </View>
         </View>
         <View
@@ -284,7 +280,7 @@ const Profile = (props: Props) => {
         </View>
         <View
           style={{
-            height: ScreenHeight / 2,
+            height: ScreenHeight / 2.5,
             backgroundColor: "#ffff",
           }}
         >
@@ -308,22 +304,15 @@ const Profile = (props: Props) => {
             />
             <Text style={{ fontSize: 18, padding: 15 }}>개인정보처리방침</Text>
           </View>
-          <View style={styles.informView}>
-            <AntDesign name="sound" size={24} color="black" />
-            <Text style={{ fontSize: 18, padding: 15 }}>공지사항</Text>
-          </View>
           <TouchableOpacity onPress={logout}>
             <View style={styles.informView}>
               <MaterialIcons name="logout" size={24} color="black" />
               <Text style={{ fontSize: 18, padding: 15 }}>로그아웃</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("setting")}>
-            <View style={styles.informView}>
-              <Ionicons name="settings-outline" size={24} color="black" />
-              <Text style={{ fontSize: 18, padding: 15 }}>설정</Text>
-            </View>
-          </TouchableOpacity>
+          <View style={styles.informView}>
+            <OtherSetting navigation={navigation} />
+          </View>
         </View>
       </ScrollView>
     </View>
