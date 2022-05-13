@@ -89,20 +89,12 @@ const onSale = (props: Props) => {
                     }}
                   />
                 </View>
-                <View style={{ flex: 6, justifyContent: "space-between" }}>
-                  <Text style={{ fontSize: 18 }} numberOfLines={2}>
+                <View style={{ justifyContent: "space-between" }}>
+                  <Text style={{ fontSize: 18 }} numberOfLines={1}>
                     {item.title}
                   </Text>
                   <View>
                     <View style={{ flexDirection: "row" }}>
-                      {/* <CompletedTag
-                        styles={{ tag: styles.completedTypeTag }}
-                        text={
-                          currentTime < new Date(item.startTime)
-                            ? "예약중"
-                            : "진행중"
-                        }
-                      /> */}
                       <Text>참여자 : </Text>
                       <TextInput
                         editable={false}
@@ -153,7 +145,11 @@ const onSale = (props: Props) => {
               </View>
               <View>
                 <View
-                  style={{ flexDirection: "row", marginTop: ScreenWidth / 30 }}
+                  style={{
+                    flexDirection: "row",
+                    marginTop: ScreenWidth / 30,
+                    alignItems: "center",
+                  }}
                 >
                   <Text>경매일 : </Text>
                   <TextInput

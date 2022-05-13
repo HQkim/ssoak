@@ -12,143 +12,128 @@ const { width: ScreenWidth } = Dimensions.get("window");
 const ItemInforms = ({ item }) => {
   return (
     <View>
-      {item.isSold === true ? (
-        <>
-          <View style={{ flexDirection: "row", marginTop: 10 }}>
-            <View style={{ flex: 2 }}>
-              <ItemImage
-                source={{ uri: item.imageUrl }}
-                imageStyle={styles.imageStyle}
-              />
-            </View>
-            <View style={{ flex: 6, justifyContent: "space-between" }}>
-              <ItemTitle
-                titleStyle={styles.titleStyle}
-                numberOfLines={2}
-                value={item.title}
-              />
-              <View style={{ flexDirection: "row" }}>
-                {/* <CompletedTag
-                  styles={{ tag: styles.completedTypeTag }}
-                  text={"거래완료"}
-                /> */}
-                <Text>참여자 : </Text>
-                <ItemTextInput
-                  value={
-                    item.biddingCount
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 명"
-                  }
-                  textAlign={"center"}
-                  maxLength={5}
-                  textInputStyle={styles.textArea}
-                />
-              </View>
-            </View>
-          </View>
-          <View style={{ flexDirection: "row", marginTop: ScreenWidth / 30 }}>
-            <View style={{ flexDirection: "row", flex: 1 }}>
-              <Text>시초가 : </Text>
+      <View style={{ flexDirection: "row", marginTop: ScreenWidth / 50 }}>
+        <ItemImage
+          source={{ uri: item.imageUrl }}
+          imageStyle={styles.imageStyle}
+        />
+
+        <View
+          style={{
+            flexDirection: "row",
+            flex: 3,
+            justifyContent: "space-between",
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "column",
+              justifyContent: "space-around",
+              height: ScreenWidth / 3.2,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: ScreenWidth / 18,
+                marginLeft: ScreenWidth / 20,
+              }}
+              numberOfLines={1}
+            >
+              {item.title}
+            </Text>
+            <Text
+              style={{
+                fontSize: ScreenWidth / 24,
+                marginTop: ScreenWidth / 70,
+                marginLeft: ScreenWidth / 20,
+              }}
+            >
+              참여자 : {item.biddingCount} 명
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                marginLeft: 19,
+                marginTop: ScreenWidth / 70,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: ScreenWidth / 24,
+                  alignSelf: "center",
+                }}
+              >
+                시초가 :{" "}
+              </Text>
               <ItemTextInput
+                maxLength={10}
                 value={
                   item.startPrice
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
                 }
-                textAlign={"center"}
-                maxLength={10}
                 textInputStyle={styles.textArea}
+                textAlign="center"
               />
             </View>
-            <View style={{ flexDirection: "row", flex: 1, marginLeft: 19 }}>
-              <Text>입찰가 : </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                marginLeft: 19,
+                marginTop: ScreenWidth / 70,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: ScreenWidth / 24,
+                  alignSelf: "center",
+                }}
+              >
+                {item.isSold == true ? "낙찰가 : " : "입찰가 : "}
+              </Text>
               <ItemTextInput
-                value={
-                  item.lastPrice
-                    .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
-                }
-                textAlign={"center"}
                 maxLength={10}
+                value={
+                  item.isSold == true
+                    ? item.lastPrice
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
+                    : 0 + " 원"
+                }
                 textInputStyle={styles.textArea}
+                textAlign="center"
               />
             </View>
           </View>
-          <View style={{ flexDirection: "row", marginTop: ScreenWidth / 30 }}>
-            <Text>경매일 : </Text>
-            <ItemTextInput
-              value={
-                item.auctionType == "LIVE"
-                  ? item.startTime.split("T")[0] +
-                    "-" +
-                    item.startTime.split("T")[1]
-                  : item.startTime.split("T")[0] +
-                    "-" +
-                    item.startTime.split("T")[1].slice(0, 5) +
-                    " ~ " +
-                    item.endTime.split("T")[0] +
-                    "-" +
-                    item.endTime.split("T")[1].slice(0, 5)
-              }
-              textAlign={"left"}
-              maxLength={50}
-              textInputStyle={styles.textAreaDate}
-            />
-          </View>
-        </>
-      ) : (
-        <>
-          <View style={{ flexDirection: "row", marginTop: 10 }}>
-            <View style={{ flex: 2 }}>
-              <ItemImage
-                source={{ uri: item.imageUrl }}
-                imageStyle={styles.imageStyle}
-              />
-            </View>
-            <View style={{ flex: 6, justifyContent: "space-between" }}>
-              <ItemTitle
-                titleStyle={styles.titleStyle}
-                numberOfLines={2}
-                value={item.title}
-              />
-              <View style={{ flexDirection: "row" }}>
-                <Text>시초가 : </Text>
-                <ItemTextInput
-                  value={
-                    item.startPrice
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
-                  }
-                  textAlign={"center"}
-                  maxLength={10}
-                  textInputStyle={styles.textArea}
-                />
-              </View>
-            </View>
-          </View>
-          <View style={{ flexDirection: "row", marginTop: ScreenWidth / 30 }}>
-            <Text>경매일 : </Text>
-            <ItemTextInput
-              value={
-                item.auctionType == "LIVE"
-                  ? item.startTime.split("T")[0] +
-                    "-" +
-                    item.startTime.split("T")[1]
-                  : item.startTime.split("T")[0] +
-                    "-" +
-                    item.startTime.split("T")[1].slice(0, 5) +
-                    " ~ " +
-                    item.endTime.split("T")[0] +
-                    "-" +
-                    item.endTime.split("T")[1].slice(0, 5)
-              }
-              textAlign={"left"}
-              maxLength={50}
-              textInputStyle={styles.textAreaDate}
-            />
-          </View>
-        </>
-      )}
+        </View>
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          marginTop: ScreenWidth / 30,
+          alignItems: "center",
+        }}
+      >
+        <Text>경매일 : </Text>
+        <ItemTextInput
+          value={
+            item.auctionType == "LIVE"
+              ? item.startTime.split("T")[0] +
+                "-" +
+                item.startTime.split("T")[1]
+              : item.startTime.split("T")[0] +
+                "-" +
+                item.startTime.split("T")[1].slice(0, 5) +
+                " ~ " +
+                item.endTime.split("T")[0] +
+                "-" +
+                item.endTime.split("T")[1].slice(0, 5)
+          }
+          textAlign={"left"}
+          maxLength={50}
+          textInputStyle={styles.textAreaDate}
+        />
+      </View>
     </View>
   );
 };
@@ -157,8 +142,8 @@ export default ItemInforms;
 
 const styles = StyleSheet.create({
   imageStyle: {
-    width: ScreenHeight / 10,
-    height: ScreenHeight / 10,
+    width: ScreenWidth / 3.2,
+    height: ScreenWidth / 3.2,
     borderColor: "#d7d4d4",
     borderWidth: 1,
   },

@@ -86,15 +86,11 @@ const Purchased = (props: Props) => {
                     }}
                   />
                 </View>
-                <View style={{ flex: 6, justifyContent: "space-between" }}>
-                  <Text style={{ fontSize: 18 }} numberOfLines={2}>
+                <View style={{ justifyContent: "space-between" }}>
+                  <Text style={{ fontSize: 18 }} numberOfLines={1}>
                     {item.title}
                   </Text>
                   <View style={{ flexDirection: "row", marginTop: 20 }}>
-                    {/* <CompletedTag
-                      styles={{ tag: styles.completedTypeTag }}
-                      text={"거래완료"}
-                    /> */}
                     <Text>참여자 : </Text>
                     <TextInput
                       editable={false}

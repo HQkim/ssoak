@@ -137,7 +137,7 @@ const Favorite = (props: Props) => {
                             fontSize: ScreenWidth / 18,
                             marginLeft: ScreenWidth / 20,
                           }}
-                          numberOfLines={2}
+                          numberOfLines={1}
                         >
                           {item.title}
                         </Text>
