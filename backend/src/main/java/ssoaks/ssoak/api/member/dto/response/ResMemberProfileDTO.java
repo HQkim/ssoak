@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,5 +18,6 @@ public class ResMemberProfileDTO {
     private String nickname;
     private String profileImageUrl;
     private Double grade;
+    private List<Long> blackList;
 
 }

@@ -154,7 +154,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
     }
 
     @Override
-    public List<ItemOverviewLikedDto> getLikedItemOverviewsByMember(Long memberSeq) {
+    public List<ItemOverviewLikedDto> getLikedItemOverviewsByMember(Long memberSeq, List<Long> blackList) {
 
         List<ItemOverviewLikedDto> listLiked = queryFactory
                 .select(new QItemOverviewLikedDto(
@@ -169,12 +169,14 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                         item.biddingPrice,
                         image.imageUrl,
                         item.seq.isNotNull()
-
                 ))
                 .from(item)
                 .join(image).on(image.item.eq(item))
                 .join(like).on(like.item.eq(item))
-                .where(like.member.seq.eq(memberSeq))
+                .where(like.member.seq.eq(memberSeq)
+                        .and(item.member.seq.notIn(blackList))
+                        .and(item.member.isBlocked.eq(false))
+                        .and(item.member.isDeleted.eq(false)))
                 .groupBy(item)
                 .fetch();
 

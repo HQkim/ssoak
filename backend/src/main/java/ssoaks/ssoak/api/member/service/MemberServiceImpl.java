@@ -64,8 +64,10 @@ public class MemberServiceImpl implements MemberService{
             throw new NotAuthenticatedMemberException("MemberServiceImpl getMyProfile() 회원 인증 실패");
         }
 
+        List<Long> myBlackList = blockRepository.getMyAndCommonBlackList(memberSeq);
+
         ResMemberProfileDTO memberProfile = new ResMemberProfileDTO(member.getSeq(), member.getEmail(),
-                member.getNickname(), member.getProfileImageUrl(), member.getGrade());
+                member.getNickname(), member.getProfileImageUrl(), member.getGrade(), myBlackList);
 
         return memberProfile;
     }
@@ -251,7 +253,8 @@ public class MemberServiceImpl implements MemberService{
         }
 
         try {
-            likedItems = itemRepository.getLikedItemOverviewsByMember(memberSeq);
+            List<Long> myBlackList = blockRepository.getMyBlackList(memberSeq);
+            likedItems = itemRepository.getLikedItemOverviewsByMember(memberSeq, myBlackList);
         } catch (Exception e) {
             throw new IllegalArgumentException("MemberServiceImpl getMyLikedItems() 찜한 물품 조회 실패");
         }
