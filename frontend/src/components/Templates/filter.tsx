@@ -13,7 +13,8 @@ import OrderBy from "../Organisms/Filter/orderBy";
 import PriceRange from "../Organisms/Filter/priceRange";
 import TimeRange from "../Organisms/Filter/timeRange";
 import Category from "../Organisms/Filter/category";
-import { searchItem } from "../../apis/categoryApi";
+import { searchItem, searchItemWithoutToken } from "../../apis/categoryApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = {
   styles: {
@@ -59,6 +60,7 @@ const Filter = (props: Props) => {
   const [startString, setStartString] = useState("");
   const [endString, setEndString] = useState("");
   const [reset, setReset] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
   // 경매유형, 카테고리 필터 함수
   const onSelect = (info: boolean | string) => {
     if (typeof info === "boolean") {
@@ -174,14 +176,23 @@ const Filter = (props: Props) => {
       const end_tmp = final_end.substring(1, 20);
       props.propForm.form.startTime = start_tmp;
       props.propForm.form.endTime = end_tmp;
-      console.log(props.propForm, "프롭formrrrrrrrrrrrrrrrrrrrrr");
-      const result = await searchItem(props.propForm.form).then((res) => {
-        props.setItems(res);
-        props.navigation.goBack(res);
-        props.propForm.form.page = 2;
-      });
-
-      console.log(result);
+      if (isLogin == true) {
+        console.log(isLogin, "filter 로그인상태");
+        const result = await searchItem(props.propForm.form).then((res) => {
+          props.setItems(res);
+          props.navigation.goBack(res);
+          props.propForm.form.page = 2;
+        });
+      } else {
+        console.log(isLogin, "filter 미로그인상태");
+        const result = await searchItemWithoutToken(props.propForm.form).then(
+          (res) => {
+            props.setItems(res);
+            props.navigation.goBack(res);
+            props.propForm.form.page = 2;
+          }
+        );
+      }
     }
   };
 
@@ -203,6 +214,15 @@ const Filter = (props: Props) => {
     await setReset(false);
   };
 
+  const getAccessToken = async () => {
+    const token = await AsyncStorage.getItem("accessToken");
+    if (typeof token == "string") {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = props.navigation.addListener("focus", () => {
       setForm((prev: any) => ({
@@ -220,7 +240,7 @@ const Filter = (props: Props) => {
       props.propForm.form.auctionType = "LIVE";
       props.propForm.form.sort = "createdDate";
       props.propForm.form.page = 1;
-      console.log(props.propForm, "ㅅㄷㄴㅅ");
+      getAccessToken();
     });
     return unsubscribe;
   }, [props.navigation]);

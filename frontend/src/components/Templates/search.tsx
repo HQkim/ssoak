@@ -15,6 +15,7 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import AuctionTypeTag from "../Atoms/Tags/auctionTypeTag";
 import CompletedTag from "../Atoms/Tags/completedTag";
 import { searchItem } from "../../apis/categoryApi";
+import FilterTag from "../Atoms/Tags/filterTag";
 
 type Props = {
   style: object;
@@ -34,6 +35,9 @@ const { width: ScreenWidth } = Dimensions.get("window");
 
 const Search = (props: Props) => {
   const [data, setData] = useState<items | null | any>([]);
+  const [currentTime, setCurrentTime] = useState<any | undefined | object>(
+    new Date()
+  );
   const saveData = (data) => {
     setData(data);
   };
@@ -78,74 +82,120 @@ const Search = (props: Props) => {
             styles={{ tag: styles.categoryTag }}
             text={item.category}
           ></AuctionTypeTag>
-        </View>
-        <View style={{ flexDirection: "row", marginTop: 10 }}>
-          <View style={{ flex: 2 }}>
-            <Image
-              source={{ uri: item.imageUrl }}
-              style={{
-                width: ScreenHeight / 10,
-                height: ScreenHeight / 10,
-                borderColor: "#d7d4d4",
-                borderWidth: 1,
-              }}
+          {item.isSold == true ? (
+            <CompletedTag
+              styles={{ tag: styles.completedTypeTag }}
+              text={"거래완료"}
             />
-          </View>
-          <View style={{ justifyContent: "space-between" }}>
-            <Text style={{ fontSize: 18 }} numberOfLines={1}>
-              {item.title}
-            </Text>
-            <View>
-              <Text>{item.isCompleted}</Text>
-              <View style={{ flexDirection: "row" }}>
-                <CompletedTag
-                  styles={{ tag: styles.completedTypeTag }}
-                  text={"진행중"}
-                />
-                <Text>참여자 : </Text>
+          ) : (
+            <FilterTag
+              styles={{ tag: styles.completedTypeTag }}
+              startTime={item.startTime}
+              endTime={item.endTime}
+            />
+          )}
+          {/* <CompletedTag
+            styles={{ tag: styles.completedTypeTag }}
+            text={"진행중"}
+          /> */}
+        </View>
+        <View style={{ flexDirection: "row", marginTop: ScreenWidth / 50 }}>
+          <Image
+            source={{ uri: item.imageUrl }}
+            style={{
+              width: ScreenWidth / 3.2,
+              height: ScreenWidth / 3.2,
+              borderColor: "#d7d4d4",
+              borderWidth: 1,
+            }}
+          />
+          <View
+            style={{
+              flexDirection: "row",
+              flex: 3,
+              justifyContent: "space-between",
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "column",
+                justifyContent: "space-around",
+                height: ScreenWidth / 3.2,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: ScreenWidth / 18,
+                  marginLeft: ScreenWidth / 20,
+                }}
+                numberOfLines={1}
+              >
+                {item.title}
+              </Text>
+              <Text
+                style={{
+                  fontSize: ScreenWidth / 24,
+                  marginTop: ScreenWidth / 70,
+                  marginLeft: ScreenWidth / 20,
+                }}
+              >
+                참여자 : {item.biddingCount} 명
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  marginLeft: 19,
+                  marginTop: ScreenWidth / 70,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: ScreenWidth / 24,
+                    alignSelf: "center",
+                  }}
+                >
+                  시초가 :{" "}
+                </Text>
                 <TextInput
                   editable={false}
-                  maxLength={5}
+                  maxLength={7}
                   value={
-                    item.biddingCount
+                    item.startPrice
                       .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 명"
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
+                  }
+                  style={styles.textArea}
+                  textAlign="center"
+                />
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  marginLeft: 19,
+                  marginTop: ScreenWidth / 70,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: ScreenWidth / 24,
+                    alignSelf: "center",
+                  }}
+                >
+                  {item.isSold == true ? "낙찰가 : " : "입찰가 : "}
+                </Text>
+                <TextInput
+                  editable={false}
+                  maxLength={10}
+                  value={
+                    item.biddingPrice
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
                   }
                   style={styles.textArea}
                   textAlign="center"
                 />
               </View>
             </View>
-          </View>
-        </View>
-        <View style={{ flexDirection: "row", marginTop: ScreenWidth / 30 }}>
-          <View style={{ flexDirection: "row", flex: 1 }}>
-            <Text>시초가 : </Text>
-            <TextInput
-              editable={false}
-              maxLength={10}
-              value={
-                item.startPrice
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
-              }
-              style={styles.textArea}
-              textAlign="center"
-            />
-          </View>
-          <View style={{ flexDirection: "row", flex: 1, marginLeft: 19 }}>
-            <Text>입찰가 : </Text>
-            <TextInput
-              editable={false}
-              maxLength={10}
-              value={
-                item.biddingPrice
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
-              }
-              style={styles.textArea}
-              textAlign="center"
-            />
           </View>
         </View>
         <View>
@@ -238,7 +288,7 @@ const styles = StyleSheet.create({
   },
   categoryTag: {
     fontSize: 15,
-    width: ScreenWidth / 4,
+    width: ScreenWidth / 3.5,
     backgroundColor: "#F8A33E",
     borderRadius: ScreenWidth / 12,
     textAlign: "center",
@@ -252,7 +302,7 @@ const styles = StyleSheet.create({
     height: ScreenHeight / 33,
     backgroundColor: "#719DD7",
     borderRadius: 55,
-    marginRight: ScreenWidth / 12,
+    marginLeft: ScreenWidth / 30,
     justifyContent: "center",
     flexDirection: "row",
     alignItems: "center",
