@@ -113,6 +113,7 @@ const index = ({ item, descStyle, titleStyle }) => {
               createdAt: new Date(),
               type: "bid",
               price: text === "immediately" ? bidRightNow : bidAssignValue,
+              system: true,
             },
           ],
         });

@@ -23,6 +23,7 @@
     "@types/react-redux": "^7.1.24",
     "@unimodules/core": "~7.2.0",
     "axios": "^0.27.2",
+    "bad-words": "^3.0.4",
     "expo": "~44.0.0",
     "expo-apple-authentication": "~4.1.0",
     "expo-device": "~4.1.0",
@@ -30,6 +31,7 @@
     "expo-image-picker": "^12.0.2",
     "expo-image-picker-multiple": "^1.4.1",
     "expo-status-bar": "~1.2.0",
+    "firebase": "9.6.11",
     "jwt-decode": "^3.1.2",
     "react": "^17.0.1",
     "react-countdown": "^2.3.2",
@@ -63,8 +65,8 @@
     "sockjs": "^0.3.24",
     "sockjs-client": "^1.6.0",
     "text-encoding": "^0.7.0",
-    "unimodules-permissions-interface": "^6.1.0",
-    "firebase": "9.6.11"
+    "toggle-switch-react-native": "^3.3.0",
+    "unimodules-permissions-interface": "^6.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

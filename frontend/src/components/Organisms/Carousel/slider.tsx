@@ -14,6 +14,7 @@ type Props = {};
 const Slider: any = ({ data, handleClickItem }) => {
   const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
   const { item } = data;
+  // console.log(item);
 
   return (
     <>
@@ -156,7 +157,6 @@ const Slider: any = ({ data, handleClickItem }) => {
                 <View
                   style={{
                     flexDirection: "row",
-                    marginTop: 5,
                     flex: 1,
                     marginLeft: 5,
                     justifyContent: "space-between",
@@ -165,8 +165,8 @@ const Slider: any = ({ data, handleClickItem }) => {
                 >
                   <Text>
                     현재 입찰가 :{" "}
-                    {item.bidding
-                      ? item.bidding.biddingPrice
+                    {item.biddingPrice
+                      ? item.biddingPrice
                           .toString()
                           .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                       : item.startPrice
@@ -176,48 +176,64 @@ const Slider: any = ({ data, handleClickItem }) => {
                   </Text>
                 </View>
               </View>
-            </View>
-
-            <View style={{}} />
-
-            <View
-              style={{
-                justifyContent: "flex-end",
-                alignItems: "flex-end",
-                marginRight: 10,
-              }}
-            >
-              <Text>
-                최소 입찰호가 :{" "}
-                {item.bidding
-                  ? Number(item.bidding.biddingPrice * 0.03)
-                      .toFixed()
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                  : Number(item.startPrice * 0.03)
-                      .toFixed()
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                원
-              </Text>
-              <Text>
-                {/* <Countdown
-                  date={item.endTime}
-                  intervalDelay={0}
-                  precision={0}
-                  // daysInHours={true}
-                  renderer={({ days, hours, minutes, seconds }) => (
-                    <Text
-                      style={{
-                        flex: 1,
-                      }}
-                    >
-                      {Number(zeroPad(hours)) + Number(zeroPad(days)) * 24}시간{" "}
-                      {zeroPad(minutes)}분 {zeroPad(seconds)}초
+              <View
+                style={{
+                  flexDirection: "row",
+                  // justifyContent: "space-around",
+                  // alignItems: "center",
+                  marginRight: 10,
+                  flex: 1,
+                }}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: "row",
+                  }}
+                >
+                  <View style={{ flex: 1 }} />
+                  <View
+                    style={{
+                      flex: 5,
+                      backgroundColor: "#0176b7",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: 9999,
+                    }}
+                  >
+                    <Text style={{ color: "white" }}>
+                      {new Date() > new Date(item.endTime)
+                        ? "경매종료"
+                        : new Date() < new Date(item.startDate)
+                        ? "경매예정"
+                        : "경매중"}
                     </Text>
-                  )}
-                /> */}
-              </Text>
+                  </View>
+                  <View style={{ flex: 1 }} />
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                    // flexDirection: "row",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text style={{}}>
+                    최소 입찰호가 :{" "}
+                    {item.biddingPrice
+                      ? Number(item.biddingPrice * 0.03)
+                          .toFixed()
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      : Number(item.startPrice * 0.03)
+                          .toFixed()
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                    원
+                  </Text>
+                </View>
+              </View>
             </View>
           </View>
         </TouchableOpacity>

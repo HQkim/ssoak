@@ -5,8 +5,9 @@ import {
   Dimensions,
   useWindowDimensions,
   FlatList,
+  Switch,
 } from "react-native";
-
+import ToggleSwitch from "toggle-switch-react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { useSelector, useDispatch } from "react-redux";
@@ -28,8 +29,8 @@ const Main = (props: Props) => {
   const data = useSelector((state: RootState) => state.mainLoader.data);
   const [liveItems, setLiveItems] = useState<any>([]);
   const [normalItems, setNormalItems] = useState<any>([]);
+  const [isEnabled, setIsEnabled] = useState(false);
   const navigation: any = useNavigation();
-
   const handleClickItem = (item: any) => {
     if (item.auctionType === "NORMAL") {
       navigation.navigate("auctionDetail", {
@@ -46,6 +47,25 @@ const Main = (props: Props) => {
     navigation.navigate("searchNavigator");
   };
 
+  useEffect(() => {
+    if (isEnabled) {
+      setNormalItems(
+        normalItems.filter((item) => new Date(item.endTime) > new Date())
+      );
+      setLiveItems(
+        liveItems.filter((item) => new Date(item.endTime) > new Date())
+      );
+    } else {
+      const liveItems = data
+        .filter((item) => item.auctionType === "LIVE")
+        .sort((first, second) => (first.itemSeq > second.itemSeq ? -1 : 1));
+      const normalItems = data
+        .filter((item) => item.auctionType === "NORMAL")
+        .sort((first, second) => (first.itemSeq > second.itemSeq ? -1 : 1));
+      setLiveItems(liveItems);
+      setNormalItems(normalItems);
+    }
+  }, [isEnabled]);
   const normalRoute = useCallback(
     () =>
       isLoading ? (
@@ -72,19 +92,21 @@ const Main = (props: Props) => {
       isLoading ? (
         <SliderSkeleton />
       ) : (
-        <FlatList
-          data={liveItems}
-          style={{ flex: 1 }}
-          refreshing={false}
-          onRefresh={props.onRefresh}
-          onEndReached={props.onScrollLive}
-          onEndReachedThreshold={0.8}
-          scrollEnabled={true}
-          keyExtractor={(data, index) => String(index)}
-          renderItem={(data) => {
-            return <Slider data={data} handleClickItem={handleClickItem} />;
-          }}
-        />
+        <>
+          <FlatList
+            data={liveItems}
+            style={{ flex: 1 }}
+            refreshing={false}
+            onRefresh={props.onRefresh}
+            onEndReached={props.onScrollLive}
+            onEndReachedThreshold={0.8}
+            scrollEnabled={true}
+            keyExtractor={(data, index) => String(index)}
+            renderItem={(data) => {
+              return <Slider data={data} handleClickItem={handleClickItem} />;
+            }}
+          />
+        </>
       ),
     [liveItems]
   );
@@ -110,20 +132,47 @@ const Main = (props: Props) => {
   }, []);
 
   useEffect(() => {
-    const liveItems = data
-      .filter((item) => item.auctionType === "LIVE")
-      .sort((first, second) => (first.itemSeq > second.itemSeq ? -1 : 1));
-    const normalItems = data
-      .filter((item) => item.auctionType === "NORMAL")
-      .sort((first, second) => (first.itemSeq > second.itemSeq ? -1 : 1));
-    setLiveItems(liveItems);
-    setNormalItems(normalItems);
+    if (isEnabled) {
+      setNormalItems(
+        normalItems.filter((item) => new Date(item.endTime) > new Date())
+      );
+      setLiveItems(
+        liveItems.filter((item) => new Date(item.endTime) > new Date())
+      );
+    } else {
+      const liveItems = data
+        .filter((item) => item.auctionType === "LIVE")
+        .sort((first, second) => (first.itemSeq > second.itemSeq ? -1 : 1));
+      const normalItems = data
+        .filter((item) => item.auctionType === "NORMAL")
+        .sort((first, second) => (first.itemSeq > second.itemSeq ? -1 : 1));
+      setLiveItems(liveItems);
+      setNormalItems(normalItems);
+    }
   }, [data]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <MainHeader styles={styles} handleSearchClick={handleSearchClick} />
       <View style={styles.scrollView}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            marginRight: 10,
+          }}
+        >
+          <ToggleSwitch
+            isOn={isEnabled}
+            onColor="#719dd7"
+            offColor="#f8a33e"
+            label="종료 물품 제거"
+            labelStyle={{ color: "#444" }}
+            size="medium"
+            onToggle={() => setIsEnabled((prev) => !prev)}
+          />
+        </View>
         <TabView
           renderTabBar={(props) => <CustomTabBar props={props} />}
           navigationState={{ index, routes }}
@@ -155,10 +204,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   main: {
-    fontSize: Dimensions.get("window").width / 15,
+    fontSize: 40,
     fontWeight: "bold",
+    fontFamily: "DoHyeonRegular",
   },
   scrollView: {
-    flex: 5,
+    flex: 6,
   },
 });
