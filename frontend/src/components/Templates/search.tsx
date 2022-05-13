@@ -92,8 +92,8 @@ const Search = (props: Props) => {
               }}
             />
           </View>
-          <View style={{ flex: 6, justifyContent: "space-between" }}>
-            <Text style={{ fontSize: 18 }} numberOfLines={2}>
+          <View style={{ justifyContent: "space-between" }}>
+            <Text style={{ fontSize: 18 }} numberOfLines={1}>
               {item.title}
             </Text>
             <View>
@@ -154,6 +154,7 @@ const Search = (props: Props) => {
             style={{
               flexDirection: "row",
               marginTop: ScreenWidth / 30,
+              alignItems: "center",
             }}
           >
             <Text>경매일 : </Text>

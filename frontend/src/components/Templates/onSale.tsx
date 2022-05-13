@@ -173,7 +173,11 @@ const onSale = (props: Props) => {
               </View>
               <View>
                 <View
-                  style={{ flexDirection: "row", marginTop: ScreenWidth / 20 }}
+                  style={{
+                    flexDirection: "row",
+                    marginTop: ScreenWidth / 30,
+                    alignItems: "center",
+                  }}
                 >
                   <Text
                     style={{
