@@ -25,7 +25,6 @@ const InformRegulation = (props: Props) => {
       </Text>
       <Text
         style={{
-          flexShrink: 1,
           color: "black",
           marginTop: ScreenWidth / 50,
           fontSize: ScreenWidth / 24,
@@ -54,7 +53,6 @@ const InformRegulation = (props: Props) => {
       </Text>
       <Text
         style={{
-          flexShrink: 1,
           color: "black",
           marginTop: ScreenWidth / 50,
           fontSize: ScreenWidth / 24,
@@ -450,7 +448,6 @@ const InformRegulation = (props: Props) => {
       </Text>
       <Text
         style={{
-          flexShrink: 1,
           color: "black",
           marginTop: ScreenWidth / 50,
           fontSize: ScreenWidth / 24,
