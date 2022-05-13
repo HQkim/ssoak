@@ -94,8 +94,7 @@ const PrivacyPolicy = (props: Props) => {
           "보유근거 : 회원 및 게시물 관리" +
           "\n" +
           "관련법령 : 소비자의 불만 또는 분쟁처리에 관한 기록 : 3년" +
-          "\n" +
-          "예외사유 : "}
+          "\n"}
       </Text>
       <Text
         style={{
@@ -118,8 +117,7 @@ const PrivacyPolicy = (props: Props) => {
           "1< 홈페이지 회원가입 및 관리 >" +
           "\n" +
           "필수항목 : 이메일, 로그인ID" +
-          "\n" +
-          "선택항목 : "}
+          "\n"}
       </Text>
       <Text
         style={{

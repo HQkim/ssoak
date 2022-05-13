@@ -38,14 +38,6 @@ const MainHeader = ({ styles, handleSearchClick }) => {
             style={{ marginRight: 20 }}
           />
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Fontisto
-            name="bell"
-            size={20}
-            color="black"
-            style={{ marginRight: 30 }}
-          />
-        </TouchableOpacity>
       </View>
     </View>
   );
