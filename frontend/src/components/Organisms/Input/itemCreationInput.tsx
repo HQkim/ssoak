@@ -216,7 +216,7 @@ const ItemCreationInput = (props: Props) => {
         placeholderTextColor="#C5C8CE"
         value={title}
         style={styles.textContainer}
-        maxLength={20}
+        maxLength={15}
         keyboardType="default"
         multiline={false}
         onChangeText={(text) => onChangeInput("title", text)}

@@ -4,7 +4,11 @@ import Filter from "../Templates/filter";
 
 type Props = {
   navigation: any;
+  text: string;
+  setItems: Function;
   route: object;
+  form: any;
+  setForm: Function;
 };
 
 const { height: ScreenHeight } = Dimensions.get("window");
@@ -22,7 +26,11 @@ const FilterContainer = (props: Props) => {
           applyText: styles.applyText,
         }}
         navigation={props.navigation}
+        text={props.text}
+        setItems={props.setItems}
         route={props.route}
+        propForm={props.form}
+        propSetForm={props.setForm}
       />
     </ScrollView>
   );
@@ -44,7 +52,7 @@ const styles = StyleSheet.create({
     width: ScreenWidth * 0.4,
     borderRadius: ScreenWidth * 0.8,
     backgroundColor: "#A1A5AC",
-    height: ScreenWidth * 0.15,
+    height: ScreenWidth * 0.1,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -52,7 +60,7 @@ const styles = StyleSheet.create({
     width: ScreenWidth * 0.4,
     borderRadius: ScreenWidth * 0.8,
     backgroundColor: "#0176B7",
-    height: ScreenWidth * 0.15,
+    height: ScreenWidth * 0.1,
     justifyContent: "center",
     alignItems: "center",
   },

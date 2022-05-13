@@ -13,6 +13,7 @@ import Border from "../../Atoms/Borders/border";
 import MoreButton from "../../Atoms/Buttons/moreButton";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import UpdateButton from "./updateButton";
 
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
@@ -22,6 +23,7 @@ const AuctionDescription = ({ item, reqItem }) => {
   const [showDivider, setShowDivier] = useState<boolean>(true);
   const [biddingPrice, setBiddingPrice] = useState(0);
   const navigation = useNavigation();
+  const endTime = item.endTime.replace("T", " ");
 
   const onTextLayout = useCallback((e) => {
     setShowDivier(e.nativeEvent.lines.length < 2);
@@ -116,6 +118,23 @@ const AuctionDescription = ({ item, reqItem }) => {
         <Text style={styles.title}>
           {biddingPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
         </Text>
+      </View>
+      <View style={styles.box}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Ionicons
+            name="ios-time-outline"
+            color="black"
+            size={ScreenWidth / 18}
+            style={{ marginRight: 5 }}
+          />
+          <Text style={styles.title}>경매 종료 시간</Text>
+        </View>
+        <Text style={styles.title}>{endTime}</Text>
       </View>
       <Text
         style={styles.description}

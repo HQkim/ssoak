@@ -60,70 +60,108 @@ const Purchased = (props: Props) => {
         items.map((item, index) => (
           <View key={index} style={styles.purchasedContainer}>
             <TouchableOpacity onPress={() => goDetail(item)}>
-              <AuctionTypeTag
-                styles={{ tag: styles.auctionTypeTag }}
-                text={item.auctionType == "LIVE" ? "실시간" : "일반"}
-              ></AuctionTypeTag>
-              <View style={{ flexDirection: "row", marginTop: 10 }}>
-                <View style={{ flex: 2 }}>
-                  <Image
-                    source={{ uri: item.imageUrl }}
+              <View style={{ flexDirection: "row" }}>
+                <AuctionTypeTag
+                  styles={{ tag: styles.auctionTypeTag }}
+                  text={item.auctionType == "LIVE" ? "실시간" : "일반"}
+                ></AuctionTypeTag>
+                <CompletedTag
+                  styles={{ tag: styles.completedTypeTag }}
+                  text={"거래완료"}
+                />
+              </View>
+              <View
+                style={{ flexDirection: "row", marginTop: ScreenWidth / 50 }}
+              >
+                <Image
+                  source={{ uri: item.imageUrl }}
+                  style={{
+                    width: ScreenWidth / 3.2,
+                    height: ScreenWidth / 3.2,
+                    borderColor: "#d7d4d4",
+                    borderWidth: 1,
+                  }}
+                />
+
+                <View
+                  style={{
+                    flexDirection: "column",
+                    justifyContent: "space-around",
+                    height: ScreenWidth / 3.2,
+                  }}
+                >
+                  <Text
                     style={{
-                      width: ScreenHeight / 10,
-                      height: ScreenHeight / 10,
-                      borderColor: "#d7d4d4",
-                      borderWidth: 1,
+                      fontSize: ScreenWidth / 18,
+                      marginLeft: ScreenWidth / 20,
                     }}
-                  />
-                </View>
-                <View style={{ flex: 6, justifyContent: "space-between" }}>
-                  <Text style={{ fontSize: 18 }} numberOfLines={2}>
+                    numberOfLines={1}
+                  >
                     {item.title}
                   </Text>
-                  <View style={{ flexDirection: "row", marginTop: 20 }}>
-                    <CompletedTag
-                      styles={{ tag: styles.completedTypeTag }}
-                      text={"거래완료"}
-                    />
-                    <Text>참여자 : </Text>
+                  <Text
+                    style={{
+                      fontSize: ScreenWidth / 24,
+                      marginTop: ScreenWidth / 70,
+                      marginLeft: ScreenWidth / 20,
+                    }}
+                  >
+                    참여자 : {item.biddingCount} 명
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      marginLeft: 19,
+                      marginTop: ScreenWidth / 70,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: ScreenWidth / 24,
+                        alignSelf: "center",
+                      }}
+                    >
+                      시초가 :{" "}
+                    </Text>
                     <TextInput
                       editable={false}
-                      maxLength={3}
-                      value={item.biddingCount
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      maxLength={20}
+                      value={
+                        item.startPrice
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
+                      }
                       style={styles.textArea}
                       textAlign="center"
                     />
                   </View>
-                </View>
-              </View>
-              <View
-                style={{ flexDirection: "row", marginTop: ScreenWidth / 30 }}
-              >
-                <View style={{ flexDirection: "row", flex: 1 }}>
-                  <Text>시초가 : </Text>
-                  <TextInput
-                    editable={false}
-                    maxLength={20}
-                    value={item.startPrice
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                    style={styles.textArea}
-                    textAlign="center"
-                  />
-                </View>
-                <View style={{ flexDirection: "row", flex: 1, marginLeft: 19 }}>
-                  <Text>낙찰가 : </Text>
-                  <TextInput
-                    editable={false}
-                    maxLength={20}
-                    value={item.lastPrice
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                    style={styles.textArea}
-                    textAlign="center"
-                  />
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      marginLeft: 19,
+                      marginTop: ScreenWidth / 70,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: ScreenWidth / 24,
+                        alignSelf: "center",
+                      }}
+                    >
+                      낙찰가 :{" "}
+                    </Text>
+                    <TextInput
+                      editable={false}
+                      maxLength={20}
+                      value={
+                        item.lastPrice
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
+                      }
+                      style={styles.textArea}
+                      textAlign="center"
+                    />
+                  </View>
                 </View>
               </View>
               <View
@@ -132,7 +170,7 @@ const Purchased = (props: Props) => {
                   borderBottomWidth: 1,
                   marginTop: 15,
                 }}
-              ></View>
+              />
             </TouchableOpacity>
           </View>
         ))}
@@ -152,16 +190,17 @@ const styles = StyleSheet.create({
     width: ScreenWidth / 6,
     height: ScreenHeight / 33,
     backgroundColor: "#F8A33E",
-    borderRadius: ScreenWidth / 12,
+    borderRadius: 55,
     justifyContent: "center",
     flexDirection: "row",
     alignItems: "center",
+    marginRight: 5,
   },
   completedTypeTag: {
     width: ScreenWidth / 6,
     height: ScreenHeight / 33,
-    backgroundColor: "#C4C4C4",
-    borderRadius: ScreenWidth / 12,
+    backgroundColor: "#719DD7",
+    borderRadius: 55,
     marginRight: ScreenWidth / 12,
     justifyContent: "center",
     flexDirection: "row",
@@ -171,6 +210,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 0.5,
     height: 24,
-    width: ScreenWidth / 4,
+    width: ScreenWidth / 3,
+    fontWeight: "300",
   },
 });

@@ -70,139 +70,155 @@ const Favorite = (props: Props) => {
 
   return (
     <ScrollView>
-      {items &&
-        items.map((item, index) => (
-          <View key={index} style={styles.favListContainer}>
-            <TouchableOpacity onPress={() => goDetail(item)}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <View style={{ flexDirection: "row" }}>
-                  <AuctionTypeTag
-                    styles={{ tag: styles.auctionTypeTag }}
-                    text={item.auctionType == "LIVE" ? "실시간" : "일반"}
-                  ></AuctionTypeTag>
-                  <CompletedTag
-                    styles={{ tag: styles.completedTypeTag }}
-                    text={item.isSold == true ? "거래완료" : "진행중"}
-                  />
-                </View>
-                <Likes item={item} />
-              </View>
-              <View
-                style={{ flexDirection: "row", marginTop: ScreenWidth / 50 }}
-              >
-                <Image
-                  source={{ uri: item.imageUrl }}
-                  style={{
-                    width: ScreenWidth / 3.2,
-                    height: ScreenWidth / 3.2,
-                    borderColor: "#d7d4d4",
-                    borderWidth: 1,
-                  }}
-                />
-                <View
-                  style={{
-                    flexDirection: "row",
-                    flex: 3,
-                    justifyContent: "space-between",
-                  }}
-                >
+      {items.length < 1 ? (
+        <View
+          style={{
+            marginTop: ScreenHeight * 0.4,
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ fontSize: 20 }}>찜한 물품이 없습니다.</Text>
+        </View>
+      ) : (
+        <>
+          {items &&
+            items.map((item, index) => (
+              <View key={index} style={styles.favListContainer}>
+                <TouchableOpacity onPress={() => goDetail(item)}>
                   <View
                     style={{
-                      flexDirection: "column",
-                      justifyContent: "space-around",
-                      height: ScreenWidth / 3.2,
+                      flexDirection: "row",
+                      justifyContent: "space-between",
                     }}
                   >
-                    <Text
-                      style={{
-                        fontSize: ScreenWidth / 18,
-                        marginLeft: ScreenWidth / 20,
-                      }}
-                      numberOfLines={2}
-                    >
-                      {item.title}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: ScreenWidth / 24,
-                        marginTop: ScreenWidth / 70,
-                        marginLeft: ScreenWidth / 20,
-                      }}
-                    >
-                      참여자 : {item.biddingCount} 명
-                    </Text>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        marginLeft: 19,
-                        marginTop: ScreenWidth / 70,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: ScreenWidth / 24,
-                          alignSelf: "center",
-                        }}
-                      >
-                        시초가 :{" "}
-                      </Text>
-                      <TextInput
-                        editable={false}
-                        maxLength={7}
-                        value={
-                          item.startPrice
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
-                        }
-                        style={styles.textArea}
-                        textAlign="center"
+                    <View style={{ flexDirection: "row" }}>
+                      <AuctionTypeTag
+                        styles={{ tag: styles.auctionTypeTag }}
+                        text={item.auctionType == "LIVE" ? "실시간" : "일반"}
+                      ></AuctionTypeTag>
+                      <CompletedTag
+                        styles={{ tag: styles.completedTypeTag }}
+                        text={item.isSold == true ? "거래완료" : "진행중"}
                       />
                     </View>
+                    <Likes item={item} />
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      marginTop: ScreenWidth / 50,
+                    }}
+                  >
+                    <Image
+                      source={{ uri: item.imageUrl }}
+                      style={{
+                        width: ScreenWidth / 3.2,
+                        height: ScreenWidth / 3.2,
+                        borderColor: "#d7d4d4",
+                        borderWidth: 1,
+                      }}
+                    />
                     <View
                       style={{
                         flexDirection: "row",
-                        marginLeft: 19,
-                        marginTop: ScreenWidth / 70,
+                        flex: 3,
+                        justifyContent: "space-between",
                       }}
                     >
-                      <Text
+                      <View
                         style={{
-                          fontSize: ScreenWidth / 24,
-                          alignSelf: "center",
+                          flexDirection: "column",
+                          justifyContent: "space-around",
+                          height: ScreenWidth / 3.2,
                         }}
                       >
-                        {item.isSold == true ? "낙찰가 : " : "입찰가 : "}
-                      </Text>
-                      <TextInput
-                        editable={false}
-                        maxLength={7}
-                        value={
-                          item.lastPrice
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
-                        }
-                        style={styles.textArea}
-                        textAlign="center"
-                      />
+                        <Text
+                          style={{
+                            fontSize: ScreenWidth / 18,
+                            marginLeft: ScreenWidth / 20,
+                          }}
+                          numberOfLines={1}
+                        >
+                          {item.title}
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: ScreenWidth / 24,
+                            marginTop: ScreenWidth / 70,
+                            marginLeft: ScreenWidth / 20,
+                          }}
+                        >
+                          참여자 : {item.biddingCount} 명
+                        </Text>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            marginLeft: 19,
+                            marginTop: ScreenWidth / 70,
+                          }}
+                        >
+                          <Text
+                            style={{
+                              fontSize: ScreenWidth / 24,
+                              alignSelf: "center",
+                            }}
+                          >
+                            시초가 :{" "}
+                          </Text>
+                          <TextInput
+                            editable={false}
+                            maxLength={7}
+                            value={
+                              item.startPrice
+                                .toString()
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
+                            }
+                            style={styles.textArea}
+                            textAlign="center"
+                          />
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            marginLeft: 19,
+                            marginTop: ScreenWidth / 70,
+                          }}
+                        >
+                          <Text
+                            style={{
+                              fontSize: ScreenWidth / 24,
+                              alignSelf: "center",
+                            }}
+                          >
+                            {item.isSold == true ? "낙찰가 : " : "입찰가 : "}
+                          </Text>
+                          <TextInput
+                            editable={false}
+                            maxLength={7}
+                            value={
+                              item.lastPrice
+                                .toString()
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
+                            }
+                            style={styles.textArea}
+                            textAlign="center"
+                          />
+                        </View>
+                      </View>
                     </View>
                   </View>
-                </View>
+                  <View
+                    style={{
+                      borderBottomColor: "#d7d4d4",
+                      borderBottomWidth: 1,
+                      marginTop: 15,
+                    }}
+                  />
+                </TouchableOpacity>
               </View>
-              <View
-                style={{
-                  borderBottomColor: "#d7d4d4",
-                  borderBottomWidth: 1,
-                  marginTop: 15,
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-        ))}
+            ))}
+        </>
+      )}
     </ScrollView>
   );
 };
