@@ -31,4 +31,5 @@ public interface MemberService {
 
     Integer changeMember(ReqMemberProfileChangeDto reqMemberProfileChangeDto) throws Exception;
 
+    Integer reportMember(Long memberSeq);
 }

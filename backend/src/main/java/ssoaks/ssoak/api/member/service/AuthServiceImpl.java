@@ -79,6 +79,7 @@ public class AuthServiceImpl implements AuthService {
                     .loginTime(LocalDateTime.now())
                     .isDeleted(false)
                     .password(passwordEncoder.encode(kakaoUser.getKakaoId()))
+                    .isBlocked(false)
                     .build();
 
             memberRepository.save(member);
@@ -110,6 +111,7 @@ public class AuthServiceImpl implements AuthService {
                         .loginTime(LocalDateTime.now())
                         .isDeleted(false)
                         .password(passwordEncoder.encode(appleMember.getAppleId()))
+                        .isBlocked(false)
                         .build();
 
                 memberRepository.save(member);
@@ -212,6 +214,7 @@ public class AuthServiceImpl implements AuthService {
                 .loginTime(LocalDateTime.now())
                 .isDeleted(false)
                 .password(null)
+                .isBlocked(false)
                 .build();
 
     }
@@ -338,6 +341,7 @@ public class AuthServiceImpl implements AuthService {
                 .loginTime(LocalDateTime.now())
                 .isDeleted(false)
                 .password(null)
+                .isBlocked(false)
                 .build();
         return appleMember;
     }
