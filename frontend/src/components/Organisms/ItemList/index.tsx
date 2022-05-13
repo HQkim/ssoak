@@ -3,6 +3,7 @@ import React from "react";
 import AuctionTypeTag from "../../Atoms/Tags/auctionTypeTag";
 import ItemInforms from "../../Molecules/ItemInfo/itemInforms";
 import { useNavigation } from "@react-navigation/native";
+import CompletedTag from "../../Atoms/Tags/completedTag";
 
 type Props = {
   items: Array<object>;
@@ -32,10 +33,16 @@ const Index = ({ items, containerStyle }) => {
         items.map((item, index) => (
           <View key={index} style={{ marginTop: 20 }}>
             <TouchableOpacity onPress={() => goDetail(item)}>
-              <AuctionTypeTag
-                styles={{ tag: styles.auctionTypeTag }}
-                text={item.auctionType == "LIVE" ? "실시간" : "일반"}
-              ></AuctionTypeTag>
+              <View style={{ flexDirection: "row" }}>
+                <AuctionTypeTag
+                  styles={{ tag: styles.auctionTypeTag }}
+                  text={item.auctionType == "LIVE" ? "실시간" : "일반"}
+                ></AuctionTypeTag>
+                <CompletedTag
+                  styles={{ tag: styles.completedTypeTag }}
+                  text={item.isSold == true ? "거래완료" : "기간초과"}
+                />
+              </View>
               <ItemInforms item={item} />
               <View
                 style={{
@@ -58,10 +65,11 @@ const styles = StyleSheet.create({
     width: ScreenWidth / 6,
     height: ScreenHeight / 33,
     backgroundColor: "#F8A33E",
-    borderRadius: ScreenWidth / 12,
+    borderRadius: 55,
     justifyContent: "center",
     flexDirection: "row",
     alignItems: "center",
+    marginRight: 5,
   },
   textAreaDate: {
     borderRadius: 20,
@@ -69,5 +77,15 @@ const styles = StyleSheet.create({
     height: 24,
     width: ScreenWidth * 0.73,
     paddingLeft: 8,
+  },
+  completedTypeTag: {
+    width: ScreenWidth / 6,
+    height: ScreenHeight / 33,
+    backgroundColor: "#719DD7",
+    borderRadius: 55,
+    marginRight: ScreenWidth / 12,
+    justifyContent: "center",
+    flexDirection: "row",
+    alignItems: "center",
   },
 });

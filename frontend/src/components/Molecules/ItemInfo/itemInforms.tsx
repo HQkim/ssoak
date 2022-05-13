@@ -28,17 +28,19 @@ const ItemInforms = ({ item }) => {
                 value={item.title}
               />
               <View style={{ flexDirection: "row" }}>
-                <CompletedTag
+                {/* <CompletedTag
                   styles={{ tag: styles.completedTypeTag }}
                   text={"거래완료"}
-                />
+                /> */}
                 <Text>참여자 : </Text>
                 <ItemTextInput
-                  value={item.biddingCount
-                    .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  value={
+                    item.biddingCount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 명"
+                  }
                   textAlign={"center"}
-                  maxLength={3}
+                  maxLength={5}
                   textInputStyle={styles.textArea}
                 />
               </View>
@@ -48,22 +50,26 @@ const ItemInforms = ({ item }) => {
             <View style={{ flexDirection: "row", flex: 1 }}>
               <Text>시초가 : </Text>
               <ItemTextInput
-                value={item.startPrice
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                value={
+                  item.startPrice
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
+                }
                 textAlign={"center"}
-                maxLength={7}
+                maxLength={10}
                 textInputStyle={styles.textArea}
               />
             </View>
             <View style={{ flexDirection: "row", flex: 1, marginLeft: 19 }}>
               <Text>입찰가 : </Text>
               <ItemTextInput
-                value={item.lastPrice
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                value={
+                  item.lastPrice
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
+                }
                 textAlign={"center"}
-                maxLength={7}
+                maxLength={10}
                 textInputStyle={styles.textArea}
               />
             </View>
@@ -106,17 +112,15 @@ const ItemInforms = ({ item }) => {
                 value={item.title}
               />
               <View style={{ flexDirection: "row" }}>
-                <CompletedTag
-                  styles={{ tag: styles.completedTypeTag }}
-                  text={"기간초과"}
-                />
                 <Text>시초가 : </Text>
                 <ItemTextInput
-                  value={item.startPrice
-                    .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  value={
+                    item.startPrice
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
+                  }
                   textAlign={"center"}
-                  maxLength={15}
+                  maxLength={10}
                   textInputStyle={styles.textArea}
                 />
               </View>
