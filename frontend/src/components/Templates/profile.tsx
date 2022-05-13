@@ -75,7 +75,7 @@ const Profile = (props: Props) => {
     props.navigation.navigate("main");
   };
   const [image, setImage] = useState<Item | null | any>(
-    props.profile.profileImageUrl
+    props.profile.profileImageUrl,
   );
   const [file, setFile] = useState<File | null | any>([]);
   const [name, setName] = useState("");
@@ -103,7 +103,7 @@ const Profile = (props: Props) => {
       };
       formData.append("profileImage", item);
       await editKakaoProfile(formData).then(() =>
-        props.setProfile({ ...props.profile, profileImageUrl: uri })
+        props.setProfile({ ...props.profile, profileImageUrl: uri }),
       );
     }
   };
@@ -150,22 +150,21 @@ const Profile = (props: Props) => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
-        <View
-          style={{
-            backgroundColor: "#ffff",
-            alignItems: "center",
-            // zIndex: 1,
-          }}
-        >
-          <TouchableOpacity onPress={pickImage}>
+          <View style={{ height: ScreenHeight / 12 }} />
+          <TouchableOpacity
+            onPress={pickImage}
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <Image
               style={{
                 width: ScreenHeight / 6,
                 height: ScreenHeight / 6,
                 borderRadius: ScreenHeight / 12,
                 position: "relative",
-                marginTop: -ScreenHeight / 5,
+
                 borderColor: "#d7d4d4",
                 borderWidth: 1,
               }}
@@ -176,12 +175,20 @@ const Profile = (props: Props) => {
               size={28}
               color="#0000009c"
               style={{
-                position: "absolute",
-                right: ScreenWidth / 60,
-                marginTop: -ScreenHeight / 12,
+                position: "relative",
+                left: ScreenHeight / 12,
+                bottom: ScreenHeight / 6,
               }}
             />
           </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            backgroundColor: "#ffff",
+            alignItems: "center",
+            // zIndex: 1,
+          }}
+        >
           <View
             style={{
               alignItems: "center",
