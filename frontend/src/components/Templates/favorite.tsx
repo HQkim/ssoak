@@ -123,7 +123,7 @@ const Favorite = (props: Props) => {
                         fontSize: ScreenWidth / 18,
                         marginLeft: ScreenWidth / 20,
                       }}
-                      numberOfLines={2}
+                      numberOfLines={1}
                     >
                       {item.title}
                     </Text>
@@ -220,6 +220,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     height: 24,
     width: ScreenWidth / 3,
+    fontWeight: "300",
   },
   auctionTypeTag: {
     width: ScreenWidth / 6,
