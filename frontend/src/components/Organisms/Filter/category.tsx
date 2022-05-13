@@ -8,11 +8,13 @@ import {
 import React, { useState } from "react";
 import RadioButton from "../../Atoms/Buttons/radioButton";
 import Typography from "../../Atoms/Typographies/typography";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 type Props = {
   getSelectInformation: Function;
   navigation: any;
   route: object;
+  reset: Boolean;
 };
 const { height: ScreenHeight } = Dimensions.get("window");
 const { width: ScreenWidth } = Dimensions.get("window");
@@ -654,6 +656,27 @@ const Category = (props: Props) => {
       await props.getSelectInformation("");
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setSelect1(false);
+      setSelect2(false);
+      setSelect3(false);
+      setSelect4(false);
+      setSelect5(false);
+      setSelect6(false);
+      setSelect7(false);
+      setSelect8(false);
+      setSelect9(false);
+      setSelect10(false);
+      setSelect11(false);
+      setSelect12(false);
+      setSelect13(false);
+      setSelect14(false);
+      setSelect15(false);
+      setSelect16(false);
+    }, [props.reset])
+  );
 
   return (
     <View>

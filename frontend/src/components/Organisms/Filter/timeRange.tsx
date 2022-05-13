@@ -13,6 +13,7 @@ import FilterStartDateTimeAndroid from "../../Molecules/Times/filterStartDateTim
 import FilterEndDateTimeAndroid from "../../Molecules/Times/filterEndDateTimeAndroid";
 import RadioButton from "../../Atoms/Buttons/radioButton";
 import Typography from "../../Atoms/Typographies/typography";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 type Props = {
   getSelectstInformation: Function;
@@ -21,6 +22,7 @@ type Props = {
   route: object;
   setStartString: Function;
   setEndString: Function;
+  reset: Boolean;
 };
 
 type timeType = {
@@ -33,7 +35,6 @@ const { width: ScreenWidth } = Dimensions.get("window");
 
 const TimeRange = (props: Props) => {
   const test = new Date();
-  // console.log(test.slice(0, 20));
   const [startDateOpen, setStartDateOpen] = useState(false);
   const [endDateOpen, setEndDateOpen] = useState(false);
   const [startMinuteOpen, setStartMinuteOpen] = useState(false);
@@ -89,6 +90,12 @@ const TimeRange = (props: Props) => {
       await props.getSelectetInformation("");
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setSelectTime(false);
+    }, [props.reset])
+  );
 
   return (
     <View>

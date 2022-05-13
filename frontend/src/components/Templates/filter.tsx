@@ -1,293 +1,3 @@
-// import {
-//   StyleSheet,
-//   Text,
-//   View,
-//   Dimensions,
-//   TouchableOpacity,
-//   Button,
-//   Alert,
-// } from "react-native";
-// import React, { useState, useEffect } from "react";
-// import AuctionType from "../Organisms/Filter/auctionType";
-// import OrderBy from "../Organisms/Filter/orderBy";
-// import PriceRange from "../Organisms/Filter/priceRange";
-// import TimeRange from "../Organisms/Filter/timeRange";
-// import Category from "../Organisms/Filter/category";
-// import { searchItem } from "../../apis/categoryApi";
-
-// type Props = {
-//   styles: {
-//     filterTemplate: object;
-//     resetContainer: object;
-//     applyContainer: object;
-//     resetText: object;
-//     applyText: object;
-//   };
-//   navigation: any;
-//   route: object;
-//   text: string;
-//   setItems: Function;
-//   propForm: any;
-//   propSetForm: Function;
-// };
-
-// const { height: ScreenHeight } = Dimensions.get("window");
-// const { width: ScreenWidth } = Dimensions.get("window");
-
-// interface Form {
-//   auctionType: string;
-//   category: string;
-//   sort: string;
-//   startPrice: number;
-//   endPrice: number;
-//   startTime: string;
-//   endTime: string;
-// }
-
-// const Filter = (props: Props) => {
-//   const [form, setForm] = useState<Form | null | any>([]);
-//   const {
-//     auctionType,
-//     category,
-//     sort,
-//     startPrice,
-//     endPrice,
-//     startTime,
-//     endTime,
-//   } = form;
-//   const [select, setSelect] = useState(true);
-//   const [selectOrder, setSelectOrder] = useState(true);
-//   const [startString, setStartString] = useState("");
-//   const [endString, setEndString] = useState("");
-//   // 경매유형, 카테고리 필터 함수
-//   const onSelect = (info: boolean | string) => {
-//     if (typeof info === "boolean") {
-//       setSelect(info);
-//       if (info === true) {
-//         setForm((prevState: any) => ({
-//           form: { ...prevState.form, auctionType: "NORMAL" },
-//         }));
-//       } else {
-//         setForm((prevState: any) => ({
-//           form: { ...prevState.form, auctionType: "LIVE" },
-//         }));
-//       }
-//     }
-//     if (typeof info === "string") {
-//       setForm((prevState: any) => ({
-//         form: { ...prevState.form, category: info },
-//       }));
-//     }
-//   };
-
-//   // 정렬 필터 함수
-//   const onSelectOrder = (info: boolean) => {
-//     setSelectOrder(info);
-//     if (info === true) {
-//       setForm((prevState: any) => ({
-//         form: { ...prevState.form, sort: "biddingCount" },
-//       }));
-//     } else {
-//       setForm((prevState: any) => ({
-//         form: { ...prevState.form, sort: "createdDate" },
-//       }));
-//     }
-//   };
-
-//   // 가격 범위 필터 함수
-//   const onSelectStartPrice = (info: number) => {
-//     setForm((prevState: any) => ({
-//       form: { ...prevState.form, startPrice: info },
-//     }));
-//   };
-
-//   const onSelectEndPrice = (info: number) => {
-//     setForm((prevState: any) => ({
-//       form: { ...prevState.form, endPrice: info },
-//     }));
-//   };
-
-//   // 시작 시간 필터 함수
-//   const onSelectStartTime = (info: object) => {
-//     setForm((prevState: any) => ({
-//       form: { ...prevState.form, startTime: info },
-//     }));
-//   };
-
-//   const onSelectEndTime = (info: object) => {
-//     setForm((prevState: any) => ({
-//       form: { ...prevState.form, endTime: info },
-//     }));
-//   };
-
-//   // 필터 적용 함수
-//   const applyFilters = async (form) => {
-//     // 년-월-일-시-분 비교 변수
-//     const string_start = JSON.stringify(form.form.startTime).slice(0, 17);
-//     const string_end = JSON.stringify(form.form.endTime).slice(0, 17);
-
-//     if (
-//       form.form.startPrice &&
-//       form.form.endPrice &&
-//       form.form.startPrice > form.form.endPrice
-//     ) {
-//       Alert.alert("최대금액을 다시 설정해주세요.");
-//     } else if (
-//       form.form.startPrice &&
-//       form.form.endPrice &&
-//       form.form.startPrice == form.form.endPrice
-//     ) {
-//       Alert.alert("최소금액과 최대금액을 다시 설정해주세요.");
-//     } else if (
-//       form.form.startPrice &&
-//       form.form.endPrice &&
-//       form.form.startPrice == 0 &&
-//       form.form.endPrice == 0
-//     ) {
-//       Alert.alert("최소금액과 최대금액을 다시 설정해주세요.");
-//     } else if (
-//       (form.form.startPrice && !form.form.endPrice) ||
-//       (!form.form.startPrice && form.form.endPrice)
-//     ) {
-//       Alert.alert("최소금액과 최대금액 모두 입력해주세요.");
-//     } else if (
-//       form.form.startTime &&
-//       form.form.endTime &&
-//       form.form.startTime > form.form.endTime
-//     ) {
-//       Alert.alert("종료시간을 다시 설정해주세요.");
-//     } else if (
-//       form.form.startTime &&
-//       form.form.endTime &&
-//       string_start == string_end
-//     ) {
-//       Alert.alert("시작시간과 종료시간을 다시 설정해주세요.");
-//     } else if (
-//       (form.form.startTime && !form.form.endTime) ||
-//       (!form.form.startTime && form.form.endTime)
-//     ) {
-//       Alert.alert("시작시간과 종료시간 모두 입력해주세요.");
-//     } else {
-//       const final_start = startString;
-//       const final_end = endString;
-//       const start_tmp = final_start.substring(1, 20);
-//       const end_tmp = final_end.substring(1, 20);
-//       form.form.startTime = start_tmp;
-//       form.form.endTime = end_tmp;
-//       console.log(form, "form출력ㄱㄱㄱㄱㄱㄱ");
-//       // const result = await searchItem(form.form).then((res) => {
-//       //   props.setItems(res);
-//       //   props.navigation.goBack();
-//       // });
-//       // console.log(result);
-//     }
-//   };
-
-//   // 필터 초기화 함수 ==> 수정해야함
-//   const resetFilters = () => {
-//     setForm((prev: any) => ({
-//       form: {
-//         keyword: props.text,
-//         auctionType: "LIVE",
-//         category: "",
-//         sort: "createdDate",
-//         startPrice: "",
-//         endPrice: "",
-//         startTime: "",
-//         endTime: "",
-//       },
-//     }));
-//   };
-
-//   useEffect(() => {
-//     const unsubscribe = props.navigation.addListener("focus", () => {
-//       setForm((prev: any) => ({
-//         form: {
-//           keyword: props.text,
-//           auctionType: "LIVE",
-//           category: "",
-//           sort: "createdDate",
-//           startPrice: "",
-//           endPrice: "",
-//           startTime: "",
-//           endTime: "",
-//         },
-//       }));
-//       console.log(props.propForm, "ㅅㄷㄴㅅ");
-//     });
-//     return unsubscribe;
-//   }, [props.navigation]);
-
-//   return (
-//     <View style={props.styles.filterTemplate}>
-//       <View
-//         style={{
-//           borderBottomColor: "#d7d4d4",
-//           borderBottomWidth: 1,
-//         }}
-//       ></View>
-//       <View style={{ marginTop: 10 }}>
-//         <AuctionType
-//           getSelectInformation={onSelect}
-//           navigation={props.navigation}
-//           route={props.route}
-//         />
-//       </View>
-//       <View style={{ marginTop: 10 }}>
-//         <Category
-//           getSelectInformation={onSelect}
-//           navigation={props.navigation}
-//           route={props.route}
-//         />
-//       </View>
-//       <View style={{ marginTop: 10 }}>
-//         <OrderBy
-//           getSelectInformation={onSelectOrder}
-//           navigation={props.navigation}
-//           route={props.route}
-//         />
-//       </View>
-//       <View style={{ marginTop: 10 }}>
-//         <PriceRange
-//           getSelectInspformation={onSelectStartPrice}
-//           getSelectInepformation={onSelectEndPrice}
-//           navigation={props.navigation}
-//           route={props.route}
-//         />
-//       </View>
-//       <View style={{ marginTop: 10 }}>
-//         <TimeRange
-//           getSelectstInformation={onSelectStartTime}
-//           getSelectetInformation={onSelectEndTime}
-//           navigation={props.navigation}
-//           route={props.route}
-//           setStartString={setStartString}
-//           setEndString={setEndString}
-//         />
-//       </View>
-//       <View style={{ marginTop: 30, height: ScreenHeight / 10 }}>
-//         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-//           <TouchableOpacity
-//             onPress={resetFilters}
-//             style={props.styles.resetContainer}
-//           >
-//             <Text style={props.styles.resetText}>초기화</Text>
-//           </TouchableOpacity>
-//           <TouchableOpacity
-//             onPress={() => applyFilters(form)}
-//             style={props.styles.applyContainer}
-//           >
-//             <Text style={props.styles.applyText}>필터 적용</Text>
-//           </TouchableOpacity>
-//         </View>
-//       </View>
-//     </View>
-//   );
-// };
-
-// export default Filter;
-
-// const styles = StyleSheet.create({});
 import {
   StyleSheet,
   Text,
@@ -322,7 +32,6 @@ type Props = {
 };
 
 const { height: ScreenHeight } = Dimensions.get("window");
-const { width: ScreenWidth } = Dimensions.get("window");
 
 interface Form {
   auctionType: string;
@@ -349,6 +58,7 @@ const Filter = (props: Props) => {
   const [selectOrder, setSelectOrder] = useState(true);
   const [startString, setStartString] = useState("");
   const [endString, setEndString] = useState("");
+  const [reset, setReset] = useState(false);
   // 경매유형, 카테고리 필터 함수
   const onSelect = (info: boolean | string) => {
     if (typeof info === "boolean") {
@@ -464,27 +174,21 @@ const Filter = (props: Props) => {
       const end_tmp = final_end.substring(1, 20);
       props.propForm.form.startTime = start_tmp;
       props.propForm.form.endTime = end_tmp;
-      console.log(form, "form출력ㄱㄱㄱㄱㄱㄱ");
       console.log(props.propForm, "프롭formrrrrrrrrrrrrrrrrrrrrr");
-      // const result = await searchItem(form.form).then((res) => {
-      //   props.setItems(res);
-      //   props.navigation.goBack();
-      // });
-      // console.log(result);
-      console.log(props.propForm);
-      // const result = await searchItem(props.propForm.form).then((res) => {
-      //   props.setItems(res);
-      //   props.navigation.goBack(res);
-      //   props.propForm.form.page = 2;
-      // });
+      const result = await searchItem(props.propForm.form).then((res) => {
+        props.setItems(res);
+        props.navigation.goBack(res);
+        props.propForm.form.page = 2;
+      });
 
-      // console.log(result);
+      console.log(result);
     }
   };
 
   // 필터 초기화 함수 ==> 수정해야함
-  const resetFilters = () => {
-    setForm((prev: any) => ({
+  const resetFilters = async () => {
+    await setReset(true);
+    props.propSetForm((prev: any) => ({
       form: {
         keyword: props.text,
         auctionType: "LIVE",
@@ -496,6 +200,7 @@ const Filter = (props: Props) => {
         endTime: "",
       },
     }));
+    await setReset(false);
   };
 
   useEffect(() => {
@@ -533,6 +238,7 @@ const Filter = (props: Props) => {
           getSelectInformation={onSelect}
           navigation={props.navigation}
           route={props.route}
+          reset={reset}
         />
       </View>
       <View style={{ marginTop: 10 }}>
@@ -540,6 +246,7 @@ const Filter = (props: Props) => {
           getSelectInformation={onSelect}
           navigation={props.navigation}
           route={props.route}
+          reset={reset}
         />
       </View>
       <View style={{ marginTop: 10 }}>
@@ -547,6 +254,7 @@ const Filter = (props: Props) => {
           getSelectInformation={onSelectOrder}
           navigation={props.navigation}
           route={props.route}
+          reset={reset}
         />
       </View>
       <View style={{ marginTop: 10 }}>
@@ -555,6 +263,7 @@ const Filter = (props: Props) => {
           getSelectInepformation={onSelectEndPrice}
           navigation={props.navigation}
           route={props.route}
+          reset={reset}
         />
       </View>
       <View style={{ marginTop: 10 }}>
@@ -565,6 +274,7 @@ const Filter = (props: Props) => {
           route={props.route}
           setStartString={setStartString}
           setEndString={setEndString}
+          reset={reset}
         />
       </View>
       <View style={{ marginTop: 30, height: ScreenHeight / 10 }}>
