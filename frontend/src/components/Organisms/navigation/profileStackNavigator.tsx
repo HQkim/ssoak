@@ -8,6 +8,9 @@ import PurchasedContainer from "../../Pages/purchasedContainer";
 import HistoryContainer from "../../Pages/historyContainer";
 import NavigatorTitle from "../../Atoms/Typographies/navigatorTitle";
 import SettingContainer from "../../Pages/settingContainer";
+import TermsOfService from "../../Pages/termsOfService";
+import InformRegulation from "../../Pages/informRegulation";
+import PrivacyPolicy from "../../Pages/privacyPolicy";
 
 type Props = {};
 
@@ -90,6 +93,42 @@ const ProfileStackNavigator = (props: Props) => {
           headerTitleAlign: "center",
           headerTitle: (props) => (
             <NavigatorTitle title={"설정"} style={styles.navigatorTitle} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="terms"
+        component={TermsOfService}
+        options={{
+          headerTitleAlign: "center",
+          headerTitle: (props) => (
+            <NavigatorTitle title={"이용약관"} style={styles.navigatorTitle} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="regulation"
+        component={InformRegulation}
+        options={{
+          headerTitleAlign: "center",
+          headerTitle: (props) => (
+            <NavigatorTitle
+              title={"내부정보관리규정"}
+              style={styles.navigatorTitle}
+            />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="privacy"
+        component={PrivacyPolicy}
+        options={{
+          headerTitleAlign: "center",
+          headerTitle: (props) => (
+            <NavigatorTitle
+              title={"개인정보처리방침"}
+              style={styles.navigatorTitle}
+            />
           ),
         }}
       />
