@@ -168,12 +168,20 @@ const Profile = (props: Props) => {
               size={28}
               color="#0000009c"
               style={{
-                position: "absolute",
-                right: ScreenWidth / 60,
-                marginTop: -ScreenHeight / 12,
+                position: "relative",
+                left: ScreenHeight / 12,
+                bottom: ScreenHeight / 6,
               }}
             />
           </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            backgroundColor: "#ffff",
+            alignItems: "center",
+            // zIndex: 1,
+          }}
+        >
           <View
             style={{
               alignItems: "center",

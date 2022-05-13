@@ -94,7 +94,7 @@ const index = ({ item, descStyle, titleStyle }) => {
           const database = getDatabase();
 
           const snapshot = await get(
-            ref(database, `auctionChatrooms/${item.itemSeq}`)
+            ref(database, `auctionChatrooms/${item.itemSeq}`),
           );
           return snapshot.val();
         };
@@ -113,6 +113,7 @@ const index = ({ item, descStyle, titleStyle }) => {
               createdAt: new Date(),
               type: "bid",
               price: text === "immediately" ? bidRightNow : bidAssignValue,
+              system: true,
             },
           ],
         });
@@ -178,7 +179,7 @@ const index = ({ item, descStyle, titleStyle }) => {
           text: "예",
           onPress: () => bidding("immediately"),
         },
-      ]
+      ],
     );
   };
 
@@ -198,7 +199,7 @@ const index = ({ item, descStyle, titleStyle }) => {
             text: "예",
             onPress: () => bidding("input"),
           },
-        ]
+        ],
       );
     } else {
       Alert.alert(
@@ -210,7 +211,7 @@ const index = ({ item, descStyle, titleStyle }) => {
           {
             text: "닫기",
           },
-        ]
+        ],
       );
     }
   };
