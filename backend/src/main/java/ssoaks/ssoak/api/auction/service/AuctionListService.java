@@ -7,7 +7,7 @@ import ssoaks.ssoak.api.auction.dto.response.ResAuctionListDto;
 
 public interface AuctionListService {
 
-    ResAuctionListDto getAuctionList(String keyword, Pageable page);
+    ResAuctionListDto getAuctionList(Boolean token, String keyword, Pageable page);
 
-    ResAuctionListDto searchAuctionList(Pageable pageable, ReqSearchDto reqSearchDto);
+    ResAuctionListDto searchAuctionList(Boolean token, Pageable pageable, ReqSearchDto reqSearchDto);
 }

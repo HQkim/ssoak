@@ -10,7 +10,6 @@ import ssoaks.ssoak.api.auction.dto.request.QFinishBiddingDto;
 import ssoaks.ssoak.api.auction.dto.request.ReqSearchDto;
 import ssoaks.ssoak.api.auction.dto.response.*;
 import ssoaks.ssoak.api.auction.entity.Item;
-import ssoaks.ssoak.api.auction.enums.AuctionType;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -19,7 +18,6 @@ import java.util.List;
 
 
 import static org.springframework.util.StringUtils.hasText;
-import static ssoaks.ssoak.api.auction.entity.QBidding.bidding;
 import static ssoaks.ssoak.api.auction.entity.QCategory.category;
 import static ssoaks.ssoak.api.auction.entity.QItem.item;
 import static ssoaks.ssoak.api.auction.entity.QItemCategory.itemCategory;
@@ -182,21 +180,22 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
     }
 
     @Override
-    public Integer countItemListByAuctionType(String keyword) {
+    public Integer countItemListByAuctionType(List<Long> blackList, String keyword) {
 
         return queryFactory
                 .select(item.count().intValue())
                 .from(item)
-                .where(item.auctionType.stringValue().eq(keyword)
-//                        .and(item.startTime.before(LocalDateTime.now()))
-//                        .and(item.endTime.after(LocalDateTime.now()))
+                .where(item.auctionType.stringValue().eq(keyword),
+                    item.member.seq.notIn(blackList),
+                        item.member.isBlocked.eq(false),
+                        item.member.isDeleted.eq(false)
                 )
                 .fetchOne();
 
     }
 
     @Override
-    public List<AuctionListDto> getItemListByAuctionType(String keyword, Pageable pageable) {
+    public List<AuctionListDto> getItemListByAuctionType(List<Long> blackList, String keyword, Pageable pageable) {
 
         JPAQuery<AuctionListDto> query = queryFactory
                 .select(new QAuctionListDto(
@@ -218,9 +217,10 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                         .join(image).on(image.item.eq(item))
                         .join(itemCategory).on(itemCategory.item.eq(item))
                         .join(category).on(category.seq.eq(itemCategory.category.seq))
-                        .where(item.auctionType.stringValue().eq(keyword)
-//                                .and(item.startTime.before(LocalDateTime.now()))
-//                                .and(item.endTime.after(LocalDateTime.now()))
+                        .where(item.auctionType.stringValue().eq(keyword),
+                                item.member.seq.notIn(blackList),
+                                item.member.isBlocked.eq(false),
+                                item.member.isDeleted.eq(false)
                         )
                         .groupBy(item)
                         .offset((long) (pageable.getPageNumber() - 1) * pageable.getPageSize())
@@ -244,18 +244,23 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
     }
 
     @Override
-    public Integer countLiveAuctionBeforeStart(String keyword) {
+    public Integer countLiveAuctionBeforeStart(List<Long> blackList, String keyword) {
         return queryFactory
                 .select(item.count().intValue())
                 .from(item)
-                .where(item.auctionType.stringValue().eq(keyword)
-                        .and(item.startTime.after(LocalDateTime.now())))
+                .where(item.auctionType.stringValue().eq(keyword),
+                        item.startTime.after(LocalDateTime.now()),
+                        item.member.seq.notIn(blackList),
+                        item.member.isBlocked.eq(false),
+                        item.member.isDeleted.eq(false)
+                )
                 .fetchOne();
     }
 
     @Override
-    public List<AuctionListDto> getLiveItemListBeforeStart(String keyword, Pageable pageable) {
-        List<AuctionListDto> auctionListDtos = queryFactory
+    public List<AuctionListDto> getLiveItemListBeforeStart(List<Long> blackList, String keyword, Pageable pageable) {
+
+        return queryFactory
                 .select(new QAuctionListDto(
                         item.seq,
                         item.title,
@@ -275,28 +280,30 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                 .join(image).on(image.item.eq(item))
                 .join(itemCategory).on(itemCategory.item.eq(item))
                 .join(category).on(category.seq.eq(itemCategory.category.seq))
-                .where(item.auctionType.stringValue().eq(keyword)
-                        .and(item.startTime.after(LocalDateTime.now())))
+                .where(item.auctionType.stringValue().eq(keyword),
+                        item.startTime.after(LocalDateTime.now()),
+                        item.member.seq.notIn(blackList),
+                        item.member.isBlocked.eq(false),
+                        item.member.isDeleted.eq(false)
+                )
                 .groupBy(item)
                 .offset((long) (pageable.getPageNumber() - 1) * pageable.getPageSize())
                 .limit(pageable.getPageSize())
                 .orderBy(item.startTime.asc())
                 .fetch();
-
-        return auctionListDtos;
     }
 
     @Override
-    public Integer countSearchItemsByKeyword(ReqSearchDto searchDto, Pageable pageable) {
+    public Integer countSearchItemsByKeyword(List<Long> blackList, ReqSearchDto searchDto, Pageable pageable) {
 
         return queryFactory
                 .select(item.count().intValue())
                 .from(item)
-                .where(item.isSold.eq(false)
-                                .and(item.startTime.before(LocalDateTime.now()))
-                                .and(item.endTime.after(LocalDateTime.now()))
-                                .and(item.title.contains(searchDto.getKeyword()))
-                                .or(item.content.contains(searchDto.getKeyword())),
+                .where(item.isSold.eq(false),
+                        item.member.seq.notIn(blackList),
+                        item.member.isBlocked.eq(false),
+                        item.member.isDeleted.eq(false),
+                        keywordCt(searchDto.getKeyword()),
                         auctionTypeEq(searchDto.getAuctionType()),
                         categoryEq(searchDto.getCategory()),
                         timeBetween(searchDto.getStartTime(), searchDto.getEndTime()),
@@ -306,7 +313,8 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
     }
 
     @Override
-    public List<AuctionListDto> getSearchItemsByKeyword(ReqSearchDto searchDto, Pageable pageable) {
+    public List<AuctionListDto> getSearchItemsByKeyword(List<Long> blackList, ReqSearchDto searchDto, Pageable pageable) {
+        System.out.println("repository - blackList" + blackList);
         JPAQuery<AuctionListDto> query = queryFactory
                 .select(new QAuctionListDto(
                         item.seq,
@@ -327,11 +335,11 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                 .join(image).on(image.item.eq(item))
                 .join(itemCategory).on(itemCategory.item.eq(item))
                 .join(category).on(category.seq.eq(itemCategory.category.seq))
-                .where(item.isSold.eq(false)
-                                .and(item.startTime.before(LocalDateTime.now()))
-                                .and(item.endTime.after(LocalDateTime.now()))
-                                .and(item.title.contains(searchDto.getKeyword()))
-                                .or(item.content.contains(searchDto.getKeyword())),
+                .where(item.isSold.eq(false),
+                        item.member.seq.notIn(blackList),
+                        item.member.isBlocked.eq(false),
+                        item.member.isDeleted.eq(false),
+                        keywordCt(searchDto.getKeyword()),
                         auctionTypeEq(searchDto.getAuctionType()),
                         categoryEq(searchDto.getCategory()),
                         timeBetween(searchDto.getStartTime(), searchDto.getEndTime()),
@@ -390,6 +398,9 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
         return auctionListDtos;
     }
 
+    private BooleanExpression keywordCt(String keyword) {
+        return item.title.contains(keyword).or(item.content.contains(keyword));
+    }
 
     private BooleanExpression auctionTypeEq(String auctionType) {
         return hasText(auctionType) ? item.auctionType.stringValue().eq(auctionType) : null;
