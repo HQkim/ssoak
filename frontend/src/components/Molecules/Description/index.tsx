@@ -9,6 +9,17 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  get,
+  getDatabase,
+  off,
+  onValue,
+  push,
+  ref,
+  set,
+  update,
+} from "firebase/database";
 import React, { useCallback, useState, useEffect } from "react";
 import MoreButton from "../../Atoms/Buttons/moreButton";
 import CountDown from "../../Atoms/Typographies/countDown";
@@ -22,6 +33,7 @@ import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import jwt_decode, { JwtPayload } from "jwt-decode";
 import { loadDataAsync } from "../../../store/modules/detail";
 import { useDispatch } from "react-redux";
+import { kakaoProfile } from "../../../apis/auth";
 type Props = {};
 
 const index = ({ item, descStyle, titleStyle }) => {
@@ -32,15 +44,28 @@ const index = ({ item, descStyle, titleStyle }) => {
   const [bidAssignValue, setBidAssignValue] = useState<string>("15000");
   const [biddingBuyer, setBiddingBuyer] = useState<any>({});
   const [userId, setUserId] = useState();
+  const [buyerId, setBuyerId] = useState();
+  const [userData, setUserData] = useState([]);
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const onLoadData = () => {
     dispatch(loadDataAsync(item.itemSeq));
   };
   useEffect(() => {
+    // console.log(userId);
+  }, [userId]);
+  useEffect(() => {
+    userId && setBuyerId(item.bidding?.buyer.seq);
+  }, [userId]);
+
+  useEffect(() => {
+    const data = kakaoProfile();
+    data.then((res) => {
+      setUserData(res.data);
+    });
     if (item.bidding !== null) {
-      setCurrentCost(item.bidding.biddingPrice);
-      setBiddingBuyer(item.bidding.buyer);
+      setCurrentCost(item.bidding?.biddingPrice);
+      setBiddingBuyer(item.bidding?.buyer);
     } else {
       setCurrentCost(item.startPrice);
     }
@@ -63,16 +88,45 @@ const index = ({ item, descStyle, titleStyle }) => {
     formData.append("isHammered", hammer);
     try {
       const response = await biddingAuction(item.itemSeq, formData);
+
+      if (response.statusCode === 201) {
+        const fetchMessages = async () => {
+          const database = getDatabase();
+
+          const snapshot = await get(
+            ref(database, `auctionChatrooms/${item.itemSeq}`)
+          );
+          return snapshot.val();
+        };
+        const database = getDatabase();
+        const currentChatroom = await fetchMessages();
+        const lastMessages = currentChatroom?.messages || [];
+        update(ref(database, `auctionChatrooms/${item.itemSeq}`), {
+          messages: [
+            ...lastMessages,
+            {
+              text:
+                text === "immediately"
+                  ? `${bidRightNow}원에 입찰했습니다.`
+                  : `${bidAssignValue}원에 입찰했습니다.`,
+              sender: userId,
+              createdAt: new Date(),
+              type: "bid",
+              price: text === "immediately" ? bidRightNow : bidAssignValue,
+            },
+          ],
+        });
+      }
     } catch {
       Alert.alert("입찰에 실패했습니다.");
     } finally {
-      onLoadData();
+      // onLoadData();
     }
   };
 
   useEffect(() => {
-    setBidRightNow(String((Number(currentCost) * 1.1).toFixed()));
-    setBidAssignValue(String((Number(currentCost) * 1.1).toFixed()));
+    setBidRightNow(String((Number(currentCost) * 1.03).toFixed()));
+    setBidAssignValue(String((Number(currentCost) * 1.03).toFixed()));
   }, [currentCost]);
 
   const handleMoreClick = () => {
@@ -80,6 +134,16 @@ const index = ({ item, descStyle, titleStyle }) => {
     setShowMore(!showMore);
   };
 
+  const database = getDatabase();
+  const chatroomRef = ref(database, `auctionChatrooms/${item.itemSeq}`);
+  onValue(chatroomRef, (snapshot) => {
+    const data = snapshot.val();
+
+    if (data?.messages[data.messages.length - 1].price > currentCost) {
+      setCurrentCost(data.messages[data.messages.length - 1].price);
+      setBuyerId(data.messages[data.messages.length - 1].sender);
+    }
+  });
   const onHandleChatOpen = () => {
     navigation.navigate("auctionChat", {
       id: item.itemSeq,
@@ -119,7 +183,7 @@ const index = ({ item, descStyle, titleStyle }) => {
   };
 
   const handlebidAssignValue = () => {
-    if (Number(currentCost) * 1.1 - 0.5 <= Number(bidAssignValue)) {
+    if (Number(currentCost) * 1.03 - 0.5 <= Number(bidAssignValue)) {
       Alert.alert(
         "지정가 입찰",
         `${bidAssignValue
@@ -139,9 +203,9 @@ const index = ({ item, descStyle, titleStyle }) => {
     } else {
       Alert.alert(
         "입찰 금액 오류",
-        `최소 입찰 금액인 ${
-          Number(currentCost) * 1.1
-        }원부터 \n입찰할 수 있습니다.`,
+        `최소 입찰 금액인 ${(
+          Number(currentCost) * 1.03
+        ).toFixed()}원부터 \n입찰할 수 있습니다.`,
         [
           {
             text: "닫기",
@@ -176,8 +240,9 @@ const index = ({ item, descStyle, titleStyle }) => {
           <View style={styles.badges}>
             <Text style={styles.typography}>{item.seller?.nickname}</Text>
             <Text style={styles.typography}>
-              최소 입찰가 :{" "}
-              {item.biddingUnit
+              최소 입찰호가 :{" "}
+              {(Number(currentCost) * 0.03)
+                .toFixed()
                 .toString()
                 .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
               원
@@ -235,19 +300,28 @@ const index = ({ item, descStyle, titleStyle }) => {
             >
               {item.bidding ? (
                 <>
-                  <Image
-                    source={{ uri: item.bidding?.buyer.profileImageUrl }}
-                    style={{
-                      width: 20,
-                      height: 20,
-                      borderWidth: 1,
-                      borderRadius: 9999,
-                      borderColor: "#444",
-                      marginRight: 5,
-                    }}
-                  />
+                  {buyerId == userId ? (
+                    <Image
+                      source={{ uri: userData.profileImageUrl }}
+                      style={{
+                        width: 20,
+                        height: 20,
+                        borderWidth: 1,
+                        borderRadius: 9999,
+                        borderColor: "#444",
+                        marginRight: 5,
+                      }}
+                    />
+                  ) : (
+                    <MaterialCommunityIcons
+                      name="crown"
+                      size={20}
+                      color="grey"
+                      style={{ marginRight: 5 }}
+                    />
+                  )}
 
-                  <Text>{item.bidding?.buyer.nickname}</Text>
+                  <Text>{buyerId == userId ? userData.nickname : "익명"}</Text>
                 </>
               ) : (
                 <></>

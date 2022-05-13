@@ -31,7 +31,6 @@ const AuctionChatContainer = (props: Props) => {
       userId={userId}
       userAvatar={userAvatar}
       item={props.route.params.item}
-      onStartLoadData={props.route.params.onStartLoadData}
     />
   );
   // return <></>;

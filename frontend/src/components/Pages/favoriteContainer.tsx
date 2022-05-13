@@ -1,7 +1,9 @@
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
-import React, { useEffect } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Favorite from "../Templates/favorite";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 type Props = {
   navigation: any;
@@ -11,11 +13,36 @@ type Props = {
 const Stack = createStackNavigator();
 
 const FavoriteContainer = ({ navigation, route }: Props) => {
+  const [isLogin, setIsLogin] = useState(false);
   const onCancel = () => {
     navigation.navigate("main");
   };
 
-  return <Favorite navigation={navigation} route={route} />;
+  const getToken = async () => {
+    const token = await AsyncStorage.getItem("accessToken");
+    console.log(token);
+    if (token) {
+      setIsLogin(true);
+    } else if (token == null) {
+      console.log(token, "여기");
+      setIsLogin(false);
+      navigation.navigate("Profile");
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getToken();
+    }, [])
+  );
+
+  return (
+    <View>
+      {isLogin == true ? (
+        <Favorite navigation={navigation} route={route} />
+      ) : null}
+    </View>
+  );
 };
 
 export default FavoriteContainer;

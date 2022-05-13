@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View, Dimensions, TextInput } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 type Props = {
   getSelectInspformation: Function;
   getSelectInepformation: Function;
   navigation: any;
   route: object;
+  reset: boolean;
 };
 
 type PriceType = {
@@ -20,13 +22,22 @@ const PriceRange = (props: Props) => {
   const [startPrice, setStartPrice] = useState<number | any | null>("");
   const [endPrice, setEndPrice] = useState<number | any | null>("");
   const inputStartPrice = (text) => {
+    const num_startPrice = parseInt(text);
     setStartPrice(text);
-    props.getSelectInspformation(text);
+    props.getSelectInspformation(num_startPrice);
   };
   const inputEndPrice = (text) => {
+    const num_endPrice = parseInt(text);
     setEndPrice(text);
-    props.getSelectInepformation(text);
+    props.getSelectInepformation(num_endPrice);
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setStartPrice("");
+      setEndPrice("");
+    }, [props.reset])
+  );
 
   return (
     <View>

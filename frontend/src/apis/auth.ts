@@ -14,7 +14,7 @@ export const kakaoLogin = async (access_code: string) => {
 export const kakaoProfile = async () => {
   try {
     const response = await instance.get("/members/profile");
-    console.log(response.data);
+    // console.log(response.data);
     if (response.data.statusCode == 200) {
       return response.data;
     } else if (response.data.statusCode == 401) {

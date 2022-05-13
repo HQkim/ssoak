@@ -40,7 +40,7 @@ import { biddingAuction } from "../../apis/auctionApi";
 type Props = {};
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
-const AuctionChat = ({ userId, userAvatar, item, onStartLoadData }) => {
+const AuctionChat = ({ userId, userAvatar, item }) => {
   const [currentCost, setCurrentCost] = useState();
   const [bidRightNow, setBidRightNow] = useState<string>("15000");
   const [bidAssignValue, setBidAssignValue] = useState<string>("15000");
@@ -57,7 +57,7 @@ const AuctionChat = ({ userId, userAvatar, item, onStartLoadData }) => {
   const [itemId, setItemId] = useState(item.itemSeq);
 
   useEffect(() => {
-    Platform.OS === "ios" && setOffset(50);
+    Platform.OS === "ios" && setOffset(60);
   }, []);
 
   useEffect(() => {
@@ -65,12 +65,8 @@ const AuctionChat = ({ userId, userAvatar, item, onStartLoadData }) => {
   }, []);
 
   useEffect(() => {
-    setBidRightNow(String((Number(currentCost) * 1.1).toFixed()));
+    setBidRightNow(String((Number(currentCost) * 1.03).toFixed()));
   }, [currentCost]);
-
-  useEffect(() => {
-    console.log(currentCost, bidRightNow);
-  }, [bidRightNow]);
 
   const [iskeyboardUp, setIsKeyboardUp] = useState(false);
   const navigation = useNavigation();
@@ -245,8 +241,13 @@ const AuctionChat = ({ userId, userAvatar, item, onStartLoadData }) => {
       //   }
       // }
       if (msgs[msgs.length - 1].type === "bid") {
-        console.log(msgs[msgs.length - 1]);
-        setCurrentCost(msgs[msgs.length - 1].price);
+        const maximum = Math.max(
+          Number(currentCost),
+          Number(msgs[msgs.length - 1].price)
+        );
+        if (currentCost && msgs[msgs.length - 1].price > currentCost) {
+          setCurrentCost(msgs[msgs.length - 1].price);
+        }
       }
 
       return msgs
@@ -334,14 +335,17 @@ const AuctionChat = ({ userId, userAvatar, item, onStartLoadData }) => {
         scrollToBottom={true}
       />
       {iskeyboardUp === false && (
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <TouchableOpacity
-            onPress={handlebidRightNow}
-            style={styles.bidButton}
-          >
-            <Text style={styles.bidText}>{bidRightNow}원</Text>
-            <Text style={styles.bidText}>즉시 입찰</Text>
-          </TouchableOpacity>
+        <View style={{ alignItems: "center" }}>
+          <Text style={{ marginTop: 3 }}>현재 가격 : {currentCost}원</Text>
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <TouchableOpacity
+              onPress={handlebidRightNow}
+              style={styles.bidButton}
+            >
+              <Text style={styles.bidText}>{bidRightNow}원</Text>
+              <Text style={styles.bidText}>즉시 입찰</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
       {Platform.OS === "android" && <KeyboardAvoidingView behavior="padding" />}

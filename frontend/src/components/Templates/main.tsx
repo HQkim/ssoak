@@ -64,7 +64,7 @@ const Main = (props: Props) => {
           }}
         />
       ),
-    [normalItems],
+    [normalItems]
   );
 
   const liveRoute = useCallback(
@@ -86,7 +86,7 @@ const Main = (props: Props) => {
           }}
         />
       ),
-    [liveItems],
+    [liveItems]
   );
 
   const { isLoading } = useSelector((state: RootState) => state.mainLoader);
@@ -99,15 +99,23 @@ const Main = (props: Props) => {
   ]);
 
   useEffect(() => {
-    const liveItems = data.filter((item) => item.auctionType === "LIVE");
-    const normalItems = data.filter((item) => item.auctionType === "NORMAL");
+    const liveItems = data
+      .filter((item) => item.auctionType === "LIVE")
+      .sort((first, second) => (first.itemSeq > second.itemSeq ? -1 : 1));
+    const normalItems = data
+      .filter((item) => item.auctionType === "NORMAL")
+      .sort((first, second) => (first.itemSeq > second.itemSeq ? -1 : 1));
     setLiveItems(liveItems);
     setNormalItems(normalItems);
   }, []);
 
   useEffect(() => {
-    const liveItems = data.filter((item) => item.auctionType === "LIVE");
-    const normalItems = data.filter((item) => item.auctionType === "NORMAL");
+    const liveItems = data
+      .filter((item) => item.auctionType === "LIVE")
+      .sort((first, second) => (first.itemSeq > second.itemSeq ? -1 : 1));
+    const normalItems = data
+      .filter((item) => item.auctionType === "NORMAL")
+      .sort((first, second) => (first.itemSeq > second.itemSeq ? -1 : 1));
     setLiveItems(liveItems);
     setNormalItems(normalItems);
   }, [data]);
@@ -151,6 +159,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   scrollView: {
-    flex: 20,
+    flex: 5,
   },
 });

@@ -32,7 +32,7 @@ export const cancelLikeItem = async (itemSeq) => {
 
 export const getList = async ({ keyword, page }) => {
   try {
-    const sort = keyword === "NORMAL" ? "createdDate" : "beforeStart";
+    const sort = keyword === "NORMAL" ? "createdDate" : "createdDate";
     const response = await noHeaderInstance.get("/auctions/list", {
       params: {
         keyword,
@@ -48,12 +48,11 @@ export const getList = async ({ keyword, page }) => {
 };
 
 export const biddingAuction = async (itemSeq, formData) => {
-  console.log(itemSeq, formData);
+  // console.log(itemSeq, formData);
   const response = await fileInstance.post(
     `/auctions/${itemSeq}/bidding`,
     formData
   );
-  console.log(response);
   return response.data;
 };
 

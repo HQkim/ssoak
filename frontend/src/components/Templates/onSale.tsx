@@ -28,6 +28,9 @@ const { width: ScreenWidth } = Dimensions.get("window");
 
 const onSale = (props: Props) => {
   const [items, setItems] = useState<Items | null | any>([]);
+  const [currentTime, setCurrentTime] = useState<any | undefined | object>(
+    new Date()
+  );
   const navigation: any = useNavigation();
   const getData = async () => {
     const response = await getOnSaleItems();
@@ -49,6 +52,9 @@ const onSale = (props: Props) => {
   useFocusEffect(
     React.useCallback(() => {
       getData();
+      // const time = new Date();
+      // console.log(time);
+      // setCurrentTime(time)
       return () => {};
     }, [])
   );
@@ -66,7 +72,9 @@ const onSale = (props: Props) => {
                 ></AuctionTypeTag>
                 <CompletedTag
                   styles={{ tag: styles.completedTypeTag }}
-                  text={"진행중"}
+                  text={
+                    currentTime < new Date(item.startTime) ? "예약중" : "진행중"
+                  }
                 />
               </View>
               <View
@@ -222,7 +230,7 @@ const styles = StyleSheet.create({
     width: ScreenWidth / 6,
     height: ScreenHeight / 33,
     backgroundColor: "#F8A33E",
-    borderRadius: ScreenWidth / 12,
+    borderRadius: 55,
     justifyContent: "center",
     flexDirection: "row",
     alignItems: "center",
@@ -247,7 +255,7 @@ const styles = StyleSheet.create({
     width: ScreenWidth / 6,
     height: ScreenHeight / 33,
     backgroundColor: "#719DD7",
-    borderRadius: ScreenWidth / 12,
+    borderRadius: 55,
     marginRight: ScreenWidth / 12,
     justifyContent: "center",
     flexDirection: "row",
