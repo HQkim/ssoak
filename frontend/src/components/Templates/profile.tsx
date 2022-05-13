@@ -292,11 +292,13 @@ const Profile = (props: Props) => {
             backgroundColor: "#ffff",
           }}
         >
-          <View style={styles.informView}>
-            <Ionicons name="document-text-outline" size={24} color="black" />
-            <Text style={{ fontSize: 18, padding: 15 }}>이용약관</Text>
-          </View>
-          <TouchableOpacity onPress={() => console.log("press")}>
+          <TouchableOpacity onPress={() => navigation.navigate("terms")}>
+            <View style={styles.informView}>
+              <Ionicons name="document-text-outline" size={24} color="black" />
+              <Text style={{ fontSize: 18, padding: 15 }}>이용약관</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("regulation")}>
             <View style={styles.informView}>
               <AntDesign name="profile" size={24} color="black" />
               <Text style={{ fontSize: 18, padding: 15 }}>
@@ -304,14 +306,18 @@ const Profile = (props: Props) => {
               </Text>
             </View>
           </TouchableOpacity>
-          <View style={styles.informView}>
-            <Ionicons
-              name="information-circle-outline"
-              size={24}
-              color="black"
-            />
-            <Text style={{ fontSize: 18, padding: 15 }}>개인정보처리방침</Text>
-          </View>
+          <TouchableOpacity onPress={() => navigation.navigate("privacy")}>
+            <View style={styles.informView}>
+              <Ionicons
+                name="information-circle-outline"
+                size={24}
+                color="black"
+              />
+              <Text style={{ fontSize: 18, padding: 15 }}>
+                개인정보처리방침
+              </Text>
+            </View>
+          </TouchableOpacity>
           <TouchableOpacity onPress={logout}>
             <View style={styles.informView}>
               <MaterialIcons name="logout" size={24} color="black" />
