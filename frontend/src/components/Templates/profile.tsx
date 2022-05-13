@@ -168,9 +168,9 @@ const Profile = (props: Props) => {
               size={28}
               color="#0000009c"
               style={{
-                position: "relative",
-                left: ScreenHeight / 12,
-                bottom: ScreenHeight / 6,
+                position: "absolute",
+                left: ScreenHeight / 8,
+                bottom: ScreenHeight / 8,
               }}
             />
           </TouchableOpacity>
