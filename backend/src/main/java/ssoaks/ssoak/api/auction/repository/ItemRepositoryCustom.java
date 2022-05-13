@@ -19,14 +19,14 @@ public interface ItemRepositoryCustom {
     List<ItemOverviewDto> getBoughtItemOverviewsByMember(Long memberSeq);
     List<ItemOverviewLikedDto> getLikedItemOverviewsByMember(Long memberSeq);
 
-    Integer countItemListByAuctionType(String keyword);
-    List<AuctionListDto> getItemListByAuctionType(String keyword, Pageable pageable);
+    Integer countItemListByAuctionType(List<Long> blackList, String keyword);
+    List<AuctionListDto> getItemListByAuctionType(List<Long> blackList, String keyword, Pageable pageable);
 
-    Integer countLiveAuctionBeforeStart(String keyword);
-    List<AuctionListDto> getLiveItemListBeforeStart(String keyword, Pageable pageable);
+    Integer countLiveAuctionBeforeStart(List<Long> blackList, String keyword);
+    List<AuctionListDto> getLiveItemListBeforeStart(List<Long> blackList, String keyword, Pageable pageable);
 
-    Integer countSearchItemsByKeyword(ReqSearchDto searchDto, Pageable pageable);
-    List<AuctionListDto> getSearchItemsByKeyword(ReqSearchDto searchDto, Pageable pageable);
+    Integer countSearchItemsByKeyword(List<Long> blackList, ReqSearchDto searchDto, Pageable pageable);
+    List<AuctionListDto> getSearchItemsByKeyword(List<Long> blackList, ReqSearchDto searchDto, Pageable pageable);
 
     List<FinishBiddingDto> getSuccessfulAuction();
     List<FinishBiddingDto> getFiledAuction();

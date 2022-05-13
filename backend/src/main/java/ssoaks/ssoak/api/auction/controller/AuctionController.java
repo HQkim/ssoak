@@ -14,6 +14,7 @@ import ssoaks.ssoak.api.auction.service.*;
 import ssoaks.ssoak.common.dto.BaseDataResponseDTO;
 import ssoaks.ssoak.common.dto.BaseResponseDTO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -208,13 +209,21 @@ public class AuctionController {
 
 
     @GetMapping("/list")
-    public ResponseEntity<BaseDataResponseDTO> auctionList (Pageable pageable,
-                                                        @RequestParam String keyword) {
+    public ResponseEntity<BaseDataResponseDTO> auctionList (HttpServletRequest request,
+                                                            Pageable pageable,
+                                                            @RequestParam String keyword) {
         log.debug("경매 리스트 keyword- {} page- {}", keyword, pageable);
 
+        Boolean token = false;
+
+        if(request.getHeader("Authorization")==null||!request.getHeader("Authorization").startsWith("Bearer")){
+            token = false;
+        } else {
+            token = true;
+        }
         ResAuctionListDto auctionListDto;
         try {
-            auctionListDto = auctionListService.getAuctionList(keyword, pageable);
+            auctionListDto = auctionListService.getAuctionList(token, keyword, pageable);
         } catch (Exception e) {
             log.error(e.getMessage());
             return ResponseEntity.status(409).body(new BaseDataResponseDTO<>(409, e.getMessage(), null));
@@ -223,12 +232,20 @@ public class AuctionController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<BaseDataResponseDTO> searchAuction(Pageable pageable,
+    public ResponseEntity<BaseDataResponseDTO> searchAuction(HttpServletRequest request,
+                                                             Pageable pageable,
                                                              ReqSearchDto reqSearchDto) {
         log.debug("경매 검색 reqSearchDto - {} , page - {}", reqSearchDto, pageable);
+        Boolean token = false;
+
+        if(request.getHeader("Authorization")==null||!request.getHeader("Authorization").startsWith("Bearer")){
+            token = false;
+        } else {
+            token = true;
+        }
         ResAuctionListDto resAuctionListDto = null;
         try{
-            resAuctionListDto = auctionListService.searchAuctionList(pageable, reqSearchDto);
+            resAuctionListDto = auctionListService.searchAuctionList(token, pageable, reqSearchDto);
         } catch (Exception e) {
             log.error(e.getMessage());
             return ResponseEntity.status(409).body(new BaseDataResponseDTO<>(409, e.getMessage(), null));
