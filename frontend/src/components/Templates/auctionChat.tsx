@@ -12,7 +12,6 @@ import {
   Platform,
   TouchableOpacity,
 } from "react-native";
-import Filter from "bad-words";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import GeneralButtonWithoutText from "../../components/Atoms/Buttons/generalButtonWithoutText";
@@ -950,8 +949,6 @@ const badWords = [
   "ac발",
   "x대가리",
 ];
-const filter = new Filter({ replaceRegex: /[A-Za-z0-9가-힣_]/g });
-filter.addWords(...badWords);
 type Props = {};
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
@@ -1023,7 +1020,7 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
       const myUserRef = ref(database, `users/${userId}`);
 
       const auctionChatroom = await get(
-        ref(database, `auctionChatrooms/${itemId}`)
+        ref(database, `auctionChatrooms/${itemId}`),
       );
       if (!auctionChatroom) {
         set(ref(database, `auctionChatrooms/${itemId}`), {
@@ -1116,7 +1113,7 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
           text: "아니오",
           onPress: () => {},
         },
-      ]
+      ],
     );
   };
 
@@ -1162,7 +1159,7 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
 
       setMessages((prevMessages) => GiftedChat.append(prevMessages, msg));
     },
-    [fetchMessages, myData?.userId, itemId]
+    [fetchMessages, myData?.userId, itemId],
   );
 
   const renderMessages = useCallback(
@@ -1196,7 +1193,7 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
           }))
         : [];
     },
-    [myData?.avatar, myData?.userId, itemId, messages]
+    [myData?.avatar, myData?.userId, itemId, messages],
   );
   useEffect(() => {
     Platform.OS === "ios" && setOffset(40);
@@ -1252,7 +1249,7 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
                       console.log(message.user._id);
                       Alert.alert(
                         "신고",
-                        "접수가 완료되었습니다.\n더 이상 신고 대상자의 채팅을\n확인할 수 없습니다."
+                        "접수가 완료되었습니다.\n더 이상 신고 대상자의 채팅을\n확인할 수 없습니다.",
                       );
                     } else {
                       Alert.alert("신고", "신고할 수 없는 채팅입니다.");
@@ -1263,7 +1260,7 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
                   text: "아니오",
                   style: "cancel",
                 },
-              ]
+              ],
             );
           } else {
           }
