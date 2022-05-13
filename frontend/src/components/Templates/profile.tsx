@@ -10,6 +10,7 @@ import {
   TextInput,
   Alert,
   Platform,
+  Linking,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -25,6 +26,7 @@ import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { editKakaoProfile } from "../../apis/auth";
 import * as Font from "expo-font";
+import OtherSetting from "../Templates/otherSetting";
 
 type Props = {
   navigation: any | undefined;
@@ -75,7 +77,7 @@ const Profile = (props: Props) => {
     props.navigation.navigate("main");
   };
   const [image, setImage] = useState<Item | null | any>(
-    props.profile.profileImageUrl,
+    props.profile.profileImageUrl
   );
   const [file, setFile] = useState<File | null | any>([]);
   const [name, setName] = useState("");
@@ -85,7 +87,7 @@ const Profile = (props: Props) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
     });
-    // console.log(result);
+    console.log(result);
     if (!result.cancelled) {
       const uri = result.uri;
       const newFile = result;
@@ -103,7 +105,7 @@ const Profile = (props: Props) => {
       };
       formData.append("profileImage", item);
       await editKakaoProfile(formData).then(() =>
-        props.setProfile({ ...props.profile, profileImageUrl: uri }),
+        props.setProfile({ ...props.profile, profileImageUrl: uri })
       );
     }
   };
@@ -140,31 +142,22 @@ const Profile = (props: Props) => {
             }}
           >
             {font ? <Text style={styles.fontStyle}>Profile</Text> : null}
-
-            {/* <View style={{ flex: 1 }}>
-                <Fontisto name="bell" size={20} color="black" />
-              </View> */}
-            <View>
-              <TouchableOpacity onPress={() => navigation.navigate("setting")}>
-                <Ionicons name="settings-outline" size={20} color="black" />
-              </TouchableOpacity>
-            </View>
           </View>
-          <View style={{ height: ScreenHeight / 12 }} />
-          <TouchableOpacity
-            onPress={pickImage}
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+        </View>
+        <View
+          style={{
+            backgroundColor: "#ffff",
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity onPress={pickImage}>
             <Image
               style={{
                 width: ScreenHeight / 6,
                 height: ScreenHeight / 6,
                 borderRadius: ScreenHeight / 12,
                 position: "relative",
-
+                marginTop: -ScreenHeight / 12,
                 borderColor: "#d7d4d4",
                 borderWidth: 1,
               }}
@@ -175,9 +168,9 @@ const Profile = (props: Props) => {
               size={28}
               color="#0000009c"
               style={{
-                position: "relative",
-                left: ScreenHeight / 12,
-                bottom: ScreenHeight / 6,
+                position: "absolute",
+                left: ScreenHeight / 8,
+                bottom: ScreenHeight / 8,
               }}
             />
           </TouchableOpacity>
@@ -295,7 +288,7 @@ const Profile = (props: Props) => {
         </View>
         <View
           style={{
-            height: ScreenHeight / 2,
+            height: ScreenHeight / 2.5,
             backgroundColor: "#ffff",
           }}
         >
@@ -303,10 +296,14 @@ const Profile = (props: Props) => {
             <Ionicons name="document-text-outline" size={24} color="black" />
             <Text style={{ fontSize: 18, padding: 15 }}>이용약관</Text>
           </View>
-          <View style={styles.informView}>
-            <AntDesign name="profile" size={24} color="black" />
-            <Text style={{ fontSize: 18, padding: 15 }}>내부정보관리규정</Text>
-          </View>
+          <TouchableOpacity onPress={() => console.log("press")}>
+            <View style={styles.informView}>
+              <AntDesign name="profile" size={24} color="black" />
+              <Text style={{ fontSize: 18, padding: 15 }}>
+                내부정보관리규정
+              </Text>
+            </View>
+          </TouchableOpacity>
           <View style={styles.informView}>
             <Ionicons
               name="information-circle-outline"
@@ -315,22 +312,15 @@ const Profile = (props: Props) => {
             />
             <Text style={{ fontSize: 18, padding: 15 }}>개인정보처리방침</Text>
           </View>
-          <View style={styles.informView}>
-            <AntDesign name="sound" size={24} color="black" />
-            <Text style={{ fontSize: 18, padding: 15 }}>공지사항</Text>
-          </View>
           <TouchableOpacity onPress={logout}>
             <View style={styles.informView}>
               <MaterialIcons name="logout" size={24} color="black" />
               <Text style={{ fontSize: 18, padding: 15 }}>로그아웃</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("setting")}>
-            <View style={styles.informView}>
-              <Ionicons name="settings-outline" size={24} color="black" />
-              <Text style={{ fontSize: 18, padding: 15 }}>설정</Text>
-            </View>
-          </TouchableOpacity>
+          <View style={styles.informView}>
+            <OtherSetting navigation={navigation} />
+          </View>
         </View>
       </ScrollView>
     </View>

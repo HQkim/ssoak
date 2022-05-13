@@ -47,11 +47,10 @@ const Search = (props: Props) => {
   }, [props]);
 
   const getMoreItems = async (form) => {
-    const page = form.form.page;
+    form.form.page = form.form.page + 1;
     const result = await searchItem(form.form);
     const more_data = data.concat(result);
     await setData(more_data);
-    form.form.page = page + 1;
   };
 
   const navigation: any = useNavigation();

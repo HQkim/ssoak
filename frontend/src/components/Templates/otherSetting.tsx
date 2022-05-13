@@ -6,15 +6,18 @@ import {
   Modal,
   Alert,
   Pressable,
+  Dimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { kakaoDelete } from "../../apis/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
 
 type Props = {
   navigation: any;
-  route: object;
 };
+
+const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
 
 const OtherSetting = (props: Props) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -25,26 +28,13 @@ const OtherSetting = (props: Props) => {
   };
   return (
     <View>
-      <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 15 }}>
-        기타
-      </Text>
-      <View style={{ marginTop: 15 }}>
-        <TouchableOpacity onPress={() => console.log("문의하기")}>
-          <Text>문의하기</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={{ marginTop: 15 }}>
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <Text>회원탈퇴</Text>
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          borderBottomColor: "#d7d4d4",
-          borderBottomWidth: 1,
-          marginTop: 15,
-        }}
-      ></View>
+      <TouchableOpacity
+        onPress={() => setModalVisible(true)}
+        style={{ flexDirection: "row", alignItems: "center" }}
+      >
+        <Ionicons name="person-remove-outline" size={24} color="black" />
+        <Text style={{ fontSize: 18, padding: 15 }}>회원탈퇴</Text>
+      </TouchableOpacity>
       <Modal
         animationType="slide"
         transparent={true}
@@ -60,19 +50,29 @@ const OtherSetting = (props: Props) => {
               회원탈퇴시 회원정보가 삭제됩니다.
             </Text>
             <Text style={styles.modalText}>정말 탈퇴하시겠습니까?</Text>
-            <View style={{ flexDirection: "row" }}>
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => console.log("삭제")}
-              >
-                <Text style={styles.textStyle}>탈퇴하기</Text>
-              </Pressable>
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.textStyle}>돌아가기</Text>
-              </Pressable>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: ScreenWidth / 50,
+              }}
+            >
+              <View>
+                <Pressable
+                  style={[styles.button, styles.deleteButton]}
+                  onPress={() => console.log("삭제")}
+                >
+                  <Text style={styles.textStyle}>탈퇴하기</Text>
+                </Pressable>
+              </View>
+              <View style={{ marginLeft: ScreenWidth / 50 }}>
+                <Pressable
+                  style={[styles.button, styles.backButton]}
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <Text style={styles.textStyle}>돌아가기</Text>
+                </Pressable>
+              </View>
             </View>
           </View>
         </View>
@@ -113,7 +113,10 @@ const styles = StyleSheet.create({
   buttonOpen: {
     backgroundColor: "#F194FF",
   },
-  buttonClose: {
+  deleteButton: {
+    backgroundColor: "red",
+  },
+  backButton: {
     backgroundColor: "#2196F3",
   },
   textStyle: {
