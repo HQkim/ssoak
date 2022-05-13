@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
@@ -107,4 +106,15 @@ public class Member {
         this.grade += point;
     }
 
+    public void blockMember() {
+        this.kakaoId = null;
+        this.appleId = null;
+        this.email = "";
+        this.nickname = "Deleted-User";
+        this.profileImageUrl = "https://ssoak-bucket.s3.ap-northeast-2.amazonaws.com/eecbabe9-1fe3-4f45-bc3d-d800035dbe05.png";
+        this.grade = 0.0;
+        this.isDeleted = true;
+        this.password = "";
+        this.isBlocked = true;
+    }
 }

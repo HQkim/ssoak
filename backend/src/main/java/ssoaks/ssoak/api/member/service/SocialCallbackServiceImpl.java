@@ -1,7 +1,5 @@
 package ssoaks.ssoak.api.member.service;
 
-
-import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
