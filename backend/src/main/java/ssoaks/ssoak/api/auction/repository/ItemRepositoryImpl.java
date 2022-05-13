@@ -156,7 +156,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
     @Override
     public List<ItemOverviewLikedDto> getLikedItemOverviewsByMember(Long memberSeq) {
 
-        List<ItemOverviewLikedDto> list_liked = queryFactory
+        List<ItemOverviewLikedDto> listLiked = queryFactory
                 .select(new QItemOverviewLikedDto(
                         item.seq,
                         item.title,
@@ -178,7 +178,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                 .groupBy(item)
                 .fetch();
 
-        return list_liked;
+        return listLiked;
     }
 
     @Override

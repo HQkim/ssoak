@@ -60,9 +60,12 @@ public class Member {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean isBlocked;
+
     @Builder
     public Member(String kakaoId, String appleId, String email, String nickname, String profileImageUrl,
-                  Double grade, LocalDateTime loginTime, Boolean isDeleted, String password
+                  Double grade, LocalDateTime loginTime, Boolean isDeleted, String password, Boolean isBlocked
                   ) {
         this.kakaoId = kakaoId;
         this.appleId = appleId;
@@ -73,6 +76,7 @@ public class Member {
         this.loginTime = loginTime;
         this.isDeleted = isDeleted;
         this.password = password;
+        this.isBlocked = isBlocked;
     }
 
     public void changeMember(String nickname, String profileImageUrl) {

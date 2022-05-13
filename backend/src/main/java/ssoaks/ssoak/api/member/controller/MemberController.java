@@ -9,6 +9,7 @@ import ssoaks.ssoak.api.auction.dto.response.ItemOverviewDto;
 import ssoaks.ssoak.api.auction.dto.response.ItemOverviewLikedDto;
 import ssoaks.ssoak.api.member.dto.request.ReqMemberProfileChangeDto;
 import ssoaks.ssoak.api.member.dto.request.ReqMemberProfileWrapperDto;
+import ssoaks.ssoak.api.member.dto.request.ReqMemberReportDto;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileDTO;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileItemsDTO;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileLikedItemsDTO;
@@ -28,13 +29,13 @@ import static org.springframework.util.StringUtils.isEmpty;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/members/profile")
+@RequestMapping("/api/v1/members")
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("")
+    @GetMapping("/profile")
     public ResponseEntity<BaseDataResponseDTO<ResMemberProfileDTO>> getMyProfile () {
         log.debug("MemberController getMyProfile 호출됨");
 
@@ -57,7 +58,7 @@ public class MemberController {
         return ResponseEntity.status(200).body(resMemberProfile);
     }
 
-    @GetMapping("/selling")
+    @GetMapping("/profile/selling")
     public ResponseEntity<BaseDataResponseDTO<ResMemberProfileItemsDTO>> getMySellingItems () {
         log.debug("MemberController getMySellingItems 호출됨");
 
@@ -86,7 +87,7 @@ public class MemberController {
         return ResponseEntity.status(200).body(resMemberProfileSelling);
     }
 
-    @GetMapping("/sold")
+    @GetMapping("/profile/sold")
     public ResponseEntity<BaseDataResponseDTO<ResMemberProfileItemsDTO>> getMySoldItems () {
         log.debug("MemberController getMySoldItems 호출됨");
 
@@ -115,7 +116,7 @@ public class MemberController {
         return ResponseEntity.status(200).body(resMemberProfileSold);
     }
 
-    @GetMapping("/unsold")
+    @GetMapping("/profile/unsold")
     public ResponseEntity<BaseDataResponseDTO<ResMemberProfileItemsDTO>> getMyUnsoldItems () {
         log.debug("MemberController getMyUnsoldItems 호출됨");
 
@@ -145,7 +146,7 @@ public class MemberController {
     }
 
     // 프로필 수정
-    @PatchMapping("")
+    @PatchMapping("/profile")
     public ResponseEntity<BaseResponseDTO> changeProfileV1 (ReqMemberProfileChangeDto reqProfileChangeDto) {   // @Valid 나중에 테스트 해보기
         log.debug("MemberController changeProfileV1 호출됨");
         System.out.println("reqProfileChangeDto: " + reqProfileChangeDto);
@@ -173,7 +174,7 @@ public class MemberController {
     }
 
     // 프로필 수정 v2
-    @PostMapping("")
+    @PostMapping("/profile")
     public ResponseEntity<BaseResponseDTO> changeProfileV2 (ReqMemberProfileChangeDto reqProfileChangeDto) {   // @Valid 나중에 테스트 해보기
         log.debug("MemberController changeProfileV2 호출됨");
         System.out.println("reqProfileChangeDto: " + reqProfileChangeDto);
@@ -200,7 +201,7 @@ public class MemberController {
     }
 
     // 프로필 수정 v3
-    @PostMapping("/test")
+    @PostMapping("/profile/test")
     public ResponseEntity<BaseResponseDTO> changeProfileV3 (ReqMemberProfileWrapperDto reqProfileDto) {   // @Valid 나중에 테스트 해보기
         log.debug("MemberController changeProfileV2 호출됨");
         System.out.println("reqProfileChangeDto: " + reqProfileDto);
@@ -228,7 +229,7 @@ public class MemberController {
         return ResponseEntity.status(200).body(new BaseResponseDTO(200, "프로필 수정 성공"));
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/profile")
     public ResponseEntity<BaseResponseDTO> deleteMember () {
         log.debug("MemberController deleteMyAccount 호출됨");
 
@@ -248,7 +249,7 @@ public class MemberController {
 
     }
 
-    @GetMapping("/{memberSeq}")
+    @GetMapping("/profile/{memberSeq}")
     public ResponseEntity<BaseDataResponseDTO<ResOtherMemberProfileDTO>> getOtherMemberProfile (@PathVariable("memberSeq") Long memberSeq) {
         log.debug("MemberController getOtherMemberProfile 호출됨");
 
@@ -276,7 +277,7 @@ public class MemberController {
         return ResponseEntity.status(200).body(resMemberProfile);
     }
 
-    @GetMapping("/buy")
+    @GetMapping("/profile/buy")
     public ResponseEntity<BaseDataResponseDTO<ResMemberProfileItemsDTO>> getMyBoughtItems () {
         log.debug("MemberController getMyBoughtItems 호출됨");
 
@@ -305,7 +306,7 @@ public class MemberController {
         return ResponseEntity.status(200).body(resMemberProfileBought);
     }
 
-    @GetMapping("/likes")
+    @GetMapping("/profile/likes")
     public ResponseEntity<BaseDataResponseDTO<ResMemberProfileLikedItemsDTO>> getMyLikedItems () {
         log.debug("MemberController getMyLikedItems 호출됨");
 
@@ -332,5 +333,26 @@ public class MemberController {
                 ResMemberProfileLikedItemsDTO.builder().items(LikedItems).build());
 
         return ResponseEntity.status(200).body(resMemberProfileLikes);
+    }
+
+    @PostMapping("/report")
+    public ResponseEntity<BaseResponseDTO> reportMember(@RequestBody ReqMemberReportDto reqMemberReportDto) {
+        log.debug("MemberController reportMember 호출됨");
+
+        try {
+            Integer statusCode = memberService.reportMember(reqMemberReportDto.getMemberSeq());
+            if (statusCode == 404)
+                return ResponseEntity.status(404).body(new BaseResponseDTO(404, "신고할 회원을 찾을 수 없습니다."));
+            if (statusCode == 400)
+                return ResponseEntity.status(400).body(new BaseResponseDTO(400, "이미 신고한 회원입니다."));
+        } catch (NotAuthenticatedMemberException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(401).body(new BaseResponseDTO(401, "회원 권한 없음"));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(500).body(new BaseResponseDTO(500, "내부 서버 에러"));
+        }
+
+        return ResponseEntity.status(200).body(new BaseResponseDTO(200, "계정 신고 성공"));
     }
 }

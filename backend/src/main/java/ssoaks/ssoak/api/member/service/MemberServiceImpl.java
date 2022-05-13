@@ -14,9 +14,11 @@ import ssoaks.ssoak.api.auction.service.AwsS3Service;
 import ssoaks.ssoak.api.member.dto.request.ReqMemberProfileChangeDto;
 import ssoaks.ssoak.api.member.dto.response.ResMemberProfileDTO;
 import ssoaks.ssoak.api.member.dto.response.ResOtherMemberProfileDTO;
+import ssoaks.ssoak.api.member.entity.Block;
 import ssoaks.ssoak.api.member.entity.Member;
 import ssoaks.ssoak.api.member.exception.NotAuthenticatedMemberException;
 import ssoaks.ssoak.api.member.exception.NotFoundMemberException;
+import ssoaks.ssoak.api.member.repository.BlockRepository;
 import ssoaks.ssoak.api.member.repository.MemberRepository;
 import ssoaks.ssoak.common.util.SecurityUtil;
 
@@ -33,7 +35,7 @@ public class MemberServiceImpl implements MemberService{
 
     private final ItemRepository itemRepository;
 
-    private final ImageRepository imageRepository;
+    private final BlockRepository blockRepository;
 
     private final AwsS3Service awsS3Service;
 
@@ -283,7 +285,47 @@ public class MemberServiceImpl implements MemberService{
         return memberProfile;
     }
 
+    @Override
+    @Transactional
+    public Integer reportMember(Long memberSeq) {
+        Member reporter;
+        Long reporterSeq;
+        Member member;
 
+        try {
+            reporter = getMemberByAuthentication();
+            reporterSeq = reporter.getSeq();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new NotAuthenticatedMemberException("MemberServiceImpl deleteMember() 회원 인증 실패");
+        }
+
+
+        // 신고할 회원 찾기
+        try {
+            System.out.println("memberSeq: " + memberSeq);
+            member = memberRepository.getById(memberSeq);
+            System.out.println("member: " + member);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return 404;
+        }
+
+        // 블락 처리하기
+        Block findBlock = blockRepository.findBlockByReporterSeqAndMemberSeq(reporterSeq, memberSeq).orElse(null);
+
+        if (findBlock != null) {
+            return 400;
+        }
+
+        Block block = Block.builder()
+                .reporter(reporter)
+                .member(member)
+                .build();
+        blockRepository.save(block);
+
+        return 200;
+    }
 
 
 
