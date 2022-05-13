@@ -17,7 +17,7 @@ public interface ItemRepositoryCustom {
     List<ItemOverviewDto> getUnsoldItemOverviewsByMember(Long memberSeq);
     List<Item> getSoldItemsByMember(Long memberSeq);
     List<ItemOverviewDto> getBoughtItemOverviewsByMember(Long memberSeq);
-    List<ItemOverviewLikedDto> getLikedItemOverviewsByMember(Long memberSeq);
+    List<ItemOverviewLikedDto> getLikedItemOverviewsByMember(Long memberSeq, List<Long> blackList);
 
     Integer countItemListByAuctionType(List<Long> blackList, String keyword);
     List<AuctionListDto> getItemListByAuctionType(List<Long> blackList, String keyword, Pageable pageable);

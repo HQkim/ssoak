@@ -39,5 +39,17 @@ public class BlockRepositoryImpl implements BlockRepositoryCustom{
                 .fetch();
     }
 
+    @Override
+    public List<Long> getMyAndCommonBlackList(Long memberSeq) {
+
+        return queryFactory
+                .select(member.seq)
+                .from(member)
+                .leftJoin(block).on(block.member.eq(member))
+                .where(member.isBlocked.eq(true).or(block.seq.isNotNull()))
+                .groupBy(member)
+                .fetch();
+    }
+
 
 }
