@@ -44,11 +44,11 @@ const AutionDetailContainer = (props: Props) => {
     }
   }, [item]);
   useEffect(() => {
-    console.log(item);
+    // console.log(item);
     onStartLoadData(props.route.params.id);
 
     return () => {
-      console.log("reset normal");
+      // console.log("reset normal");
       dispatch(dataReset());
     };
   }, []);

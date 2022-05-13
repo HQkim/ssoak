@@ -59,21 +59,21 @@ const MainChat = ({ onBack, myData, selectedUser, userId }) => {
           }))
         : [];
     },
-    [myData.avatar, myData.userId, selectedUser.avatar, selectedUser.userId],
+    [myData.avatar, myData.userId, selectedUser.avatar, selectedUser.userId]
   );
 
   const fetchMessages = useCallback(async () => {
     const database = getDatabase();
 
     const snapshot = await get(
-      ref(database, `chatrooms/${selectedUser.chatroomId}`),
+      ref(database, `chatrooms/${selectedUser.chatroomId}`)
     );
 
     return snapshot.val();
   }, [selectedUser.chatroomId]);
 
   useEffect(() => {
-    Platform.OS === "ios" && setOffset(40);
+    Platform.OS === "ios" && setOffset(44);
 
     //load old messages
     const loadData = async () => {
@@ -101,7 +101,7 @@ const MainChat = ({ onBack, myData, selectedUser, userId }) => {
   const onSend = useCallback(
     async (msg = []) => {
       //send the msg[0] to the other user
-      console.log(msg);
+      // console.log(msg);
       const database = getDatabase();
 
       //fetch fresh messages from server
@@ -122,7 +122,7 @@ const MainChat = ({ onBack, myData, selectedUser, userId }) => {
 
       setMessages((prevMessages) => GiftedChat.append(prevMessages, msg));
     },
-    [fetchMessages, myData.userId, selectedUser.chatroomId],
+    [fetchMessages, myData.userId, selectedUser.chatroomId]
   );
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     borderTopColor: "black",
     borderTopWidth: 1,
     borderColor: "black",
-    borderRadius: 9999,
+    // borderRadius: 9999,
     alignItems: "center",
     alignSelf: "center",
     justifyContent: "center",
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
     paddingRight: 8,
     marginTop: 10,
-    marginLeft: 5,
-    marginRight: 5,
+    // marginLeft: 5,
+    // marginRight: 5,
   },
 });

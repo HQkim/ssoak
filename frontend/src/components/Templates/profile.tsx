@@ -85,7 +85,7 @@ const Profile = (props: Props) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
     });
-    console.log(result);
+    // console.log(result);
     if (!result.cancelled) {
       const uri = result.uri;
       const newFile = result;

@@ -35,7 +35,7 @@ function* logInSaga(action: any) {
     console.log("saga / logIn / Request");
     const result = yield call(loginAPI, action.payload);
     // yield delay(2000);
-    console.log(result);
+    // console.log(result);
     yield put({
       type: LOG_IN_SUCCESS,
       data: result.data.accessToken,

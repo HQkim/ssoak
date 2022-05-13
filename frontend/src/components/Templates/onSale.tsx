@@ -77,70 +77,98 @@ const onSale = (props: Props) => {
                   }
                 />
               </View>
-              <View style={{ flexDirection: "row", marginTop: 10 }}>
-                <View style={{ flex: 2 }}>
-                  <Image
-                    source={{ uri: item.imageUrl }}
+              <View
+                style={{ flexDirection: "row", marginTop: ScreenWidth / 50 }}
+              >
+                <Image
+                  source={{ uri: item.imageUrl }}
+                  style={{
+                    width: ScreenWidth / 3.2,
+                    height: ScreenWidth / 3.2,
+                    borderColor: "#d7d4d4",
+                    borderWidth: 1,
+                  }}
+                />
+
+                <View
+                  style={{
+                    flexDirection: "column",
+                    justifyContent: "space-around",
+                    height: ScreenWidth / 3.2,
+                  }}
+                >
+                  <Text
                     style={{
-                      width: ScreenHeight / 10,
-                      height: ScreenHeight / 10,
-                      borderColor: "#d7d4d4",
-                      borderWidth: 1,
+                      fontSize: ScreenWidth / 18,
+                      marginLeft: ScreenWidth / 20,
                     }}
-                  />
-                </View>
-                <View style={{ justifyContent: "space-between" }}>
-                  <Text style={{ fontSize: 18 }} numberOfLines={1}>
+                    numberOfLines={1}
+                  >
                     {item.title}
                   </Text>
-                  <View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Text>참여자 : </Text>
-                      <TextInput
-                        editable={false}
-                        maxLength={5}
-                        value={
-                          item.biddingCount
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 명"
-                        }
-                        style={styles.textArea}
-                        textAlign="center"
-                      />
-                    </View>
+                  <Text
+                    style={{
+                      fontSize: ScreenWidth / 24,
+                      marginTop: ScreenWidth / 70,
+                      marginLeft: ScreenWidth / 20,
+                    }}
+                  >
+                    참여자 : {item.biddingCount} 명
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      marginLeft: 19,
+                      marginTop: ScreenWidth / 70,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: ScreenWidth / 24,
+                        alignSelf: "center",
+                      }}
+                    >
+                      시초가 :{" "}
+                    </Text>
+                    <TextInput
+                      editable={false}
+                      maxLength={7}
+                      value={
+                        item.startPrice
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
+                      }
+                      style={styles.textArea}
+                      textAlign="center"
+                    />
                   </View>
-                </View>
-              </View>
-              <View
-                style={{ flexDirection: "row", marginTop: ScreenWidth / 30 }}
-              >
-                <View style={{ flexDirection: "row", flex: 1 }}>
-                  <Text>시초가 : </Text>
-                  <TextInput
-                    editable={false}
-                    maxLength={7}
-                    value={
-                      item.startPrice
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
-                    }
-                    style={styles.textArea}
-                    textAlign="center"
-                  />
-                </View>
-                <View style={{ flexDirection: "row", flex: 1, marginLeft: 19 }}>
-                  <Text>입찰가 : </Text>
-                  <TextInput
-                    editable={false}
-                    maxLength={7}
-                    value={
-                      item.lastPrice
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
-                    }
-                    style={styles.textArea}
-                    textAlign="center"
-                  />
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      marginLeft: 19,
+                      marginTop: ScreenWidth / 70,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: ScreenWidth / 24,
+                        alignSelf: "center",
+                      }}
+                    >
+                      입찰가 :{" "}
+                    </Text>
+                    <TextInput
+                      editable={false}
+                      maxLength={7}
+                      value={
+                        item.lastPrice
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " 원"
+                      }
+                      style={styles.textArea}
+                      textAlign="center"
+                    />
+                  </View>
                 </View>
               </View>
               <View>
@@ -151,7 +179,14 @@ const onSale = (props: Props) => {
                     alignItems: "center",
                   }}
                 >
-                  <Text>경매일 : </Text>
+                  <Text
+                    style={{
+                      fontSize: ScreenWidth / 24,
+                      alignSelf: "center",
+                    }}
+                  >
+                    경매일 :{" "}
+                  </Text>
                   <TextInput
                     editable={false}
                     maxLength={50}
@@ -209,14 +244,16 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 0.5,
     height: 24,
-    width: ScreenWidth / 4,
+    width: ScreenWidth / 3,
+    fontWeight: "300",
   },
   textAreaDate: {
     borderRadius: 20,
     borderWidth: 0.5,
     height: 24,
-    width: ScreenWidth * 0.73,
+    width: ScreenWidth * 0.75,
     paddingLeft: 8,
+    fontWeight: "300",
   },
   completedTypeTag: {
     width: ScreenWidth / 6,

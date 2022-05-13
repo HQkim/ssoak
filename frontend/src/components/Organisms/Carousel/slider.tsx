@@ -4,9 +4,8 @@ import {
   View,
   Dimensions,
   Image,
-  Pressable,
+  TouchableOpacity,
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Countdown, { zeroPad } from "react-countdown";
@@ -191,11 +190,11 @@ const Slider: any = ({ data, handleClickItem }) => {
               <Text>
                 최소 입찰호가 :{" "}
                 {item.bidding
-                  ? Number(item.bidding.biddingPrice / 10)
+                  ? Number(item.bidding.biddingPrice * 0.03)
                       .toFixed()
                       .toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                  : Number(item.startPrice / 10)
+                  : Number(item.startPrice * 0.03)
                       .toFixed()
                       .toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}

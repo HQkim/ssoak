@@ -70,7 +70,7 @@ const MainContainer = ({ navigation, route }: Props) => {
 
   const getToken = async () => {
     const token = await AsyncStorage.getItem("accessToken", (err, res) => {
-      console.log(res);
+      // console.log(res);
     });
   };
 
