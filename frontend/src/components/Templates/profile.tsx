@@ -10,6 +10,7 @@ import {
   TextInput,
   Alert,
   Platform,
+  Linking,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -85,7 +86,7 @@ const Profile = (props: Props) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
     });
-    // console.log(result);
+    console.log(result);
     if (!result.cancelled) {
       const uri = result.uri;
       const newFile = result;
@@ -140,10 +141,6 @@ const Profile = (props: Props) => {
             }}
           >
             {font ? <Text style={styles.fontStyle}>Profile</Text> : null}
-
-            {/* <View style={{ flex: 1 }}>
-                <Fontisto name="bell" size={20} color="black" />
-              </View> */}
             <View>
               <TouchableOpacity onPress={() => navigation.navigate("setting")}>
                 <Ionicons name="settings-outline" size={20} color="black" />
@@ -155,7 +152,6 @@ const Profile = (props: Props) => {
           style={{
             backgroundColor: "#ffff",
             alignItems: "center",
-            // zIndex: 1,
           }}
         >
           <TouchableOpacity onPress={pickImage}>
@@ -165,7 +161,7 @@ const Profile = (props: Props) => {
                 height: ScreenHeight / 6,
                 borderRadius: ScreenHeight / 12,
                 position: "relative",
-                marginTop: -ScreenHeight / 5,
+                marginTop: -ScreenHeight / 12,
                 borderColor: "#d7d4d4",
                 borderWidth: 1,
               }}
@@ -296,10 +292,14 @@ const Profile = (props: Props) => {
             <Ionicons name="document-text-outline" size={24} color="black" />
             <Text style={{ fontSize: 18, padding: 15 }}>이용약관</Text>
           </View>
-          <View style={styles.informView}>
-            <AntDesign name="profile" size={24} color="black" />
-            <Text style={{ fontSize: 18, padding: 15 }}>내부정보관리규정</Text>
-          </View>
+          <TouchableOpacity onPress={() => console.log("press")}>
+            <View style={styles.informView}>
+              <AntDesign name="profile" size={24} color="black" />
+              <Text style={{ fontSize: 18, padding: 15 }}>
+                내부정보관리규정
+              </Text>
+            </View>
+          </TouchableOpacity>
           <View style={styles.informView}>
             <Ionicons
               name="information-circle-outline"
