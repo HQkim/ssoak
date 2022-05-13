@@ -115,11 +115,11 @@ const Slider: any = ({ data, handleClickItem }) => {
                       marginRight: 15,
                     }}
                   >
-                    <Ionicons
+                    {/* <Ionicons
                       name={"heart"}
                       size={ScreenWidth / 15}
                       color={"#EA759A"}
-                    />
+                    /> */}
                   </View>
                   <View
                     style={{
