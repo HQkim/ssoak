@@ -1180,6 +1180,7 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
         ? msgs.reverse().map((msg, index) =>
             user.blackList.includes(msg.sender)
               ? {
+                  ...msg,
                   _id: index,
                   text: msg.type !== "bid" ? "" : msg.text,
                   user: {
