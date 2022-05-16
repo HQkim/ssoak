@@ -1151,6 +1151,7 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
             createdAt: new Date(),
             type: msg[0].type,
             price: msg[0].price ? msg[0].price : "",
+            system: msg[0].system,
           },
         ],
       });
@@ -1286,7 +1287,7 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
   return (
     <View style={{ flex: 1 }}>
       <GiftedChat
-        renderAvatar={() => null}
+        // renderAvatar={() => null}
         renderBubble={(props) => <Bubble {...props} />}
         onLongPress={function (context, message) {
           if (message.user._id !== userId) {
