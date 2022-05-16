@@ -65,7 +65,7 @@ public class FirebaseUtil {
                 String index = String.valueOf(snapshot.getChildrenCount());
 
                 FirebaseFriendDto friendDto = FirebaseFriendDto.builder().avatar(finalImgUrl)
-                        .chatroomId(itemDto.getItemSeq()).userId(finalFriendSeq).title("title").build();
+                        .chatroomId(itemDto.getItemSeq()).userId(finalFriendSeq).title(itemDto.getTitle()).build();
 
                 Map<String, Object> friends = new HashMap<>();
                 friends.put(index, friendDto);
