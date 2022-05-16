@@ -21,12 +21,12 @@ const Slider: any = ({ data, handleClickItem }) => {
       {item && (
         <TouchableOpacity
           style={{
-            height: Dimensions.get("window").height / 6,
+            height: Dimensions.get("window").height / 5.5,
             flex: 1,
             flexDirection: "row",
             backgroundColor: "#eeeeee",
-            marginTop: 5,
-            marginBottom: 5,
+            marginTop: 10,
+            marginBottom: 10,
             borderRadius: 10,
             shadowOffset: {
               width: 2,
@@ -45,110 +45,107 @@ const Slider: any = ({ data, handleClickItem }) => {
             <Image
               source={{ uri: item.imageUrl }}
               style={{
-                width: ScreenHeight / 8,
-                height: ScreenHeight / 8,
+                width: ScreenHeight / 6.5,
+                height: ScreenHeight / 6.5,
                 borderWidth: 1,
                 borderRadius: 5,
               }}
               resizeMode="cover"
             />
           </View>
-          <View style={{ justifyContent: "center", flex: 2 }}>
+          <View style={{ justifyContent: "center", flex: 1.5, padding: 5 }}>
             <View style={{ flex: 2, flexDirection: "column" }}>
               <View style={{ flex: 3, flexDirection: "row" }}>
-                <View style={{ flex: 2 }}>
+                <View>
                   <View
                     style={{
                       justifyContent: "center",
                       marginBottom: 3,
-                      flex: 2,
+                      flex: 1,
                     }}
                   >
                     <View
                       style={{
-                        paddingTop: 3,
                         paddingBottom: 3,
-                        flex: 1,
                         justifyContent: "center",
+                        flexDirection: "row",
                       }}
                     >
-                      <View style={{ flex: 1 }} />
                       <View
                         style={{
-                          flex: 2,
                           backgroundColor: "#F8A33E",
                           width: ScreenWidth / 4,
-                          height: ScreenWidth / 20,
+                          height: ScreenWidth / 16,
                           borderRadius: 9999,
                           alignItems: "center",
                           justifyContent: "center",
+                          marginRight: 10,
                         }}
                       >
-                        <Text style={{}}>{item.category}</Text>
+                        <Text style={{ color: "#ffffff" }}>
+                          {item.category}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          backgroundColor: "#0176b7",
+                          width: ScreenWidth / 5,
+                          height: ScreenWidth / 16,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          borderRadius: 9999,
+                        }}
+                      >
+                        <Text style={{ color: "white" }}>
+                          {new Date() > new Date(item.endTime)
+                            ? "경매종료"
+                            : new Date() < new Date(item.startDate)
+                            ? "경매예정"
+                            : "경매중"}
+                        </Text>
                       </View>
                     </View>
                     <View
                       style={{
-                        flex: 1,
+                        flex: 3,
                         marginTop: 3,
-                        marginLeft: 3,
                         justifyContent: "center",
-                      }}
-                    >
-                      <Text numberOfLines={1} style={{ fontSize: 20 }}>
-                        {item.title}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    flex: 1,
-                    alignItems: "flex-end",
-                    justifyContent: "center",
-                  }}
-                >
-                  <View
-                    style={{
-                      flex: 1,
-                      justifyContent: "flex-end",
-                      marginRight: 15,
-                    }}
-                  >
-                    {/* <Ionicons
-                      name={"heart"}
-                      size={ScreenWidth / 15}
-                      color={"#EA759A"}
-                    /> */}
-                  </View>
-                  <View
-                    style={{
-                      flex: 1,
-                      justifyContent: "center",
-                      alignItems: "center",
-                      marginRight: 10,
-                    }}
-                  >
-                    <View
-                      style={{
                         flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "center",
                       }}
                     >
-                      <Image
-                        source={{ uri: item.sellerprofile }}
+                      <View
                         style={{
-                          width: 20,
-                          height: 20,
-                          borderRadius: 9999,
-                          borderWidth: 1,
-                          borderColor: "#444",
+                          flex: 2,
+                          marginTop: 3,
+                          justifyContent: "center",
                         }}
-                      />
-                      <Text style={{ marginLeft: 5 }}>
-                        {item.sellerNickname}
-                      </Text>
+                      >
+                        <Text numberOfLines={1} style={{ fontSize: 20 }}>
+                          {item.title}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          flex: 1,
+                          marginLeft: 20,
+                        }}
+                      >
+                        <Image
+                          source={{ uri: item.sellerprofile }}
+                          style={{
+                            width: 20,
+                            height: 20,
+                            borderRadius: 9999,
+                            borderWidth: 1,
+                            borderColor: "#444",
+                          }}
+                        />
+                        <Text style={{ marginLeft: 5, marginRight: 5 }}>
+                          {item.sellerNickname}
+                        </Text>
+                      </View>
                     </View>
                   </View>
                 </View>
@@ -158,8 +155,6 @@ const Slider: any = ({ data, handleClickItem }) => {
                   style={{
                     flexDirection: "row",
                     flex: 1,
-                    marginLeft: 5,
-                    justifyContent: "space-between",
                     alignItems: "center",
                   }}
                 >
@@ -187,39 +182,12 @@ const Slider: any = ({ data, handleClickItem }) => {
               >
                 <View
                   style={{
-                    flex: 1,
-                    flexDirection: "row",
-                  }}
-                >
-                  <View style={{ flex: 1 }} />
-                  <View
-                    style={{
-                      flex: 5,
-                      backgroundColor: "#0176b7",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      borderRadius: 9999,
-                    }}
-                  >
-                    <Text style={{ color: "white" }}>
-                      {new Date() > new Date(item.endTime)
-                        ? "경매종료"
-                        : new Date() < new Date(item.startDate)
-                        ? "경매예정"
-                        : "경매중"}
-                    </Text>
-                  </View>
-                  <View style={{ flex: 1 }} />
-                </View>
-                <View
-                  style={{
-                    flex: 1,
                     alignItems: "center",
                     // flexDirection: "row",
                     justifyContent: "center",
                   }}
                 >
-                  <Text style={{}}>
+                  <Text>
                     최소 입찰호가 :{" "}
                     {item.biddingPrice
                       ? Number(item.biddingPrice * 0.03)
