@@ -56,11 +56,11 @@ const index = ({ imageUrls, style }: any) => {
                 source={{
                   uri: url,
                 }}
-                // resizeMode="contain"
+                resizeMode="contain"
                 style={{
                   flex: 1,
-                  width: "100%",
-                  height: "80%",
+
+                  // height: "50%",
                 }}
               />
             </ReactNativeZoomableView>

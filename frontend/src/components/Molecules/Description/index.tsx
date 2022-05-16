@@ -52,9 +52,9 @@ const index = ({ item, descStyle, titleStyle }) => {
   const onLoadData = () => {
     dispatch(loadDataAsync(item.itemSeq));
   };
-  useEffect(() => {
-    // console.log(userId);
-  }, [userId]);
+  // useEffect(() => {
+  //   console.log();
+  // }, []);
   useEffect(() => {
     userId && setBuyerId(item.bidding?.buyer.seq);
   }, [userId]);
@@ -120,7 +120,7 @@ const index = ({ item, descStyle, titleStyle }) => {
         });
       }
     } catch {
-      Alert.alert("입찰에 실패했습니다.");
+      Alert.alert("경매", "입찰에 실패했습니다.");
     } finally {
       // onLoadData();
     }
@@ -312,10 +312,17 @@ const index = ({ item, descStyle, titleStyle }) => {
               }}
             />
           )}
-          <View style={styles.itemInformationContainer}>
-            <Text style={styles.information}>종료까지 남은 시간 : </Text>
-            <CountDown style={styles.information} endTime={item.endTime} />
-          </View>
+          {new Date(Date.parse(item.startTime)) < new Date() ? (
+            <View style={styles.itemInformationContainer}>
+              <Text style={styles.information}>종료까지 남은 시간 : </Text>
+              <CountDown style={styles.information} endTime={item.endTime} />
+            </View>
+          ) : (
+            <View style={styles.itemInformationContainer}>
+              <Text style={styles.information}>시작까지 남은 시간 : </Text>
+              <CountDown style={styles.information} endTime={item.startTime} />
+            </View>
+          )}
           <View style={styles.itemInformationContainer}>
             <Text style={styles.information}>현재 입찰가 : </Text>
             <TextInput

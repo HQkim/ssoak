@@ -1,12 +1,17 @@
-import { StyleSheet, Text } from "react-native";
-import React from "react";
+import { StyleSheet, Text, Platform } from "react-native";
+import React, { useEffect, useState } from "react";
 import Countdown, { zeroPad } from "react-countdown";
 type Props = {};
 
 const CountDown = ({ style, endTime }) => {
+  const [parsedTime, setParsedTime] = useState(new Date(Date.parse(endTime)));
+  useEffect(() => {
+    Platform.OS === "android" &&
+      setParsedTime(new Date(Date.parse(endTime) - 9000 * 60 * 60));
+  }, []);
   return (
     <Countdown
-      date={endTime}
+      date={parsedTime}
       intervalDelay={0}
       precision={0}
       // daysInHours={true}

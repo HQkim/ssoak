@@ -18,6 +18,10 @@ export const fileInstance = axios.create({
   },
 });
 
+export const noHeaderInstance = axios.create({
+  baseURL: `${BaseURL}`,
+});
+
 instance.interceptors.request.use(
   async (config: any) => {
     const token = await AsyncStorage.getItem("accessToken");
@@ -26,7 +30,7 @@ instance.interceptors.request.use(
   },
   (err) => {
     return Promise.reject(err);
-  }
+  },
 );
 fileInstance.interceptors.request.use(
   async (config: any) => {
@@ -36,9 +40,19 @@ fileInstance.interceptors.request.use(
   },
   (err) => {
     return Promise.reject(err);
-  }
+  },
 );
 
-export const noHeaderInstance = axios.create({
-  baseURL: `${BaseURL}`,
-});
+noHeaderInstance.interceptors.request.use(
+  async (config) => {
+    const token = await AsyncStorage.getItem("accessToken");
+    console.log(token, "..");
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (err) => {
+    return Promise.reject(err);
+  },
+);

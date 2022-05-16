@@ -1102,7 +1102,7 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
                 ]);
               }
             } catch (error) {
-              console.log(error);
+              Alert.alert("경매", "입찰에 실패했습니다.");
             }
           },
         },

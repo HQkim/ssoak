@@ -37,7 +37,7 @@ export const getList = async ({ keyword, page }) => {
       params: {
         keyword,
         page,
-        size: 10,
+        size: 20,
         sort: sort,
       },
     });
@@ -51,7 +51,7 @@ export const biddingAuction = async (itemSeq, formData) => {
   // console.log(itemSeq, formData);
   const response = await fileInstance.post(
     `/auctions/${itemSeq}/bidding`,
-    formData
+    formData,
   );
   return response.data;
 };
@@ -59,7 +59,7 @@ export const biddingAuction = async (itemSeq, formData) => {
 export const hammerAuction = async (itemSeq, formData) => {
   const response = await fileInstance.post(
     `/auctions/${itemSeq}/hammered`,
-    formData
+    formData,
   );
   return response.data;
 };
