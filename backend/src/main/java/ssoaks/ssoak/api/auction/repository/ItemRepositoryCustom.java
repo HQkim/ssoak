@@ -29,7 +29,7 @@ public interface ItemRepositoryCustom {
     List<AuctionListDto> getSearchItemsByKeyword(List<Long> blackList, ReqSearchDto searchDto, Pageable pageable);
 
     List<FinishBiddingDto> getSuccessfulAuction();
-    List<FinishBiddingDto> getFiledAuction();
+    List<FinishBiddingDto> getFailedAuction();
 
 
 }

@@ -316,7 +316,6 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
 
     @Override
     public List<AuctionListDto> getSearchItemsByKeyword(List<Long> blackList, ReqSearchDto searchDto, Pageable pageable) {
-        System.out.println("repository - blackList" + blackList);
         JPAQuery<AuctionListDto> query = queryFactory
                 .select(new QAuctionListDto(
                         item.seq,
@@ -382,7 +381,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
     }
 
     @Override
-    public List<FinishBiddingDto> getFiledAuction() {
+    public List<FinishBiddingDto> getFailedAuction() {
         List<FinishBiddingDto> auctionListDtos = queryFactory
                 .select(new QFinishBiddingDto(
                         item.seq,
