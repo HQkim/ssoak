@@ -40,6 +40,7 @@ import {
 } from "firebase/database";
 import { useNavigation } from "@react-navigation/native";
 import { biddingAuction } from "../../apis/auctionApi";
+import { reportUser } from "../../apis/auth";
 const badWords = [
   "10새끼",
   "10쎄끼",
@@ -952,7 +953,7 @@ const badWords = [
 type Props = {};
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
-const AuctionChat = ({ userId, userAvatar, item }) => {
+const AuctionChat = ({ user, userId, userAvatar, item }) => {
   const [currentCost, setCurrentCost] = useState();
   const [bidRightNow, setBidRightNow] = useState<string>("15000");
   const [bidAssignValue, setBidAssignValue] = useState<string>("15000");
@@ -965,25 +966,12 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
   const [myData, setMyData] = useState<any>(null);
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [userData, setUserData] = useState([]);
-  const giftedChatRef = useRef();
   const [itemId, setItemId] = useState(item.itemSeq);
+  const [blackList, setBlackList] = useState(null);
 
   useEffect(() => {
     Platform.OS === "ios" && setOffset(60);
-    setMessages([
-      {
-        _id: 1,
-        text: "채팅방에 입장했습니다.",
-        createdAt: new Date(),
-        system: true,
-      },
-      {
-        _id: 0,
-        text: "욕설과 비난은 자제해주시기 바라며, 신고를 원하시면 말풍선을 길게 터치하세요.",
-        createdAt: new Date(),
-        system: true,
-      },
-    ]);
+    setMessages([]);
   }, []);
 
   useEffect(() => {
@@ -1022,6 +1010,7 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
       const auctionChatroom = await get(
         ref(database, `auctionChatrooms/${itemId}`),
       );
+
       if (!auctionChatroom) {
         set(ref(database, `auctionChatrooms/${itemId}`), {
           itemId: itemId,
@@ -1057,10 +1046,18 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
   }, [userId]);
 
   useEffect(() => {
-    if (userId && userData) {
+    if (userId) {
       onLogin();
     }
-  }, [userData]);
+  }, [userId]);
+
+  useEffect(() => {
+    user !== null && setBlackList(user.blackList);
+  }, [user]);
+
+  useEffect(() => {
+    console.log(blackList);
+  }, [blackList]);
 
   useEffect(() => {
     Keyboard.addListener("keyboardWillShow", () => {
@@ -1180,17 +1177,48 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
       }
 
       return msgs
-        ? msgs.reverse().map((msg, index) => ({
-            ...msg,
-            _id: index,
-            user: {
-              _id: msg.sender === myData?.userId ? myData?.userId : msg.sender,
-              avatar:
-                msg.sender === myData?.userId ? myData?.avatar : msg.sender,
-              name: msg.sender === myData?.userId ? myData?.userId : msg.sender,
-            },
-            type: msg.type,
-          }))
+        ? msgs.reverse().map((msg, index) =>
+            user.blackList.includes(msg.sender)
+              ? {
+                  ...msg,
+                  _id: index,
+                  text: msg.type !== "bid" ? "" : msg.text,
+                  user: {
+                    _id:
+                      msg.sender === myData?.userId
+                        ? myData?.userId
+                        : msg.sender,
+                    avatar:
+                      msg.sender === myData?.userId
+                        ? myData?.avatar
+                        : msg.sender,
+                    name:
+                      msg.sender === myData?.userId
+                        ? myData?.userId
+                        : msg.sender,
+                  },
+                  type: msg.type,
+                }
+              : {
+                  ...msg,
+                  _id: index,
+                  user: {
+                    _id:
+                      msg.sender === myData?.userId
+                        ? myData?.userId
+                        : msg.sender,
+                    avatar:
+                      msg.sender === myData?.userId
+                        ? myData?.avatar
+                        : msg.sender,
+                    name:
+                      msg.sender === myData?.userId
+                        ? myData?.userId
+                        : msg.sender,
+                  },
+                  type: msg.type,
+                },
+          )
         : [];
     },
     [myData?.avatar, myData?.userId, itemId, messages],
@@ -1203,6 +1231,30 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
       const myChatroom = await fetchMessages();
 
       myChatroom && setMessages(renderMessages(myChatroom.messages));
+      !myChatroom &&
+        set(ref(database, `auctionChatrooms/${itemId}`), {
+          itemId,
+          messages: [
+            {
+              _id: 15132413,
+              text: "채팅방이 생성되었습니다.",
+              createdAt: new Date(),
+              system: true,
+            },
+            {
+              _id: 11523124,
+              text: "욕설과 비난은 자제해주시기 바라며, 신고를 원하시면 말풍선을 길게 터치하세요.",
+              createdAt: new Date(),
+              system: true,
+            },
+            {
+              _id: 25432643,
+              text: "현재 욕설 필터링이 적용중입니다.",
+              createdAt: new Date(),
+              system: true,
+            },
+          ],
+        });
     };
 
     loadData();
@@ -1244,13 +1296,20 @@ const AuctionChat = ({ userId, userAvatar, item }) => {
                 {
                   text: "예",
                   onPress: () => {
-                    //신고 로직 들어갈 곳
                     if (message.type === "text") {
-                      console.log(message.user._id);
-                      Alert.alert(
-                        "신고",
-                        "접수가 완료되었습니다.\n더 이상 신고 대상자의 채팅을\n확인할 수 없습니다.",
-                      );
+                      reportUser(message.user._id)
+                        .then((res) => {
+                          Alert.alert(
+                            "신고",
+                            "접수가 완료되었습니다.\n더 이상 신고 대상자의 채팅을\n확인할 수 없습니다.",
+                          );
+                        })
+                        .catch(() => {
+                          Alert.alert(
+                            "신고",
+                            "신고 접수에 실패했습니다.\n신고 내용을 확인해주세요.",
+                          );
+                        });
                     } else {
                       Alert.alert("신고", "신고할 수 없는 채팅입니다.");
                     }
