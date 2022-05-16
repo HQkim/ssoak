@@ -97,6 +97,15 @@ const TimeRange = (props: Props) => {
     }, [props.reset])
   );
 
+  useEffect(() => {
+    if (Device.osName === "iOS") {
+      setStartDateOpen(true);
+      setEndDateOpen(true);
+      setStartMinuteOpen(true);
+      setEndMinuteOpen(true);
+    }
+  }, []);
+
   return (
     <View>
       <View style={{ height: ScreenHeight / 20 }}>
