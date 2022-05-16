@@ -1172,10 +1172,9 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
       //     _id: ''
       //   }
       // }
+
       if (msgs[msgs.length - 1].type === "bid") {
-        if (currentCost && msgs[msgs.length - 1].price > currentCost) {
-          setCurrentCost(msgs[msgs.length - 1].price);
-        }
+        setCurrentCost(msgs[msgs.length - 1].price);
       }
 
       return msgs
