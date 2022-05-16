@@ -24,6 +24,7 @@ const OtherSetting = (props: Props) => {
   const deleteAccount = async () => {
     await kakaoDelete();
     await AsyncStorage.removeItem("accessToken");
+    setModalVisible(false);
     props.navigation.navigate("main");
   };
   return (
@@ -60,7 +61,7 @@ const OtherSetting = (props: Props) => {
               <View>
                 <Pressable
                   style={[styles.button, styles.deleteButton]}
-                  onPress={() => console.log("삭제")}
+                  onPress={deleteAccount}
                 >
                   <Text style={styles.textStyle}>탈퇴하기</Text>
                 </Pressable>

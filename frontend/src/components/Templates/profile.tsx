@@ -201,7 +201,7 @@ const Profile = (props: Props) => {
                     editable={false}
                     // textAlign="center"
                     value={props.profile.nickname}
-                    maxLength={5}
+                    maxLength={11}
                   />
                   <AntDesign name="edit" size={24} color="black" />
                 </View>
@@ -221,7 +221,7 @@ const Profile = (props: Props) => {
                     editable={true}
                     textAlign="center"
                     value={name}
-                    maxLength={5}
+                    maxLength={10}
                     onChangeText={setName}
                     placeholder={props.profile.nickname}
                   />
@@ -237,9 +237,9 @@ const Profile = (props: Props) => {
             <Text style={{ fontSize: 20, fontWeight: "200", padding: 5 }}>
               Email : {props.profile.email}
             </Text>
-            <Text style={{ fontSize: 20, fontWeight: "200", padding: 5 }}>
+            {/* <Text style={{ fontSize: 20, fontWeight: "200", padding: 5 }}>
               Point : {props.profile.grade}
-            </Text>
+            </Text> */}
           </View>
         </View>
         <View style={{ backgroundColor: "#ffff" }}>
