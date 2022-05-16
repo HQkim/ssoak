@@ -62,12 +62,12 @@ export default class ImageCreateContainer extends Component {
               {this.state.photos.length} / 10
             </Text>
           </View>
-          {this.state.photos.map((item, i) => (
+          {this.state.photos.map((item, index) => (
             <TouchableWithoutFeedback>
               <View style={{ alignItems: "flex-end" }}>
                 <Image
                   source={{ uri: item.uri }}
-                  key={i}
+                  key={index}
                   style={styles.imgContainer}
                 />
                 <Ionicons
