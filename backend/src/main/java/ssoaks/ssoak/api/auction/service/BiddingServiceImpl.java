@@ -57,14 +57,11 @@ public class BiddingServiceImpl implements BiddingService {
         } else if (item.getEndTime().isBefore(LocalDateTime.now()) | item.getIsSold().equals(true)) {
             throw new NotAllowedBiddingItemException("이미 종료된 경매입니다.");
         }
-//        else if (item.getAuctionType() == AuctionType.LIVE) {
-//            throw new NotAllowedBiddingItemException("이건 일반 경매 api >.<");
-//        }
 
         if (item.getBuyer() != null) {
             if (item.getBuyer().equals(member)) {
                 throw new NotAllowedBiddingItemException("직전에 입찰한 경매입니다.");
-            } else if (item.getBiddingPrice() > biddingDto.getBiddingPrice()) {
+            } else if (item.getBiddingPrice() >= biddingDto.getBiddingPrice()) {
                 throw new NotAllowedBiddingItemException("금액이 직전 입찰 금액보다 작습니다.");
             }
         } else if (biddingDto.getBiddingPrice() < item.getStartPrice()) {
