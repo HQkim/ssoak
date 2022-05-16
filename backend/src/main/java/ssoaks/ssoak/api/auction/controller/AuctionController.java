@@ -61,9 +61,6 @@ public class AuctionController {
     public ResponseEntity<BaseDataResponseDTO> changeItem(@PathVariable("itemSeq") Long itemSeq,
                                                       ReqItemChangeDto reqItemChangeDto) {
         log.debug("물품수정  seq- {} dto-{}", itemSeq, reqItemChangeDto);
-        System.out.println("===물품수정=====> reqItemChangeDto : " + reqItemChangeDto);
-        System.out.println("imageUrls = " + reqItemChangeDto.getImageUrls());
-        System.out.println("images = " + reqItemChangeDto.getImages());
         ResItemSeqDto resItemSeqDto = ResItemSeqDto.builder().itemSeq(itemSeq).build();
         try {
             resItemSeqDto = auctionService.changeItem(itemSeq, reqItemChangeDto);

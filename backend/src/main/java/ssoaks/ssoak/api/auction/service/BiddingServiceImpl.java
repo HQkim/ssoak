@@ -3,6 +3,7 @@ package ssoaks.ssoak.api.auction.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.jni.Local;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +12,7 @@ import ssoaks.ssoak.api.auction.dto.request.ReqBiddingRegisterDto;
 import ssoaks.ssoak.api.auction.dto.response.BiddingSimpleInfoDto;
 import ssoaks.ssoak.api.auction.entity.Bidding;
 import ssoaks.ssoak.api.auction.entity.Item;
-import ssoaks.ssoak.api.auction.enums.AuctionType;
+
 import ssoaks.ssoak.api.auction.exception.FailBiddingException;
 import ssoaks.ssoak.api.auction.exception.NotAllowedBiddingItemException;
 import ssoaks.ssoak.api.auction.repository.BiddingRepository;
@@ -19,10 +20,12 @@ import ssoaks.ssoak.api.auction.repository.ItemRepository;
 import ssoaks.ssoak.api.member.dto.response.MemberSimpleInfoDto;
 import ssoaks.ssoak.api.member.entity.Member;
 import ssoaks.ssoak.api.member.service.MemberService;
+import ssoaks.ssoak.common.dto.FirebaseItemDto;
+import ssoaks.ssoak.common.util.FirebaseUtil;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+
 
 
 @Slf4j
@@ -36,6 +39,8 @@ public class BiddingServiceImpl implements BiddingService {
     private final BiddingRepository biddingRepository;
 
     private final ItemRepository itemRepository;
+
+    private final FirebaseUtil firebaseUtil;
 
     @Transactional
     @Override
@@ -139,12 +144,18 @@ public class BiddingServiceImpl implements BiddingService {
     @Override
     @Transactional
     @Scheduled(cron = "10 * * * * *")
-    public void checkFinishedBidding() {
+    public void checkFinishedBidding() throws InterruptedException {
         log.debug("=========BiddingScheduler=========");
         List<FinishBiddingDto> successfulAuction = itemRepository.getSuccessfulAuction();
-        System.out.println("=============successfulAuction===========");
         for (FinishBiddingDto finishBiddingDto : successfulAuction) {
+
             Item item = itemRepository.findBySeq(finishBiddingDto.getItemSeq()).orElse(null);
+            FirebaseItemDto itemDto = FirebaseItemDto.builder().itemSeq(item.getSeq()).sellerSeq(item.getMember().getSeq())
+                    .buyerSeq(item.getBuyer().getSeq()).title(item.getTitle())
+                    .sellerImgUrl(item.getMember().getProfileImageUrl())
+                    .buyerImgUrl(item.getBuyer().getProfileImageUrl()).build();
+
+            firebaseUtil.createChatroom(itemDto);
             if (item != null){
                 item.successBiddingScheduler();
                 item.getBuyer().updateReview(5f);
@@ -152,13 +163,13 @@ public class BiddingServiceImpl implements BiddingService {
             }
         }
 
-        List<FinishBiddingDto> filedAuction = itemRepository.getFiledAuction();
-        System.out.println("=========failedBidding===========");
-        for (FinishBiddingDto finishBiddingDto : filedAuction) {
+        List<FinishBiddingDto> failedAuction = itemRepository.getFailedAuction();
+        for (FinishBiddingDto finishBiddingDto : failedAuction) {
             Item item = itemRepository.findBySeq(finishBiddingDto.getItemSeq()).orElse(null);
             if (item != null){
                 item.failBiddingScheduler();
             }
         }
+
     }
 }

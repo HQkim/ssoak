@@ -204,7 +204,6 @@ public class AuctionServiceImpl implements AuctionService {
 
         itemImages.forEach(image -> {
             String imageUrl = awsS3Service.uploadImage(image);
-            System.out.println("AWS -- imageUrl : " + imageUrl);
             Image imageBuild = Image.builder()
                     .imageUrl(imageUrl)
                     .item(item)
@@ -224,7 +223,6 @@ public class AuctionServiceImpl implements AuctionService {
         if (!(item.getMember().equals(member))) {
             throw new NotAllowedChangeItemException("본인의 경매만 수정이 가능합니다.");
         }
-        System.out.println("item - " + item);
         Bidding bidding = biddingRepository.findTop1ByItemSeqOrderBySeqDesc(itemSeq).orElse(null);
         if (item.getAuctionType().equals(AuctionType.NORMAL) && !(bidding == null)) {
             throw new NotAllowedChangeItemException("이미 진행중인 경매는 수정이 불가능합니다.");
@@ -247,11 +245,9 @@ public class AuctionServiceImpl implements AuctionService {
             // image
             List<Image> originImageList = imageRepository.findAllByItemSeq(itemSeq);
             for (Image image : originImageList) {
-                System.out.println("imageurls null이 아니면 true -> " + !CollectionUtils.isEmpty(itemChangeDto.getImageUrls()));
                 if (!CollectionUtils.isEmpty(itemChangeDto.getImageUrls())){
 
                     List<String> imageStringList = itemChangeDto.getImageUrls();
-                    System.out.println("imageUrl이 포함되어있지 않으면  true하고 delete - " + !(imageStringList.contains(image.getImageUrl())));
                     if (!(imageStringList.contains(image.getImageUrl()))) {
                         imageRepository.delete(image);
                     }
@@ -260,7 +256,6 @@ public class AuctionServiceImpl implements AuctionService {
                 }
             }
             if(!CollectionUtils.isEmpty(itemChangeDto.getImages())) {
-                System.out.println("==새로운 이미지 upload====");
                 uploadItemImages(item, itemChangeDto.getImages());
             }
 
@@ -289,9 +284,7 @@ public class AuctionServiceImpl implements AuctionService {
         } else if (item.getAuctionType().equals(AuctionType.LIVE) && item.getStartTime().isBefore(LocalDateTime.now())) {
             throw new NotAllowedChangeItemException("이미 진행중인 경매는 삭제가 불가능합니다.");
         } else {
-            // delete image
-//            List<Image> imageList = imageRepository.findAllByItemSeq(itemSeq);
-//            imageRepository.deleteAll(imageList);
+
             // delete likes
             List<Like> likes = likeRepository.findAllByItemSeq(itemSeq);
             likeRepository.deleteAll(likes);

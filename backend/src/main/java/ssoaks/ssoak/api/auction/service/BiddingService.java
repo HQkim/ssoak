@@ -9,5 +9,5 @@ public interface BiddingService {
 
     BiddingSimpleInfoDto successBidding(Long itemSeq, ReqBiddingRegisterDto successBiddingDto);
 
-    void checkFinishedBidding();
+    void checkFinishedBidding() throws InterruptedException;
 }

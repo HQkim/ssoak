@@ -35,9 +35,7 @@ public class AuctionListServiceImpl implements AuctionListService {
         List<Long> blackList = new ArrayList<>();
         if (token) {
             member = memberService.getMemberByAuthentication();
-            System.out.println("memberSeqqqqqqqqqqqq" + member.getSeq());
             blackList = blockRepository.getMyBlackList(member.getSeq());
-            System.out.println("blackkkk -" + blackList);
         }
         Integer totalCount = null;
         List<AuctionListDto> auctionList = null;
@@ -64,10 +62,8 @@ public class AuctionListServiceImpl implements AuctionListService {
         List<Long> blackList = new ArrayList<>();
         if (token) {
             member = memberService.getMemberByAuthentication();
-            System.out.println("memberSeqqqqqqqqqqqq" + member.getSeq());
             blackList = blockRepository.getMyBlackList(member.getSeq());
 
-            System.out.println("blackkkk -" + blackList);
         }
 
         Integer totalCount = itemRepository.countSearchItemsByKeyword(blackList, reqSearchDto, pageable);
