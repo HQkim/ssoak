@@ -99,12 +99,12 @@ export default AutionDetailContainer;
 const styles = StyleSheet.create({
   box: {
     height: ScreenHeight / 3,
-    backgroundColor: "#999999",
+    backgroundColor: "#e9e8e8",
   },
   page: {
     flex: 1,
-    width: ScreenWidth,
-    alignItems: "center",
-    justifyContent: "center",
+    // width: ScreenWidth,
+    // alignItems: "center",
+    // justifyContent: "center",
   },
 });
