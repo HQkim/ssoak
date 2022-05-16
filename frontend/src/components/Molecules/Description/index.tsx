@@ -33,7 +33,8 @@ import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import jwt_decode, { JwtPayload } from "jwt-decode";
 import { loadDataAsync } from "../../../store/modules/detail";
 import { useDispatch } from "react-redux";
-import { kakaoProfile } from "../../../apis/auth";
+import { kakaoProfile, reportUser } from "../../../apis/auth";
+
 type Props = {};
 
 const index = ({ item, descStyle, titleStyle }) => {
@@ -164,6 +165,34 @@ const index = ({ item, descStyle, titleStyle }) => {
     setShowDivier(e.nativeEvent.lines.length < 2);
   }, []);
 
+  const handleReportClick = () => {
+    Alert.alert(
+      "신고",
+      `판매 내용을 신고하시겠습니까?\n신고 후에는 대상자의 경매품을 볼 수 없습니다.`,
+      [
+        {
+          text: "예",
+          onPress: () => {
+            reportUser(item.seller?.seq)
+              .then((res) => {
+                Alert.alert(
+                  "신고",
+                  "접수가 완료되었습니다.\n더 이상 신고 대상자의 경매품을\n확인할 수 없습니다.",
+                );
+              })
+              .catch(() => {
+                Alert.alert("신고", "신고 접수에 실패했습니다.");
+              });
+          },
+        },
+        {
+          text: "아니오",
+          style: "cancel",
+        },
+      ],
+    );
+  };
+
   const handlebidRightNow = () => {
     Alert.alert(
       "지정가 입찰",
@@ -232,7 +261,14 @@ const index = ({ item, descStyle, titleStyle }) => {
             {userId == item.seller?.seq ? (
               <UpdateButton item={item} reqItem={item.itemSeq} />
             ) : (
-              <View />
+              <TouchableOpacity onPress={handleReportClick}>
+                <AntDesign
+                  name="exclamationcircle"
+                  size={24}
+                  color="black"
+                  style={{ marginTop: 10, marginRight: 10 }}
+                />
+              </TouchableOpacity>
             )}
           </View>
           <Text style={titleStyle} numberOfLines={2}>

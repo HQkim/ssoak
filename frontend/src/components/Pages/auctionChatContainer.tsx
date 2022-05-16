@@ -6,9 +6,10 @@ import { kakaoProfile } from "../../apis/auth";
 import { detailAuction } from "../../apis/auctionApi";
 type Props = {};
 
-const AuctionChatContainer = (props: Props) => {
+const AuctionChatContainer = (props: any) => {
   const [userId, setUserId] = useState<any>(null);
   const [userAvatar, setUserAvatar] = useState(null);
+  const [user, setUser] = useState(null);
   const [item, setItem] = useState();
   const getToken = async () => {
     const token = await AsyncStorage.getItem(
@@ -17,8 +18,9 @@ const AuctionChatContainer = (props: Props) => {
         await kakaoProfile().then((res) => {
           setUserAvatar(res.data.profileImageUrl);
           setUserId(res.data.seq);
+          setUser(res.data);
         });
-      }
+      },
     );
   };
 
@@ -27,11 +29,16 @@ const AuctionChatContainer = (props: Props) => {
   }, []);
 
   return (
-    <AuctionChat
-      userId={userId}
-      userAvatar={userAvatar}
-      item={props.route.params.item}
-    />
+    <>
+      {user && (
+        <AuctionChat
+          user={user}
+          userId={userId}
+          userAvatar={userAvatar}
+          item={props.route.params.item}
+        />
+      )}
+    </>
   );
   // return <></>;
 };

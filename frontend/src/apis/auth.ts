@@ -59,3 +59,10 @@ export const editKakaoProfile = async (formData) => {
     console.log(e);
   }
 };
+
+export const reportUser = async (userSeq) => {
+  const response = await instance.post(`members/report`, {
+    memberSeq: userSeq,
+  });
+  return response;
+};

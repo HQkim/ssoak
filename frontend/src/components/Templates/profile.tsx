@@ -318,6 +318,16 @@ const Profile = (props: Props) => {
               </Text>
             </View>
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("licenses")}>
+            <View style={styles.informView}>
+              <Ionicons
+                name="information-circle-outline"
+                size={24}
+                color="black"
+              />
+              <Text style={{ fontSize: 18, padding: 15 }}>라이센스</Text>
+            </View>
+          </TouchableOpacity>
           <TouchableOpacity onPress={logout}>
             <View style={styles.informView}>
               <MaterialIcons name="logout" size={24} color="black" />

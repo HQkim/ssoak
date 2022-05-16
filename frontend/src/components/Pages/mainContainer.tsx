@@ -19,7 +19,7 @@ type Props = {
 
 const MainContainer = ({ navigation, route }: Props) => {
   const { isLoading, normalPageAvailable, livePageAvailable } = useSelector(
-    (state: RootState) => state.mainLoader
+    (state: RootState) => state.mainLoader,
   );
   const { item } = useSelector((state: RootState) => state.detail);
 
@@ -39,7 +39,7 @@ const MainContainer = ({ navigation, route }: Props) => {
   const onScrollLive = () => {
     if (livePageAvailable) {
       dispatch(
-        dataFetchAsyncWithoutLoader({ keyword: "LIVE", page: livePage })
+        dataFetchAsyncWithoutLoader({ keyword: "LIVE", page: livePage }),
       );
       setLivePage(livePage + 1);
     }
@@ -48,13 +48,17 @@ const MainContainer = ({ navigation, route }: Props) => {
   const onScrollNormal = () => {
     if (normalPageAvailable) {
       dispatch(
-        dataFetchAsyncWithoutLoader({ keyword: "NORMAL", page: normalPage })
+        dataFetchAsyncWithoutLoader({ keyword: "NORMAL", page: normalPage }),
       );
       setNormalPage(normalPage + 1);
     }
   };
   useEffect(() => {
     onRefresh();
+
+    return () => {
+      dispatch(dataReset());
+    };
   }, []);
   // navigation.addListener("focus", () => {
   //   console.log(item, "################");
