@@ -16,7 +16,7 @@ const ChatUsers = ({
   onClickUser,
   userToAdd,
   setUserToAdd,
-  onAddFriend,
+  // onAddFriend,
 }) => {
   const renderUser = ({ item }) => {
     return (

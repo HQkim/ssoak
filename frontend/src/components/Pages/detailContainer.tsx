@@ -90,7 +90,7 @@ export default DetailContainer;
 const styles = StyleSheet.create({
   box: {
     height: ScreenHeight / 3,
-    // backgroundColor: "#999999",
+    backgroundColor: "#999999",
   },
   page: {
     flex: 1,

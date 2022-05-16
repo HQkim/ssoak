@@ -80,6 +80,7 @@ const Slider: any = ({ data, handleClickItem }) => {
                           alignItems: "center",
                           justifyContent: "center",
                           marginRight: 10,
+                          marginTop: 5,
                         }}
                       >
                         <Text style={{ color: "#ffffff" }}>
@@ -94,6 +95,7 @@ const Slider: any = ({ data, handleClickItem }) => {
                           alignItems: "center",
                           justifyContent: "center",
                           borderRadius: 9999,
+                          marginTop: 5,
                         }}
                       >
                         <Text style={{ color: "white" }}>

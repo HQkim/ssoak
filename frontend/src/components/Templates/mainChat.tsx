@@ -1018,6 +1018,13 @@ const MainChat = ({ onBack, myData, selectedUser, userId }) => {
     async (msg = []) => {
       //send the msg[0] to the other user
       // console.log(msg);
+      for (let n = 0; n < badWords.length; n++) {
+        if (msg[0].text.includes(badWords[n])) {
+          const starWord = "*".repeat(badWords[n].length);
+          msg[0].text = msg[0].text.replace(badWords[n], starWord);
+        }
+      }
+
       const database = getDatabase();
 
       //fetch fresh messages from server

@@ -23,7 +23,7 @@ const ChatContainer = () => {
           setUserAvatar(res.data.profileImageUrl);
           setUserId(res.data.seq);
         });
-      }
+      },
     );
   };
 
@@ -88,67 +88,67 @@ const ChatContainer = () => {
     setSelectedUser(user);
   };
 
-  const onAddFriend = async (name) => {
-    try {
-      //find user and add it to my friends and also add me to his friends
-      const database = getDatabase();
+  // const onAddFriend = async (name) => {
+  //   try {
+  //     //find user and add it to my friends and also add me to his friends
+  //     const database = getDatabase();
 
-      const user = await findUser();
+  //     const user = await findUser();
 
-      if (user) {
-        if (user.userId === myData.userId) {
-          // don't let user add himself
-          return;
-        }
+  //     if (user) {
+  //       if (user.userId === myData.userId) {
+  //         // don't let user add himself
+  //         return;
+  //       }
 
-        if (
-          myData.friends &&
-          myData.friends.findIndex((f) => f.userId === user.userId) > 0
-        ) {
-          // don't let user add a user twice
-          return;
-        }
+  //       if (
+  //         myData.friends &&
+  //         myData.friends.findIndex((f) => f.userId === user.userId) > 0
+  //       ) {
+  //         // don't let user add a user twice
+  //         return;
+  //       }
 
-        // create a chatroom and store the chatroom id
+  //       // create a chatroom and store the chatroom id
 
-        const newChatroomRef = push(ref(database, "chatrooms"), {
-          firstUser: myData.userId,
-          secondUser: user.userId,
-          messages: [],
-        });
+  //       const newChatroomRef = push(ref(database, "chatrooms"), {
+  //         firstUser: myData.userId,
+  //         secondUser: user.userId,
+  //         messages: [],
+  //       });
 
-        const newChatroomId = newChatroomRef.key;
+  //       const newChatroomId = newChatroomRef.key;
 
-        const userFriends = user.friends || [];
-        //join myself to this user friend list
-        update(ref(database, `users/${user.userId}`), {
-          friends: [
-            ...userFriends,
-            {
-              userId: myData.userId,
-              avatar: myData.avatar,
-              chatroomId: newChatroomId,
-            },
-          ],
-        });
+  //       const userFriends = user.friends || [];
+  //       //join myself to this user friend list
+  //       update(ref(database, `users/${user.userId}`), {
+  //         friends: [
+  //           ...userFriends,
+  //           {
+  //             userId: myData.userId,
+  //             avatar: myData.avatar,
+  //             chatroomId: newChatroomId,
+  //           },
+  //         ],
+  //       });
 
-        const myFriends = myData.friends || [];
-        //add this user to my friend list
-        update(ref(database, `users/${myData.userId}`), {
-          friends: [
-            ...myFriends,
-            {
-              userId: user.userId,
-              avatar: user.avatar,
-              chatroomId: newChatroomId,
-            },
-          ],
-        });
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //       const myFriends = myData.friends || [];
+  //       //add this user to my friend list
+  //       update(ref(database, `users/${myData.userId}`), {
+  //         friends: [
+  //           ...myFriends,
+  //           {
+  //             userId: user.userId,
+  //             avatar: user.avatar,
+  //             chatroomId: newChatroomId,
+  //           },
+  //         ],
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const onBack = () => {
     setCurrentPage("users");
@@ -164,7 +164,7 @@ const ChatContainer = () => {
           onClickUser={onClickUser}
           userToAdd={userToAdd}
           setUserToAdd={setUserToAdd}
-          onAddFriend={onAddFriend}
+          // onAddFriend={onAddFriend}
         />
       );
     case "chat":
