@@ -1236,19 +1236,19 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
           itemId,
           messages: [
             {
-              _id: 15132413,
+              _id: 0,
               text: "채팅방이 생성되었습니다.",
               createdAt: new Date(),
               system: true,
             },
             {
-              _id: 11523124,
+              _id: 1,
               text: "욕설과 비난은 자제해주시기 바라며, 신고를 원하시면 말풍선을 길게 터치하세요.",
               createdAt: new Date(),
               system: true,
             },
             {
-              _id: 25432643,
+              _id: 2,
               text: "현재 욕설 필터링이 적용중입니다.",
               createdAt: new Date(),
               system: true,
@@ -1372,7 +1372,7 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
           </View>
         </View>
       )}
-      {Platform.OS === "android" && <KeyboardAvoidingView behavior="padding" />}
+      {/* {Platform.OS === "android" && <KeyboardAvoidingView behavior="padding" />} */}
     </View>
   );
 };

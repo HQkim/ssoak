@@ -49,7 +49,7 @@ const TimeRange = (props: Props) => {
 
   const onChangeStart = async (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
-    console.log(typeof currentDate, "1111111111");
+    // console.log(typeof currentDate, "1111111111");
     Device.osName === "Android" && setStartDateOpen(false);
     Device.osName === "Android" && setStartMinuteOpen(false);
     selectedDate !== undefined && setStartDate(currentDate);
@@ -59,7 +59,7 @@ const TimeRange = (props: Props) => {
     let timeInformation = JSON.stringify(now);
     const result = timeInformation.substring(20, 25);
     const tmp = timeInformation.replace(result, "");
-    console.log(tmp, "12312321");
+    // console.log(tmp, "12312321");
     await props.setStartString(tmp);
   };
 
@@ -94,7 +94,7 @@ const TimeRange = (props: Props) => {
   useFocusEffect(
     React.useCallback(() => {
       setSelectTime(false);
-    }, [props.reset])
+    }, [props.reset]),
   );
 
   useEffect(() => {

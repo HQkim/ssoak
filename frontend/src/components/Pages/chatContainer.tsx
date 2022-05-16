@@ -13,6 +13,7 @@ import {
 import MainChat from "../Templates/mainChat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { kakaoProfile } from "../../apis/auth";
+import { useNavigation } from "@react-navigation/native";
 
 const ChatContainer = () => {
   const getToken = async () => {
@@ -80,11 +81,16 @@ const ChatContainer = () => {
   const findUser = async () => {
     const database = getDatabase();
     const mySnapshot = await get(ref(database, `users/${userId}`));
+    // console.log(mySnapshot.val());
     return mySnapshot.val();
   };
-
+  const navigation = useNavigation();
   const onClickUser = (user) => {
-    setCurrentPage("chat");
+    navigation.navigate("chat", {
+      user: user,
+      myData: myData,
+      userId: userId,
+    });
     setSelectedUser(user);
   };
 
@@ -165,15 +171,6 @@ const ChatContainer = () => {
           userToAdd={userToAdd}
           setUserToAdd={setUserToAdd}
           // onAddFriend={onAddFriend}
-        />
-      );
-    case "chat":
-      return (
-        <MainChat
-          myData={myData}
-          selectedUser={selectedUser}
-          onBack={onBack}
-          userId={userId}
         />
       );
     default:

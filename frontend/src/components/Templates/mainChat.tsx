@@ -1,5 +1,6 @@
 import {
   Alert,
+  KeyboardAvoidingView,
   Platform,
   Pressable,
   SafeAreaView,
@@ -18,15 +19,25 @@ import {
   set,
 } from "firebase/database";
 import {
+  Bubble,
+  Composer,
   GiftedChat,
   IMessage,
   InputToolbar,
   Send,
+  SystemMessage,
 } from "react-native-gifted-chat";
 import GeneralButtonWithoutText from "../Atoms/Buttons/generalButtonWithoutText";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { reportUser } from "../../apis/auth";
 type Props = {};
 const badWords = [
+  "싸발",
+  "시발",
+  "ㅆ발",
+  "ㅆㅂ",
+  "ㅅㅂ",
+  "시팔",
   "10새끼",
   "10쎄끼",
   "10알",
@@ -935,10 +946,10 @@ const badWords = [
   "ac발",
   "x대가리",
 ];
-const MainChat = ({ onBack, myData, selectedUser, userId }) => {
+const MainChat = (props: any) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [offset, setOffset] = useState(0);
-
+  const { userId, myData, user: selectedUser } = props.route.params;
   useEffect(() => {
     console.log(userId);
   }, [userId]);
@@ -996,6 +1007,29 @@ const MainChat = ({ onBack, myData, selectedUser, userId }) => {
       const myChatroom = await fetchMessages();
 
       myChatroom && setMessages(renderMessages(myChatroom.messages));
+      !myChatroom &&
+        set(ref(database, `chatrooms/${selectedUser.chatroomId}`), {
+          messages: [
+            {
+              _id: 0,
+              text: "채팅방이 생성되었습니다.",
+              createdAt: new Date(),
+              system: true,
+            },
+            {
+              _id: 1,
+              text: "욕설과 비난은 자제해주시기 바라며, 신고를 원하시면 말풍선을 길게 터치하세요.",
+              createdAt: new Date(),
+              system: true,
+            },
+            {
+              _id: 2,
+              text: "현재 욕설 필터링이 적용중입니다.",
+              createdAt: new Date(),
+              system: true,
+            },
+          ],
+        });
     };
 
     loadData();
@@ -1005,7 +1039,7 @@ const MainChat = ({ onBack, myData, selectedUser, userId }) => {
     const chatroomRef = ref(database, `chatrooms/${selectedUser.chatroomId}`);
     onValue(chatroomRef, (snapshot) => {
       const data = snapshot.val();
-      setMessages(renderMessages(data.messages));
+      data && setMessages(renderMessages(data.messages));
     });
 
     return () => {
@@ -1029,7 +1063,7 @@ const MainChat = ({ onBack, myData, selectedUser, userId }) => {
 
       //fetch fresh messages from server
       const currentChatroom = await fetchMessages();
-
+      console.log(currentChatroom);
       const lastMessages = currentChatroom.messages || [];
 
       update(ref(database, `chatrooms/${selectedUser.chatroomId}`), {
@@ -1050,17 +1084,48 @@ const MainChat = ({ onBack, myData, selectedUser, userId }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, backgroundColor: "#719DD7" }}>
-        <View style={styles.actionBar}>
-          <Pressable onPress={onBack}>
-            <AntDesign
-              name="left"
-              size={24}
-              color="black"
-              style={{ marginLeft: 10 }}
-            />
-          </Pressable>
-        </View>
         <GiftedChat
+          renderBubble={(props) => <Bubble {...props} />}
+          onLongPress={function (context, message) {
+            if (message.user._id !== userId) {
+              Alert.alert(
+                `신고하기`,
+                `익명 유저의 "${message.text}" 내용을 신고하시겠습니까?\n신고 후에는 대상자의 채팅을 볼 수 없습니다.`,
+                [
+                  {
+                    text: "예",
+                    onPress: () => {
+                      if (message.type === "text") {
+                        reportUser(message.user._id)
+                          .then((res) => {
+                            Alert.alert(
+                              "신고",
+                              "접수가 완료되었습니다.\n더 이상 신고 대상자의 채팅을\n확인할 수 없습니다.",
+                            );
+                          })
+                          .catch(() => {
+                            Alert.alert(
+                              "신고",
+                              "신고 접수에 실패했습니다.\n신고 내용을 확인해주세요.",
+                            );
+                          });
+                      } else {
+                        Alert.alert("신고", "신고할 수 없는 채팅입니다.");
+                      }
+                    },
+                  },
+                  {
+                    text: "아니오",
+                    style: "cancel",
+                  },
+                ],
+              );
+            } else {
+            }
+          }}
+          // showAvatarForEveryMessage={false}
+          // showUserAvatar={true}
+
           messages={messages}
           onSend={onSend}
           user={{
@@ -1073,6 +1138,12 @@ const MainChat = ({ onBack, myData, selectedUser, userId }) => {
           renderInputToolbar={(props) => (
             <InputToolbar {...props} containerStyle={styles.textArea} />
           )}
+          renderSystemMessage={(props) => {
+            return <SystemMessage {...props} textStyle={{ color: "#444" }} />;
+          }}
+          renderComposer={(props) => {
+            return <Composer {...props} placeholder={"메세지를 입력하세요"} />;
+          }}
           renderSend={(props) => {
             return (
               <Send
@@ -1090,6 +1161,7 @@ const MainChat = ({ onBack, myData, selectedUser, userId }) => {
           scrollToBottom={true}
         />
       </View>
+      {/* {Platform.OS === "android" && <KeyboardAvoidingView behavior="padding" />} */}
     </SafeAreaView>
   );
 };

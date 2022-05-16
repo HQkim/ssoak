@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import NavigatorTitle from "../../Atoms/Typographies/navigatorTitle";
 import ChatListContainer from "../../Pages/chatListContainer";
 import ChatContainer from "../../Pages/chatContainer";
+import MainChat from "../../Templates/mainChat";
 type Props = {};
 
 const Stack = createStackNavigator();
@@ -26,11 +27,11 @@ const MainStackNavigator = (props: Props) => {
       <Stack.Screen
         name="chatList"
         component={ChatContainer}
-        options={{ headerShown: false, title: "메인 화면" }}
+        options={{ title: "채팅 리스트" }}
       />
       <Stack.Screen
         name="chat"
-        component={ChatContainer}
+        component={MainChat}
         options={{
           headerTitleAlign: "center",
           headerTitle: (props) => (

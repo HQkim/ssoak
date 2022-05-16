@@ -46,7 +46,7 @@ fileInstance.interceptors.request.use(
 noHeaderInstance.interceptors.request.use(
   async (config) => {
     const token = await AsyncStorage.getItem("accessToken");
-    console.log(token, "..");
+    // console.log(token, "..");
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }

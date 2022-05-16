@@ -21,8 +21,10 @@ const ChatUsers = ({
   const renderUser = ({ item }) => {
     return (
       <Pressable onPress={() => onClickUser(item)} style={styles.row}>
-        <Image style={styles.avatar} source={{ uri: item.avatar }} />
-        <Text>{item?.userId}</Text>
+        <View style={{}}>
+          <Image style={styles.avatar} source={{ uri: item.avatar }} />
+        </View>
+        <Text numberOfLines={1}>{item?.title}</Text>
       </Pressable>
     );
   };
@@ -46,6 +48,8 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     marginRight: 10,
+    borderRadius: 9999,
+    borderWidth: 0.5,
   },
   row: {
     flexDirection: "row",
