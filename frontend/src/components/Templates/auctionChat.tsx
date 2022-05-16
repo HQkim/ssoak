@@ -1098,6 +1098,7 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
                     type: "bid",
                     price: `${bidRightNow}`,
                     text: `${bidRightNow}원에 입찰했습니다.`,
+                    system: true,
                   },
                 ]);
               }

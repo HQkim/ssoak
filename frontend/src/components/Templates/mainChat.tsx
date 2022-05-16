@@ -1005,9 +1005,10 @@ const MainChat = (props: any) => {
     //load old messages
     const loadData = async () => {
       const myChatroom = await fetchMessages();
-
+      console.log(selectedUser);
+      console.log(myChatroom, "myChatROom!!!!!!!!!!!!!!!!!!!");
       myChatroom && setMessages(renderMessages(myChatroom.messages));
-      !myChatroom &&
+      !myChatroom.messages &&
         set(ref(database, `chatrooms/${selectedUser.chatroomId}`), {
           messages: [
             {

@@ -19,6 +19,7 @@ const ChatUsers = ({
   // onAddFriend,
 }) => {
   const renderUser = ({ item }) => {
+    console.log(item);
     return (
       <Pressable onPress={() => onClickUser(item)} style={styles.row}>
         <View style={{}}>
@@ -34,7 +35,7 @@ const ChatUsers = ({
         <FlatList
           data={users}
           renderItem={renderUser}
-          keyExtractor={(item) => item?.userId.toString()}
+          keyExtractor={(item) => item?.chatroomId.toString()}
         />
       </SafeAreaView>
     </>

@@ -5,8 +5,9 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  Platform,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Countdown, { zeroPad } from "react-countdown";
 type Props = {};
@@ -14,6 +15,17 @@ type Props = {};
 const Slider: any = ({ data, handleClickItem }) => {
   const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get("window");
   const { item } = data;
+  const [dateTime, setDateTime] = useState();
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      setDateTime(new Date().setHours(new Date().getHours() + 9));
+    } else {
+      setDateTime(new Date());
+    }
+  }, []);
+  useEffect(() => {
+    console.log(dateTime, new Date(item.endTime), data.item.title);
+  }, [dateTime]);
   // console.log(item);
 
   return (
@@ -99,7 +111,7 @@ const Slider: any = ({ data, handleClickItem }) => {
                         }}
                       >
                         <Text style={{ color: "white" }}>
-                          {new Date() > new Date(item.endTime)
+                          {dateTime && dateTime > new Date(item.endTime)
                             ? "경매종료"
                             : new Date() < new Date(item.startDate)
                             ? "경매예정"
