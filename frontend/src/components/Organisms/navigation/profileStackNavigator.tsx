@@ -11,6 +11,8 @@ import SettingContainer from "../../Pages/settingContainer";
 import TermsOfService from "../../Pages/termsOfService";
 import InformRegulation from "../../Pages/informRegulation";
 import PrivacyPolicy from "../../Pages/privacyPolicy";
+import Licenses from "../../Templates/licenses";
+import LicenseDetail from "../../Templates/licenseDetail";
 
 type Props = {};
 
@@ -127,6 +129,29 @@ const ProfileStackNavigator = (props: Props) => {
           headerTitle: (props) => (
             <NavigatorTitle
               title={"개인정보처리방침"}
+              style={styles.navigatorTitle}
+            />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="licenses"
+        component={Licenses}
+        options={{
+          headerTitleAlign: "center",
+          headerTitle: (props) => (
+            <NavigatorTitle title={"라이센스"} style={styles.navigatorTitle} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="licenseDetail"
+        component={LicenseDetail}
+        options={{
+          headerTitleAlign: "center",
+          headerTitle: (props) => (
+            <NavigatorTitle
+              title={"라이센스 세부설명"}
               style={styles.navigatorTitle}
             />
           ),
