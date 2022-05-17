@@ -66,6 +66,8 @@ public class BiddingServiceImpl implements BiddingService {
             }
         } else if (biddingDto.getBiddingPrice() < item.getStartPrice()) {
             throw new NotAllowedBiddingItemException("입찰 금액이 시초가보다 작습니다.");
+        } else if (item.getStartTime().isAfter(LocalDateTime.now())) {
+            throw new NotAllowedBiddingItemException("아직 경매 시작 전입니다");
         }
 
         Bidding bidding = Bidding.builder()
