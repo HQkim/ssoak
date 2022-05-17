@@ -1,3 +1,5 @@
+// bidCard
+
 import {
   StyleSheet,
   Text,
@@ -38,6 +40,9 @@ const BidCard = ({
       const price = Number(value);
       const itemPrice: any = price + item.bidding.biddingPrice;
       formData.append("biddingPrice", itemPrice);
+      if (item.bidding.buyer.seq === item.member.seq) {
+        Alert.alert("연속으로 입찰하실 수 없습니다.");
+      }
     } else if (text === "immediately" && item.bidding == null) {
       const price = Number(value);
       const itemPrice: any = price + item.startPrice;
@@ -46,11 +51,9 @@ const BidCard = ({
       const price = Number(value);
       const itemPrice: any = price;
       formData.append("biddingPrice", itemPrice);
-    }
-    if (item.bidding.buyer.seq === item.member.seq) {
-      Alert.alert("연속으로 입찰하실 수 없습니다.");
-    } else if (text === "input" && item.bidding.biddingPrice >= value) {
-      Alert.alert("현재 입찰가보다 적은 금액으로 입찰할 수 없습니다.");
+      if (item.bidding && item.bidding.biddingPrice >= value) {
+        Alert.alert("현재 입찰가보다 적은 금액으로 입찰할 수 없습니다.");
+      }
     }
     const hammer: any = false;
     formData.append("isHammered", hammer);
