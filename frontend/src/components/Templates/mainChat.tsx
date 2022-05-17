@@ -24,6 +24,8 @@ import {
   GiftedChat,
   IMessage,
   InputToolbar,
+  Message as GiftedChatMessage,
+  MessageProps,
   Send,
   SystemMessage,
 } from "react-native-gifted-chat";
@@ -950,6 +952,12 @@ const badWords = [
   "ac발",
   "x대가리",
 ];
+class NoAvatarMessage extends GiftedChatMessage {
+  renderAvatar() {
+    return null;
+  }
+}
+
 const MainChat = (props: any) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [offset, setOffset] = useState(0);
@@ -957,6 +965,9 @@ const MainChat = (props: any) => {
   useEffect(() => {
     console.log(userId);
   }, [userId]);
+  const CustomMessage = (props: MessageProps<IMessage>): JSX.Element => (
+    <NoAvatarMessage {...props} />
+  );
   const renderMessages = useCallback(
     (msgs) => {
       //structure for chat library:
@@ -1164,6 +1175,7 @@ const MainChat = (props: any) => {
             );
           }}
           scrollToBottom={true}
+          renderMessage={CustomMessage}
         />
       </View>
       {/* {Platform.OS === "android" && <KeyboardAvoidingView behavior="padding" />} */}

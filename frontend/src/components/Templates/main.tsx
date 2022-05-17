@@ -6,6 +6,7 @@ import {
   useWindowDimensions,
   FlatList,
   Switch,
+  Alert,
 } from "react-native";
 import ToggleSwitch from "toggle-switch-react-native";
 import React, { useCallback, useEffect, useState } from "react";
@@ -18,6 +19,7 @@ import Slider from "../Organisms/Carousel/slider";
 import SliderSkeleton from "../Organisms/Carousel/sliderSkeleton";
 import CustomTabBar from "../Organisms/ItemList/customTabBar";
 import MainHeader from "../Molecules/Headers/mainHeader";
+import AsyncStorageLib from "@react-native-async-storage/async-storage";
 type Props = {
   onRefresh: () => any | undefined;
   navigation: any;
@@ -31,15 +33,25 @@ const Main = (props: Props) => {
   const [normalItems, setNormalItems] = useState<any>([]);
   const [isEnabled, setIsEnabled] = useState(false);
   const navigation: any = useNavigation();
-  const handleClickItem = (item: any) => {
-    if (item.auctionType === "NORMAL") {
-      navigation.navigate("auctionDetail", {
-        id: item.itemSeq,
-      });
-    } else {
-      navigation.navigate("detail", {
-        id: item.itemSeq,
-      });
+  const handleClickItem = async (item: any) => {
+    try {
+      const token = await AsyncStorageLib.getItem("accessToken");
+      if (token) {
+        if (item.auctionType === "NORMAL") {
+          navigation.navigate("auctionDetail", {
+            id: item.itemSeq,
+          });
+        } else {
+          navigation.navigate("detail", {
+            id: item.itemSeq,
+          });
+        }
+      } else {
+        navigation.navigate("profile");
+        Alert.alert("계정", "로그인이 필요합니다.");
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -50,10 +62,10 @@ const Main = (props: Props) => {
   useEffect(() => {
     if (isEnabled) {
       setNormalItems(
-        normalItems.filter((item) => new Date(item.endTime) > new Date())
+        normalItems.filter((item) => new Date(item.endTime) > new Date()),
       );
       setLiveItems(
-        liveItems.filter((item) => new Date(item.endTime) > new Date())
+        liveItems.filter((item) => new Date(item.endTime) > new Date()),
       );
     } else {
       const liveItems = data
@@ -84,7 +96,7 @@ const Main = (props: Props) => {
           }}
         />
       ),
-    [normalItems]
+    [normalItems],
   );
 
   const liveRoute = useCallback(
@@ -108,7 +120,7 @@ const Main = (props: Props) => {
           />
         </>
       ),
-    [liveItems]
+    [liveItems],
   );
 
   const { isLoading } = useSelector((state: RootState) => state.mainLoader);
@@ -134,10 +146,10 @@ const Main = (props: Props) => {
   useEffect(() => {
     if (isEnabled) {
       setNormalItems(
-        normalItems.filter((item) => new Date(item.endTime) > new Date())
+        normalItems.filter((item) => new Date(item.endTime) > new Date()),
       );
       setLiveItems(
-        liveItems.filter((item) => new Date(item.endTime) > new Date())
+        liveItems.filter((item) => new Date(item.endTime) > new Date()),
       );
     } else {
       const liveItems = data

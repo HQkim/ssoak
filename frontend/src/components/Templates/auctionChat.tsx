@@ -22,11 +22,14 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import GeneralButton from "../Atoms/Buttons/generalButton";
 import {
   Bubble,
+  Composer,
   GiftedChat,
   IMessage,
   InputToolbar,
   Send,
+  Message as GiftedChatMessage,
   SystemMessage,
+  MessageProps,
 } from "react-native-gifted-chat";
 import {
   get,
@@ -963,6 +966,12 @@ const badWords = [
 type Props = {};
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
+class NoAvatarMessage extends GiftedChatMessage {
+  renderAvatar() {
+    return null;
+  }
+}
+
 const AuctionChat = ({ user, userId, userAvatar, item }) => {
   const [currentCost, setCurrentCost] = useState();
   const [bidRightNow, setBidRightNow] = useState<string>("15000");
@@ -991,6 +1000,10 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
   useEffect(() => {
     setBidRightNow(String((Number(currentCost) * 1.03).toFixed()));
   }, [currentCost]);
+
+  const CustomMessage = (props: MessageProps<IMessage>): JSX.Element => (
+    <NoAvatarMessage {...props} />
+  );
 
   const [iskeyboardUp, setIsKeyboardUp] = useState(false);
   const navigation = useNavigation();
@@ -1066,7 +1079,7 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
   }, [user]);
 
   useEffect(() => {
-    console.log(blackList);
+    console.log(blackList, "blackList");
   }, [blackList]);
 
   useEffect(() => {
@@ -1186,7 +1199,7 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
       if (msgs[msgs.length - 1].type === "bid") {
         setCurrentCost(msgs[msgs.length - 1].price);
       }
-
+      console.log(msgs);
       return msgs
         ? msgs.reverse().map((msg, index) =>
             user.blackList.includes(msg.sender)
@@ -1335,9 +1348,9 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
           } else {
           }
         }}
-        // showAvatarForEveryMessage={false}
-        // showUserAvatar={true}
-
+        renderAvatar={() => null}
+        showAvatarForEveryMessage={false}
+        showUserAvatar={false}
         messages={messages}
         onSend={onSend}
         user={{
@@ -1350,6 +1363,9 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
         renderInputToolbar={(props) => (
           <InputToolbar {...props} containerStyle={styles.textArea} />
         )}
+        renderComposer={(props) => {
+          return <Composer {...props} placeholder={"메세지를 입력하세요"} />;
+        }}
         renderSystemMessage={(props) => {
           return <SystemMessage {...props} textStyle={{ color: "#444" }} />;
         }}
@@ -1368,6 +1384,7 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
           );
         }}
         scrollToBottom={true}
+        renderMessage={CustomMessage}
       />
       {iskeyboardUp === false && (
         <View style={{ alignItems: "center" }}>

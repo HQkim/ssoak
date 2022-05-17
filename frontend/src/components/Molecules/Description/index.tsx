@@ -277,8 +277,12 @@ const index = ({ item, descStyle, titleStyle }) => {
                   <AntDesign
                     name="exclamationcircle"
                     size={Dimensions.get("window").width / 18}
-                    color="#EA759A"
-                    style={{ marginRight: 10, marginTop: 5 }}
+                    color="#999"
+                    style={{
+                      marginRight: 10,
+                      marginTop: 5,
+                      position: "fixed",
+                    }}
                   />
                 </TouchableOpacity>
               </View>
