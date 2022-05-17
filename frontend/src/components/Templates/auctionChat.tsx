@@ -42,6 +42,16 @@ import { useNavigation } from "@react-navigation/native";
 import { biddingAuction } from "../../apis/auctionApi";
 import { reportUser } from "../../apis/auth";
 const badWords = [
+  "싸발",
+  "시발",
+  "ㅆ발",
+  "ㅆㅂ",
+  "ㅅㅂ",
+  "시팔",
+  "ㅅ발",
+  "병신",
+  "ㅄ",
+  "ㅅㅂ",
   "10새끼",
   "10쎄끼",
   "10알",

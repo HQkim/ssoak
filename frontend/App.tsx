@@ -10,18 +10,27 @@ import { rootSaga } from "./src/store/modules";
 import LoadingContainer from "./src/components/Pages/loadingContainer";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import getEnvVars from "./constants";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-
 // Your web app's Firebase configuration
+const {
+  apiKey,
+  authDomain,
+  databaseURL,
+  projectId,
+  storageBucket,
+  messagingSenderId,
+  appId,
+} = getEnvVars();
 const firebaseConfig = {
-  apiKey: "AIzaSyCmTsmSlAe3KkdJ8A4X8yS3EgOIpd7Z9HQ",
-  authDomain: "ssoak-12410.firebaseapp.com",
-  databaseURL: "https://ssoak-12410-default-rtdb.firebaseio.com",
-  projectId: "ssoak-12410",
-  storageBucket: "ssoak-12410.appspot.com",
-  messagingSenderId: "26426975279",
-  appId: "1:26426975279:web:c0135154c546223a3c52da",
+  apiKey,
+  authDomain,
+  databaseURL,
+  projectId,
+  storageBucket,
+  messagingSenderId,
+  appId,
 };
 
 // Initialize Firebase

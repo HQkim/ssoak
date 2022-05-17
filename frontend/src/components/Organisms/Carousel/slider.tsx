@@ -24,7 +24,13 @@ const Slider: any = ({ data, handleClickItem }) => {
     }
   }, []);
   useEffect(() => {
-    console.log(dateTime, new Date(item.endTime), data.item.title);
+    console.log(
+      dateTime,
+      new Date(item.startTime),
+      new Date(item.endTime),
+      data.item.title,
+    );
+    console.log(dateTime < new Date(item.startTime));
   }, [dateTime]);
   // console.log(item);
 
@@ -113,7 +119,7 @@ const Slider: any = ({ data, handleClickItem }) => {
                         <Text style={{ color: "white" }}>
                           {dateTime && dateTime > new Date(item.endTime)
                             ? "경매종료"
-                            : dateTime && dateTime < new Date(item.startDate)
+                            : dateTime && dateTime < new Date(item.startTime)
                             ? "경매예정"
                             : "경매중"}
                         </Text>
