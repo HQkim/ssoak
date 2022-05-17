@@ -1,3 +1,5 @@
+// auctionBid
+
 import {
   StyleSheet,
   Text,
@@ -18,7 +20,7 @@ const AuctionBid = ({ item, reqItem, getItemDetail }) => {
       <BidCard
         reqItem={reqItem}
         item={item}
-        title={"시초가의 10%"}
+        title={"시초가 10% 추가"}
         button={"즉시입찰"}
         edit={false}
         biddingUnit={item.biddingUnit}

@@ -201,7 +201,7 @@ const Profile = (props: Props) => {
                     editable={false}
                     // textAlign="center"
                     value={props.profile.nickname}
-                    maxLength={11}
+                    maxLength={6}
                   />
                   <AntDesign name="edit" size={24} color="black" />
                 </View>
