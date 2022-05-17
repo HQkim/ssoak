@@ -95,7 +95,7 @@ const index = ({ item, descStyle, titleStyle }) => {
           const database = getDatabase();
 
           const snapshot = await get(
-            ref(database, `auctionChatrooms/${item.itemSeq}`),
+            ref(database, `auctionChatrooms/${item.itemSeq}`)
           );
           return snapshot.val();
         };
@@ -177,7 +177,7 @@ const index = ({ item, descStyle, titleStyle }) => {
               .then((res) => {
                 Alert.alert(
                   "신고",
-                  "접수가 완료되었습니다.\n더 이상 신고 대상자의 경매품을\n확인할 수 없습니다.",
+                  "접수가 완료되었습니다.\n더 이상 신고 대상자의 경매품을\n확인할 수 없습니다."
                 );
               })
               .catch(() => {
@@ -189,7 +189,7 @@ const index = ({ item, descStyle, titleStyle }) => {
           text: "아니오",
           style: "cancel",
         },
-      ],
+      ]
     );
   };
 
@@ -209,7 +209,7 @@ const index = ({ item, descStyle, titleStyle }) => {
             text: "예",
             onPress: () => bidding("immediately"),
           },
-        ],
+        ]
       );
     }
   };
@@ -230,7 +230,7 @@ const index = ({ item, descStyle, titleStyle }) => {
             text: "예",
             onPress: () => bidding("input"),
           },
-        ],
+        ]
       );
     } else {
       Alert.alert(
@@ -242,7 +242,7 @@ const index = ({ item, descStyle, titleStyle }) => {
           {
             text: "닫기",
           },
-        ],
+        ]
       );
     }
   };
@@ -281,7 +281,7 @@ const index = ({ item, descStyle, titleStyle }) => {
                     style={{
                       marginRight: 10,
                       marginTop: 5,
-                      position: "fixed",
+                      // position: "fixed",
                     }}
                   />
                 </TouchableOpacity>
