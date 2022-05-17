@@ -46,7 +46,7 @@ public class BlockRepositoryImpl implements BlockRepositoryCustom{
                 .select(member.seq)
                 .from(member)
                 .leftJoin(block).on(block.member.eq(member))
-                .where(member.isBlocked.eq(true).or(block.seq.isNotNull()))
+                .where(member.isBlocked.eq(true).or(block.reporter.seq.eq(memberSeq)))
                 .groupBy(member)
                 .fetch();
     }
