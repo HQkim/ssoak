@@ -1151,7 +1151,7 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
             createdAt: new Date(),
             type: msg[0].type,
             price: msg[0].price ? msg[0].price : "",
-            system: msg[0].system,
+            system: msg[0].system ? true : false,
           },
         ],
       });

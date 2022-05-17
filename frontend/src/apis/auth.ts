@@ -1,4 +1,4 @@
-import { instance, fileInstance } from "./instance";
+import { instance, fileInstance, noHeaderInstance } from "./instance";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const kakaoLogin = async (access_code: string) => {
@@ -65,4 +65,24 @@ export const reportUser = async (userSeq) => {
     memberSeq: userSeq,
   });
   return response;
+};
+
+export const appleLogin = async (access_code: string) => {
+  try {
+    const response = await noHeaderInstance.post(
+      `/members/login/apple`,
+      {},
+      {
+        headers: {
+          "Social-Token": access_code,
+        },
+      },
+    );
+    if (response.data.statusCode === 200) {
+      AsyncStorage.setItem("accessToken", response.data.data.accessToken);
+    }
+    return response.data;
+  } catch (e) {
+    console.log(e);
+  }
 };

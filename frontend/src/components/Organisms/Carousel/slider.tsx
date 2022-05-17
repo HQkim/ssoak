@@ -113,7 +113,7 @@ const Slider: any = ({ data, handleClickItem }) => {
                         <Text style={{ color: "white" }}>
                           {dateTime && dateTime > new Date(item.endTime)
                             ? "경매종료"
-                            : new Date() < new Date(item.startDate)
+                            : dateTime && dateTime < new Date(item.startDate)
                             ? "경매예정"
                             : "경매중"}
                         </Text>

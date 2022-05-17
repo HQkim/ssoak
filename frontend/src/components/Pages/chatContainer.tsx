@@ -39,7 +39,13 @@ const ChatContainer = () => {
 
   useEffect(() => {
     getToken();
+    navigation.addListener("focus", () => {
+      setCurrentPage("loading");
+      getToken();
+      onLogin();
+    });
   }, []);
+
   useEffect(() => {
     // console.log(userId);
     if (userId) {

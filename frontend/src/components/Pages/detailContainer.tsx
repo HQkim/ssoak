@@ -31,9 +31,9 @@ const DetailContainer = (props: any) => {
     onStartLoadData(props.route.params.id);
   });
 
-  navigation.addListener("blur", () => {
-    dispatch(dataReset());
-  });
+  // navigation.addListener("blur", () => {
+  //   dispatch(dataReset());
+  // });
   useEffect(() => {
     onStartLoadData(props.route.params.id);
 

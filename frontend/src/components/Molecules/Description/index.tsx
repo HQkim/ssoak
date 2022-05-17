@@ -194,22 +194,24 @@ const index = ({ item, descStyle, titleStyle }) => {
   };
 
   const handlebidRightNow = () => {
-    Alert.alert(
-      "지정가 입찰",
-      `${bidAssignValue
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원에 입찰하시겠습니까?`,
-      [
-        {
-          text: "아니오",
-          style: "cancel",
-        },
-        {
-          text: "예",
-          onPress: () => bidding("immediately"),
-        },
-      ],
-    );
+    if (Number(currentCost) * 1.03 - 0.5 <= Number(bidRightNow)) {
+      Alert.alert(
+        "즉시 입찰",
+        `${bidRightNow
+          .toString()
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원에 입찰하시겠습니까?`,
+        [
+          {
+            text: "아니오",
+            style: "cancel",
+          },
+          {
+            text: "예",
+            onPress: () => bidding("immediately"),
+          },
+        ],
+      );
+    }
   };
 
   const handlebidAssignValue = () => {
@@ -261,14 +263,25 @@ const index = ({ item, descStyle, titleStyle }) => {
             {userId == item.seller?.seq ? (
               <UpdateButton item={item} reqItem={item.itemSeq} />
             ) : (
-              <TouchableOpacity onPress={handleReportClick}>
-                <AntDesign
-                  name="exclamationcircle"
-                  size={24}
-                  color="black"
-                  style={{ marginTop: 10, marginRight: 10 }}
-                />
-              </TouchableOpacity>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  // alignItems: "flex-end",
+                }}
+              >
+                <View style={{ marginRight: 10, marginTop: 5 }}>
+                  <UpdateButton item={item} reqItem={item.itemSeq} />
+                </View>
+                <TouchableOpacity onPress={handleReportClick}>
+                  <AntDesign
+                    name="exclamationcircle"
+                    size={Dimensions.get("window").width / 18}
+                    color="#EA759A"
+                    style={{ marginRight: 10, marginTop: 5 }}
+                  />
+                </TouchableOpacity>
+              </View>
             )}
           </View>
           <Text style={titleStyle} numberOfLines={2}>

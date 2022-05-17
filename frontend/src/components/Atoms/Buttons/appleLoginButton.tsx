@@ -3,10 +3,12 @@ import React from "react";
 import * as AppleAuthentication from "expo-apple-authentication";
 import { appleLogin } from "../../../apis/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 type Props = {};
 
 const AppleLoginButton = (props: Props) => {
+  const navigation = useNavigation();
   return (
     <AppleAuthentication.AppleAuthenticationButton
       buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
@@ -25,11 +27,10 @@ const AppleLoginButton = (props: Props) => {
               AppleAuthentication.AppleAuthenticationScope.EMAIL,
             ],
           });
-
           // signed in
           try {
             const response = await appleLogin(credential.identityToken);
-            AsyncStorage.setItem("accessToken", response.data);
+            navigation.goBack();
           } catch (e) {
             console.log(e);
           }
