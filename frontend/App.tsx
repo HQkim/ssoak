@@ -45,6 +45,13 @@ const store = createStore(
 sagaMiddleware.run(rootSaga);
 
 export default function App() {
+  useEffect(() => {
+    if (typeof TextEncoder !== "function") {
+      const TextEncodingPolyfill = require("text-encoding");
+      TextEncoder = TextEncodingPolyfill.TextEncoder;
+      TextDecoder = TextEncodingPolyfill.TextDecoder;
+    }
+  }, []);
   return (
     <Provider store={store}>
       <LoadingContainer />
