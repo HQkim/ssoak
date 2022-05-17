@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   Alert,
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import Border from "../../Atoms/Borders/border";
@@ -225,76 +226,77 @@ const ItemUpdate = (props: Props) => {
   };
   return (
     <View>
-      <ImageUpdateContainer
-        navigation={props.navigation}
-        route={props.route}
-        inputForm={inputForm}
-        inputImages={inputImages}
-        images={item.itemImages}
-      />
-      <RadioButton
-        getSelectInformation={onSelect}
-        navigation={props.navigation}
-        route={props.route}
-        auctionType={item.auctionType}
-      />
-      <DropDown
-        getSelectInformation={onSelect}
-        navigation={props.navigation}
-        itemCategory={item.itemCategorySeq}
-      />
-      <TextInput
-        placeholder={"글 제목"}
-        value={title}
-        style={styles.textContainer}
-        maxLength={20}
-        keyboardType="default"
-        multiline={false}
-        onChangeText={(text) => onChangeInput("title", text)}
-      ></TextInput>
-      <Border style={styles.border} />
-      <TextInput
-        placeholder={"시초가"}
-        value={startPrice}
-        style={styles.textContainer}
-        maxLength={7}
-        keyboardType="numeric"
-        multiline={false}
-        onChangeText={(text) => onChangeInput("startPrice", text)}
-      ></TextInput>
-      <Border style={styles.border} />
-      <View style={{ padding: ScreenHeight / 50 }}>
-        <Text
-          style={{
-            fontWeight: "200",
-            fontSize: ScreenHeight / 45,
-          }}
-        >
-          {select ? "경매 시작 날짜" : "경매 종료 날짜"}
-        </Text>
-        <DateTime
-          getSelectInformation={getDateTime}
+      <KeyboardAvoidingView behavior="padding" enabled>
+        <ImageUpdateContainer
           navigation={props.navigation}
           route={props.route}
-          item={item}
+          inputForm={inputForm}
+          inputImages={inputImages}
+          images={item.itemImages}
         />
-      </View>
-      <Border style={styles.border} />
-      <TextInput
-        placeholder={"상품 상세 설명"}
-        value={content}
-        style={styles.descriptionContainer}
-        maxLength={250}
-        keyboardType="default"
-        multiline={true}
-        onChangeText={(text) => onChangeInput("content", text)}
-      ></TextInput>
-      <Border style={styles.border} />
-      <View style={{ alignItems: "center", padding: ScreenHeight / 50 }}>
-        <TouchableOpacity style={styles.buttonContainer} onPress={onSubmit}>
-          <Text style={styles.buttonTextContainer}>수정하기</Text>
-        </TouchableOpacity>
-      </View>
+        <RadioButton
+          getSelectInformation={onSelect}
+          navigation={props.navigation}
+          route={props.route}
+          auctionType={item.auctionType}
+        />
+        <DropDown
+          getSelectInformation={onSelect}
+          itemCategory={item.itemCategorySeq}
+        />
+        <TextInput
+          placeholder={"글 제목"}
+          value={title}
+          style={styles.textContainer}
+          maxLength={20}
+          keyboardType="default"
+          multiline={false}
+          onChangeText={(text) => onChangeInput("title", text)}
+        ></TextInput>
+        <Border style={styles.border} />
+        <TextInput
+          placeholder={"시초가"}
+          value={startPrice}
+          style={styles.textContainer}
+          maxLength={7}
+          keyboardType="numeric"
+          multiline={false}
+          onChangeText={(text) => onChangeInput("startPrice", text)}
+        ></TextInput>
+        <Border style={styles.border} />
+        <View style={{ padding: ScreenHeight / 50 }}>
+          <Text
+            style={{
+              fontWeight: "200",
+              fontSize: ScreenHeight / 45,
+            }}
+          >
+            {select ? "경매 시작 날짜" : "경매 종료 날짜"}
+          </Text>
+          <DateTime
+            getSelectInformation={getDateTime}
+            navigation={props.navigation}
+            route={props.route}
+            item={item}
+          />
+        </View>
+        <Border style={styles.border} />
+        <TextInput
+          placeholder={""}
+          value={content}
+          style={styles.descriptionContainer}
+          maxLength={250}
+          keyboardType="default"
+          multiline={true}
+          onChangeText={(text) => onChangeInput("content", text)}
+        ></TextInput>
+        <Border style={styles.border} />
+        <View style={{ alignItems: "center", padding: ScreenHeight / 50 }}>
+          <TouchableOpacity style={styles.buttonContainer} onPress={onSubmit}>
+            <Text style={styles.buttonTextContainer}>수정하기</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </View>
   );
 };
