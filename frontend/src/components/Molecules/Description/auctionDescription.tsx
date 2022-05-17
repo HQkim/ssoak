@@ -15,11 +15,15 @@ import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import UpdateButton from "./updateButton";
+import AsyncStorageLib from "@react-native-async-storage/async-storage";
+import jwt_decode, { JwtPayload } from "jwt-decode";
+import { reportUser } from "../../../apis/auth";
 
 const { height: ScreenHeight, width: ScreenWidth } = Dimensions.get("window");
 
 const AuctionDescription = ({ item, reqItem }) => {
   const [showMore, setShowMore] = useState(false);
+  const [userId, setUserId] = useState();
   const [showDivider, setShowDivier] = useState<boolean>(true);
   const [biddingPrice, setBiddingPrice] = useState(0);
   const navigation = useNavigation();
@@ -50,7 +54,39 @@ const AuctionDescription = ({ item, reqItem }) => {
     if (item.bidding) {
       setBiddingPrice(item.bidding.biddingPrice);
     }
+    AsyncStorageLib.getItem("accessToken", (err, res: any) => {
+      const decodedToken: any = jwt_decode<JwtPayload>(res);
+      setUserId(decodedToken.sub);
+    });
   }, []);
+
+  const handleReportClick = () => {
+    Alert.alert(
+      "신고",
+      `판매 내용을 신고하시겠습니까?\n신고 후에는 대상자의 경매품을 볼 수 없습니다.`,
+      [
+        {
+          text: "예",
+          onPress: () => {
+            reportUser(item.seller?.seq)
+              .then((res) => {
+                Alert.alert(
+                  "신고",
+                  "접수가 완료되었습니다.\n더 이상 신고 대상자의 경매품을\n확인할 수 없습니다."
+                );
+              })
+              .catch(() => {
+                Alert.alert("신고", "신고 접수에 실패했습니다.");
+              });
+          },
+        },
+        {
+          text: "아니오",
+          style: "cancel",
+        },
+      ]
+    );
+  };
 
   return (
     <View>
@@ -68,10 +104,19 @@ const AuctionDescription = ({ item, reqItem }) => {
             }}
             style={styles.imgContainer}
           />
-          <View style={{ marginLeft: 10 }}>
+          <View style={{ marginLeft: 10, marginRight: 10 }}>
             <Text style={{ fontWeight: "100", marginBottom: 2 }}>판매자</Text>
             <Text style={styles.typography}>{item?.seller?.nickname}</Text>
           </View>
+          {userId == item.seller?.seq ? null : (
+            <TouchableOpacity onPress={handleReportClick}>
+              <AntDesign
+                name="exclamationcircle"
+                size={Dimensions.get("window").width / 18}
+                style={{ justifyContent: "center" }}
+              />
+            </TouchableOpacity>
+          )}
         </View>
         <UpdateButton item={item} reqItem={reqItem} />
       </View>
