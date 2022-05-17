@@ -70,7 +70,7 @@ const Favorite = (props: Props) => {
 
   return (
     <ScrollView>
-      {items.length < 1 ? (
+      {!items ? (
         <View
           style={{
             marginTop: ScreenHeight * 0.4,
