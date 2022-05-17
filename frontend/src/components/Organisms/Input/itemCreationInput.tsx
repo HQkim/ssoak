@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   Alert,
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Border from "../../Atoms/Borders/border";
@@ -204,82 +205,89 @@ const ItemCreationInput = (props: Props) => {
   };
   return (
     <View>
-      <RadioButton
-        getSelectInformation={onSelect}
-        navigation={props.navigation}
-        route={props.route}
-        auctionType={form === [] ? null : null}
-      />
-      <DropDown getSelectInformation={onSelect} itemCategory={0} />
-      <TextInput
-        placeholder={"글 제목"}
-        placeholderTextColor="#C5C8CE"
-        value={title}
-        style={styles.textContainer}
-        maxLength={15}
-        keyboardType="default"
-        multiline={false}
-        onChangeText={(text) => onChangeInput("title", text)}
-      ></TextInput>
-      <Border style={styles.border} />
-      <TextInput
-        placeholder={"시초가"}
-        placeholderTextColor="#C5C8CE"
-        value={startPrice}
-        style={styles.textContainer}
-        maxLength={7}
-        keyboardType="numeric"
-        multiline={false}
-        onChangeText={(text) => onChangeInput("startPrice", text)}
-      ></TextInput>
-      <Border style={styles.border} />
-      <View style={{ padding: ScreenHeight / 50 }}>
-        <Text
-          style={{
-            fontWeight: "200",
-            fontSize: ScreenHeight / 45,
-          }}
-        >
-          {select ? "경매 시작 날짜" : "경매 종료 날짜"}
-        </Text>
-        <DateTime
-          getSelectInformation={getDateTime}
+      <KeyboardAvoidingView behavior="padding" enabled>
+        <RadioButton
+          getSelectInformation={onSelect}
           navigation={props.navigation}
           route={props.route}
-          item={dateTime}
+          auctionType={form === [] ? null : null}
         />
-      </View>
-      <Border style={styles.border} />
-      <TextInput
-        placeholder={"상품 상세 설명"}
-        placeholderTextColor="#C5C8CE"
-        value={content}
-        style={styles.descriptionContainer}
-        maxLength={250}
-        keyboardType="default"
-        multiline={true}
-        onChangeText={(text) => onChangeInput("content", text)}
-      ></TextInput>
-      <Border style={styles.border} />
-      <View
-        style={{
-          flexDirection: "row",
-          padding: 15,
-          marginBottom: ScreenHeight / 50,
-          justifyContent: "center",
-        }}
-      >
-        <View style={{ alignItems: "center" }}>
-          <TouchableOpacity style={styles.buttonContainer2} onPress={onCancel}>
-            <Text style={styles.buttonTextContainer}>취소</Text>
-          </TouchableOpacity>
+        <DropDown getSelectInformation={onSelect} itemCategory={0} />
+        <TextInput
+          placeholder={"글 제목"}
+          placeholderTextColor="#C5C8CE"
+          value={title}
+          style={styles.textContainer}
+          maxLength={15}
+          keyboardType="default"
+          multiline={false}
+          onChangeText={(text) => onChangeInput("title", text)}
+        ></TextInput>
+        <Border style={styles.border} />
+        <TextInput
+          placeholder={"시초가"}
+          placeholderTextColor="#C5C8CE"
+          value={startPrice}
+          style={styles.textContainer}
+          maxLength={7}
+          keyboardType="numeric"
+          multiline={false}
+          onChangeText={(text) => onChangeInput("startPrice", text)}
+        ></TextInput>
+        <Border style={styles.border} />
+        <View style={{ padding: ScreenHeight / 50 }}>
+          <Text
+            style={{
+              fontWeight: "200",
+              fontSize: ScreenHeight / 45,
+            }}
+          >
+            {select ? "경매 시작 날짜" : "경매 종료 날짜"}
+          </Text>
+          <DateTime
+            getSelectInformation={getDateTime}
+            navigation={props.navigation}
+            route={props.route}
+            item={dateTime}
+          />
         </View>
-        <View style={{ alignItems: "center" }}>
-          <TouchableOpacity style={styles.buttonContainer} onPress={onSubmit}>
-            <Text style={styles.buttonTextContainer}>등록하기</Text>
-          </TouchableOpacity>
+        <Border style={styles.border} />
+
+        <TextInput
+          placeholder={"상품 상세 설명"}
+          placeholderTextColor="#C5C8CE"
+          value={content}
+          style={styles.descriptionContainer}
+          maxLength={250}
+          keyboardType="default"
+          multiline={true}
+          onChangeText={(text) => onChangeInput("content", text)}
+        ></TextInput>
+
+        <Border style={styles.border} />
+        <View
+          style={{
+            flexDirection: "row",
+            padding: 15,
+            marginBottom: ScreenHeight / 50,
+            justifyContent: "center",
+          }}
+        >
+          <View style={{ alignItems: "center" }}>
+            <TouchableOpacity
+              style={styles.buttonContainer2}
+              onPress={onCancel}
+            >
+              <Text style={styles.buttonTextContainer}>취소</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ alignItems: "center" }}>
+            <TouchableOpacity style={styles.buttonContainer} onPress={onSubmit}>
+              <Text style={styles.buttonTextContainer}>등록하기</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </View>
   );
 };
