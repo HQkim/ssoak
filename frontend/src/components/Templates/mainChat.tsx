@@ -962,9 +962,9 @@ const MainChat = (props: any) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [offset, setOffset] = useState(0);
   const { userId, myData, user: selectedUser } = props.route.params;
-  useEffect(() => {
-    console.log(userId);
-  }, [userId]);
+  // useEffect(() => {
+  //   console.log(userId);
+  // }, [userId]);
   const CustomMessage = (props: MessageProps<IMessage>): JSX.Element => (
     <NoAvatarMessage {...props} />
   );
@@ -1020,8 +1020,8 @@ const MainChat = (props: any) => {
     //load old messages
     const loadData = async () => {
       const myChatroom = await fetchMessages();
-      console.log(selectedUser);
-      console.log(myChatroom, "myChatROom!!!!!!!!!!!!!!!!!!!");
+      // console.log(selectedUser);
+      // console.log(myChatroom, "myChatROom!!!!!!!!!!!!!!!!!!!");
       myChatroom && setMessages(renderMessages(myChatroom.messages));
       !myChatroom.messages &&
         set(ref(database, `chatrooms/${selectedUser.chatroomId}`), {

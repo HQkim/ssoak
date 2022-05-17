@@ -23,15 +23,7 @@ const Slider: any = ({ data, handleClickItem }) => {
       setDateTime(new Date());
     }
   }, []);
-  useEffect(() => {
-    console.log(
-      dateTime,
-      new Date(item.startTime),
-      new Date(item.endTime),
-      data.item.title,
-    );
-    console.log(dateTime < new Date(item.startTime));
-  }, [dateTime]);
+
   // console.log(item);
 
   return (

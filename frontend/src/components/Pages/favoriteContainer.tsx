@@ -20,11 +20,9 @@ const FavoriteContainer = ({ navigation, route }: Props) => {
 
   const getToken = async () => {
     const token = await AsyncStorage.getItem("accessToken");
-    console.log(token);
     if (token) {
       setIsLogin(true);
     } else if (token == null) {
-      console.log(token, "여기");
       setIsLogin(false);
       navigation.navigate("Profile");
     }
@@ -33,7 +31,7 @@ const FavoriteContainer = ({ navigation, route }: Props) => {
   useFocusEffect(
     React.useCallback(() => {
       getToken();
-    }, [])
+    }, []),
   );
 
   return (

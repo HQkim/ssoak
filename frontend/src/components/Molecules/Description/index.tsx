@@ -281,7 +281,6 @@ const index = ({ item, descStyle, titleStyle }) => {
                     style={{
                       marginRight: 10,
                       marginTop: 5,
-                      position: "fixed",
                     }}
                   />
                 </TouchableOpacity>

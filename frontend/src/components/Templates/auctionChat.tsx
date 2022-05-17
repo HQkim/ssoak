@@ -1078,9 +1078,9 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
     user !== null && setBlackList(user.blackList);
   }, [user]);
 
-  useEffect(() => {
-    console.log(blackList, "blackList");
-  }, [blackList]);
+  // useEffect(() => {
+  //   console.log(blackList, "blackList");
+  // }, [blackList]);
 
   useEffect(() => {
     Keyboard.addListener("keyboardWillShow", () => {
@@ -1199,7 +1199,7 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
       if (msgs[msgs.length - 1].type === "bid") {
         setCurrentCost(msgs[msgs.length - 1].price);
       }
-      console.log(msgs);
+      // console.log(msgs);
       return msgs
         ? msgs.reverse().map((msg, index) =>
             user.blackList.includes(msg.sender)

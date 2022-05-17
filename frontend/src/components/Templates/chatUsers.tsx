@@ -19,7 +19,7 @@ const ChatUsers = ({
   // onAddFriend,
 }) => {
   const renderUser = ({ item }) => {
-    console.log(item);
+    // console.log(item);
     return (
       <Pressable onPress={() => onClickUser(item)} style={styles.row}>
         <View style={{}}>
