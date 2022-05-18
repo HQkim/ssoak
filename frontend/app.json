@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "frontend",
+    "name": "ssoak",
     "slug": "frontend",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -13,11 +13,10 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ssafy207.frontend"
     },
     "android": {
       "adaptiveIcon": {

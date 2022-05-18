@@ -7,6 +7,7 @@ import {
   FlatList,
   Switch,
   Alert,
+  Platform,
 } from "react-native";
 import ToggleSwitch from "toggle-switch-react-native";
 import React, { useCallback, useEffect, useState } from "react";
@@ -60,13 +61,13 @@ const Main = (props: Props) => {
   };
 
   useEffect(() => {
+    const now = new Date();
+    Platform.OS === "android" && now.setHours(now.getHours() + 9);
     if (isEnabled) {
       setNormalItems(
-        normalItems.filter((item) => new Date(item.endTime) > new Date()),
+        normalItems.filter((item) => new Date(item.endTime) > now),
       );
-      setLiveItems(
-        liveItems.filter((item) => new Date(item.endTime) > new Date()),
-      );
+      setLiveItems(liveItems.filter((item) => new Date(item.endTime) > now));
     } else {
       const liveItems = data
         .filter((item) => item.auctionType === "LIVE")
@@ -145,11 +146,17 @@ const Main = (props: Props) => {
 
   useEffect(() => {
     if (isEnabled) {
+      const now = new Date();
+      Platform.OS === "android" && now.setHours(now.getHours() + 9);
       setNormalItems(
-        normalItems.filter((item) => new Date(item.endTime) > new Date()),
+        normalItems
+          .filter((item) => new Date(item.endTime) > now)
+          .sort((first, second) => (first.itemSeq > second.itemSeq ? -1 : 1)),
       );
       setLiveItems(
-        liveItems.filter((item) => new Date(item.endTime) > new Date()),
+        liveItems
+          .filter((item) => new Date(item.endTime) > now)
+          .sort((first, second) => (first.itemSeq > second.itemSeq ? -1 : 1)),
       );
     } else {
       const liveItems = data
