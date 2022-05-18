@@ -301,8 +301,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
         return queryFactory
                 .select(item.count().intValue())
                 .from(item)
-                .where(item.isSold.eq(false),
-                        item.member.seq.notIn(blackList),
+                .where(item.member.seq.notIn(blackList),
                         item.member.isBlocked.eq(false),
                         item.member.isDeleted.eq(false),
                         keywordCt(searchDto.getKeyword()),
@@ -336,8 +335,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                 .join(image).on(image.item.eq(item))
                 .join(itemCategory).on(itemCategory.item.eq(item))
                 .join(category).on(category.seq.eq(itemCategory.category.seq))
-                .where(item.isSold.eq(false),
-                        item.member.seq.notIn(blackList),
+                .where(item.member.seq.notIn(blackList),
                         item.member.isBlocked.eq(false),
                         item.member.isDeleted.eq(false),
                         keywordCt(searchDto.getKeyword()),
