@@ -1075,37 +1075,13 @@ const MainChat = (props: any) => {
         }
       }
 
-<<<<<<< Updated upstream
       const database = getDatabase();
-=======
-  const disconnect = () => {
-    if (client != null) {
-      if (client.connected) client.deactivate();
-    }
-  };
-  const [messages, setMessages] = useState<IMessage[]>([]);
-  const onSend = useCallback((messages = []) => {
-    // console.log(client, connected, messages);
-    console.log(messages, client != null, !connected);
-    if (client != null) {
-      if (!connected) return;
-      client.publish({
-        destination: "/pub/live_auction",
-        body: JSON.stringify({
-          ...messages[0],
-        }),
-      });
-    }
-    setMessages((prev) => GiftedChat.append(prev, messages));
-  }, []);
->>>>>>> Stashed changes
 
       //fetch fresh messages from server
       const currentChatroom = await fetchMessages();
       console.log(currentChatroom);
       const lastMessages = currentChatroom.messages || [];
 
-<<<<<<< Updated upstream
       update(ref(database, `chatrooms/${selectedUser.chatroomId}`), {
         messages: [
           ...lastMessages,
@@ -1121,29 +1097,6 @@ const MainChat = (props: any) => {
     },
     [fetchMessages, myData.userId, selectedUser.chatroomId],
   );
-=======
-  useEffect(() => {
-    console.log(connected);
-  }, [connected]);
-  useEffect(() => {
-    connect();
-    setMessages([
-      // {
-      //   _id: 1,
-      //   itemSeq: 1,
-      //   text: "Hello developer",
-      //   createdAt: new Date(),
-      //   user: {
-      //     _id: 2,
-      //     name: "React Native",
-      //     avatar: "https://placeimg.com/140/140/any",
-      //   },
-      //   type: 1,
-      // },
-    ]);
-    return () => disconnect();
-  }, []);
->>>>>>> Stashed changes
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, backgroundColor: "#719DD7" }}>
