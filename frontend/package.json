@@ -56,7 +56,8 @@
     "redux-saga": "^1.1.3",
     "rn-keyboard-sticky-view": "^1.0.4",
     "toggle-switch-react-native": "^3.3.0",
-    "unimodules-permissions-interface": "^6.1.0"
+    "unimodules-permissions-interface": "^6.1.0",
+    "expo-updates": "~0.11.7"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
