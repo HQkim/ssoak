@@ -30,6 +30,8 @@ import {
   Message as GiftedChatMessage,
   SystemMessage,
   MessageProps,
+  Day,
+  Time,
 } from "react-native-gifted-chat";
 import {
   get,
@@ -989,7 +991,7 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
   const [blackList, setBlackList] = useState(null);
 
   useEffect(() => {
-    Platform.OS === "ios" && setOffset(60);
+    Platform.OS === "ios" && setOffset(45);
     setMessages([]);
   }, []);
 
@@ -1031,7 +1033,7 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
       const myUserRef = ref(database, `users/${userId}`);
 
       const auctionChatroom = await get(
-        ref(database, `auctionChatrooms/${itemId}`),
+        ref(database, `auctionChatrooms/${itemId}`)
       );
 
       if (!auctionChatroom) {
@@ -1134,7 +1136,7 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
           text: "아니오",
           onPress: () => {},
         },
-      ],
+      ]
     );
   };
 
@@ -1181,7 +1183,7 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
 
       setMessages((prevMessages) => GiftedChat.append(prevMessages, msg));
     },
-    [fetchMessages, myData?.userId, itemId],
+    [fetchMessages, myData?.userId, itemId]
   );
 
   const renderMessages = useCallback(
@@ -1206,7 +1208,10 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
               ? {
                   ...msg,
                   _id: index,
-                  text: msg.type !== "bid" ? "" : msg.text,
+                  text:
+                    msg.type !== "bid"
+                      ? "차단된 사용자의 채팅입니다."
+                      : msg.text,
                   user: {
                     _id:
                       msg.sender === myData?.userId
@@ -1241,11 +1246,11 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
                         : msg.sender,
                   },
                   type: msg.type,
-                },
+                }
           )
         : [];
     },
-    [myData?.avatar, myData?.userId, itemId, messages],
+    [myData?.avatar, myData?.userId, itemId, messages]
   );
   useEffect(() => {
     Platform.OS === "ios" && setOffset(40);
@@ -1310,7 +1315,34 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
     <View style={{ flex: 1 }}>
       <GiftedChat
         // renderAvatar={() => null}
-        renderBubble={(props) => <Bubble {...props} />}
+        renderDay={(props) => {
+          return (
+            <Day
+              {...props}
+              textStyle={{ color: "#444" }}
+              dateFormat={"YYYY년 MM월 DD일"}
+            />
+          );
+        }}
+        renderBubble={(props) => {
+          return (
+            <Bubble
+              {...props}
+              wrapperStyle={{
+                left: {
+                  // backgroundColor: "yellow",
+                  backgroundColor:
+                    item.seller?.seq === props.currentMessage?.user?._id
+                      ? "#F8A33E"
+                      : "white",
+                },
+              }}
+            />
+          );
+        }}
+        renderTime={(props) => (
+          <Time {...props} timeTextStyle={{ left: { color: "black" } }} />
+        )}
         onLongPress={function (context, message) {
           if (message.user._id !== userId) {
             Alert.alert(
@@ -1325,13 +1357,13 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
                         .then((res) => {
                           Alert.alert(
                             "신고",
-                            "접수가 완료되었습니다.\n더 이상 신고 대상자의 채팅을\n확인할 수 없습니다.",
+                            "접수가 완료되었습니다.\n더 이상 신고 대상자의 채팅을\n확인할 수 없습니다."
                           );
                         })
                         .catch(() => {
                           Alert.alert(
                             "신고",
-                            "신고 접수에 실패했습니다.\n신고 내용을 확인해주세요.",
+                            "신고 접수에 실패했습니다.\n신고 내용을 확인해주세요."
                           );
                         });
                     } else {
@@ -1343,9 +1375,10 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
                   text: "아니오",
                   style: "cancel",
                 },
-              ],
+              ]
             );
           } else {
+            Alert.alert("신고", "자신의 채팅은 신고할 수 없습니다.");
           }
         }}
         renderAvatar={() => null}
@@ -1386,7 +1419,7 @@ const AuctionChat = ({ user, userId, userAvatar, item }) => {
         scrollToBottom={true}
         renderMessage={CustomMessage}
       />
-      {iskeyboardUp === false && (
+      {iskeyboardUp === false && item.seller?.seq !== userId && (
         <View style={{ alignItems: "center" }}>
           <Text style={{ marginTop: 3 }}>현재 가격 : {currentCost}원</Text>
           <View style={{ justifyContent: "center", alignItems: "center" }}>
