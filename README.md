@@ -68,25 +68,25 @@
 
 [Notion](https://www.notion.so/PJT-738ba44afdde4f11b4ae2f3de7832802)
 
-![image-20220519184014977](C:\Users\Mandu\Desktop\README.assets\image-20220519184014977.png)
+![image-20220519184014977](README.assets/image-20220519184014977.png)
 
 [기능명세서\_GoogleSheet](https://docs.google.com/spreadsheets/d/1sCmVY6OK-BQDsHUbqxuT3qJjknPGeza3/edit#gid=1430994511)
 
 [기능명세서\_Gitlab](https://lab.ssafy.com/s06-final/S06P31A207/-/blob/docs/docs/%EA%B8%B0%EB%8A%A5%EB%AA%85%EC%84%B8%EC%84%9C.pdf)
 
-![image-20220519184230066](C:\Users\Mandu\Desktop\README.assets\image-20220519184230066.png)
+![image-20220519184230066](README.assets\image-20220519184230066.png)
 
 [와이어 프레임](https://www.figma.com/file/eooMEIO65VPFg21u4cwkVR/Untitled)
 
-![image-20220519184341328](C:\Users\Mandu\Desktop\README.assets\image-20220519184341328.png)
+![image-20220519184341328](README.assets\image-20220519184341328.png)
 
 [ERD](https://lab.ssafy.com/s06-final/S06P31A207/-/blob/docs/docs/ERD.pdf)
 
-![image-20220519184437168](C:\Users\Mandu\Desktop\README.assets\image-20220519184437168.png)
+![image-20220519184437168](README.assets\image-20220519184437168.png)
 
 [API 명세서](https://docs.google.com/spreadsheets/d/1sCmVY6OK-BQDsHUbqxuT3qJjknPGeza3/edit#gid=538015543)
 
-![image-20220519184516380](C:\Users\Mandu\Desktop\README.assets\image-20220519184516380.png)
+![image-20220519184516380](README.assets\image-20220519184516380.png)
 
 [개발 환경 세팅](ㅁㄴㅇ)
 
@@ -94,26 +94,26 @@
 
 ---
 
-![시연시나리오_2](C:\Users\Mandu\Desktop\README.assets\시연시나리오_2.png)
+![시연시나리오_2](README.assets/시연시나리오_2.png)
 
-![시연시나리오_3](C:\Users\Mandu\Desktop\README.assets\시연시나리오_3.png)
+![시연시나리오_3](README.assets/시연시나리오_3.png)
 
-![시연시나리오_4](C:\Users\Mandu\Desktop\README.assets\시연시나리오_4.png)
+![시연시나리오_4](README.assets/시연시나리오_4.png)
 
-![시연시나리오_5](C:\Users\Mandu\Desktop\README.assets\시연시나리오_5.png)
+![시연시나리오_5](README.assets/시연시나리오_5.png)
 
-![시연시나리오_6](C:\Users\Mandu\Desktop\README.assets\시연시나리오_6.png)
+![시연시나리오_6](README.assets/시연시나리오_6.png)
 
-![시연시나리오_7](C:\Users\Mandu\Desktop\README.assets\시연시나리오_7.png)
+![시연시나리오_7](README.assets/시연시나리오_7.png)
 
-![시연시나리오_8](C:\Users\Mandu\Desktop\README.assets\시연시나리오_8.png)
+![시연시나리오_8](README.assets/시연시나리오_8.png)
 
-![시연시나리오_9](C:\Users\Mandu\Desktop\README.assets\시연시나리오_9.png)
+![시연시나리오_9](README.assets/시연시나리오_9.png)
 
-![시연시나리오_10](C:\Users\Mandu\Desktop\README.assets\시연시나리오_10.png)
+![시연시나리오_10](README.assets/시연시나리오_10.png)
 
-![시연시나리오_11](C:\Users\Mandu\Desktop\README.assets\시연시나리오_11.png)
+![시연시나리오_11](README.assets/시연시나리오_11.png)
 
-![시연시나리오_12](C:\Users\Mandu\Desktop\README.assets\시연시나리오_12.png)
+![시연시나리오_12](README.assets/시연시나리오_12.png)
 
-![시연시나리오_13](C:\Users\Mandu\Desktop\README.assets\시연시나리오_13.png)
+![시연시나리오_13](README.assets/시연시나리오_13.png)
