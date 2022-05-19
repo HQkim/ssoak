@@ -8,6 +8,7 @@ import {
   Alert,
   TouchableOpacity,
   Image,
+  Platform,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
@@ -65,7 +66,7 @@ const index = ({ item, descStyle, titleStyle }) => {
       setUserData(res.data);
     });
     if (item.bidding !== null) {
-      setCurrentCost(item.bidding?.biddingPrice);
+      setCurrentCost(item.startPrice);
       setBiddingBuyer(item.bidding?.buyer);
     } else {
       setCurrentCost(item.startPrice);
@@ -95,7 +96,7 @@ const index = ({ item, descStyle, titleStyle }) => {
           const database = getDatabase();
 
           const snapshot = await get(
-            ref(database, `auctionChatrooms/${item.itemSeq}`),
+            ref(database, `auctionChatrooms/${item.itemSeq}`)
           );
           return snapshot.val();
         };
@@ -127,8 +128,8 @@ const index = ({ item, descStyle, titleStyle }) => {
   };
 
   useEffect(() => {
-    setBidRightNow(String((Number(currentCost) * 1.03).toFixed()));
-    setBidAssignValue(String((Number(currentCost) * 1.03).toFixed()));
+    setBidRightNow(String((Number(currentCost) * 1.1).toFixed()));
+    setBidAssignValue(String((Number(currentCost) * 1.1).toFixed()));
   }, [currentCost]);
 
   const handleMoreClick = () => {
@@ -177,7 +178,7 @@ const index = ({ item, descStyle, titleStyle }) => {
               .then((res) => {
                 Alert.alert(
                   "신고",
-                  "접수가 완료되었습니다.\n더 이상 신고 대상자의 경매품을\n확인할 수 없습니다.",
+                  "접수가 완료되었습니다.\n더 이상 신고 대상자의 경매품을\n확인할 수 없습니다."
                 );
               })
               .catch(() => {
@@ -189,7 +190,7 @@ const index = ({ item, descStyle, titleStyle }) => {
           text: "아니오",
           style: "cancel",
         },
-      ],
+      ]
     );
   };
 
@@ -209,7 +210,7 @@ const index = ({ item, descStyle, titleStyle }) => {
             text: "예",
             onPress: () => bidding("immediately"),
           },
-        ],
+        ]
       );
     }
   };
@@ -230,7 +231,7 @@ const index = ({ item, descStyle, titleStyle }) => {
             text: "예",
             onPress: () => bidding("input"),
           },
-        ],
+        ]
       );
     } else {
       Alert.alert(
@@ -242,7 +243,7 @@ const index = ({ item, descStyle, titleStyle }) => {
           {
             text: "닫기",
           },
-        ],
+        ]
       );
     }
   };
@@ -295,7 +296,7 @@ const index = ({ item, descStyle, titleStyle }) => {
             <Text style={styles.typography}>{item.seller?.nickname}</Text>
             <Text style={styles.typography}>
               최소 입찰호가 :{" "}
-              {(Number(currentCost) * 0.03)
+              {(Number(item.startPrice) * 0.1)
                 .toFixed()
                 .toString()
                 .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
@@ -329,7 +330,23 @@ const index = ({ item, descStyle, titleStyle }) => {
               }}
             />
           )}
-          {new Date(Date.parse(item.startTime)) < new Date() ? (
+          {Platform.OS == "ios" ? (
+            new Date(Date.parse(item.startTime)) < new Date() ? (
+              <View style={styles.itemInformationContainer}>
+                <Text style={styles.information}>종료까지 남은 시간 : </Text>
+                <CountDown style={styles.information} endTime={item.endTime} />
+              </View>
+            ) : (
+              <View style={styles.itemInformationContainer}>
+                <Text style={styles.information}>시작까지 남은 시간 : </Text>
+                <CountDown
+                  style={styles.information}
+                  endTime={item.startTime}
+                />
+              </View>
+            )
+          ) : new Date(Date.parse(item.startTime) - 9000 * 60 * 60) <
+            new Date() ? (
             <View style={styles.itemInformationContainer}>
               <Text style={styles.information}>종료까지 남은 시간 : </Text>
               <CountDown style={styles.information} endTime={item.endTime} />
