@@ -37,14 +37,14 @@ const ChatContainer = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [myData, setMyData] = useState<any>(null);
 
-  // useEffect(() => {
-  //   getToken();
-  //   navigation.addListener("focus", () => {
-  //     setCurrentPage("loading");
-  //     getToken();
-  //     onLogin();
-  //   });
-  // }, []);
+  useEffect(() => {
+    getToken();
+    // navigation.addListener("focus", () => {
+    //   setCurrentPage("loading");
+    //   getToken();
+    //   onLogin();
+    // });
+  }, []);
 
   useEffect(() => {
     // console.log(userId);

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Loading from "../Templates/loading";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
-import BottomTabs from "../Organisms/Navigation";
+import BottomTabs from "../Organisms/navigation";
 import {
   createStackNavigator,
   StackNavigationProp,
