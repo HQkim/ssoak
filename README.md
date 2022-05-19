@@ -74,19 +74,19 @@
 
 [기능명세서\_Gitlab](https://lab.ssafy.com/s06-final/S06P31A207/-/blob/docs/docs/%EA%B8%B0%EB%8A%A5%EB%AA%85%EC%84%B8%EC%84%9C.pdf)
 
-![image-20220519184230066](README.assets\image-20220519184230066.png)
+![image-20220519184230066](README.assets/image-20220519184230066.png)
 
 [와이어 프레임](https://www.figma.com/file/eooMEIO65VPFg21u4cwkVR/Untitled)
 
-![image-20220519184341328](README.assets\image-20220519184341328.png)
+![image-20220519184341328](README.assets/image-20220519184341328.png)
 
 [ERD](https://lab.ssafy.com/s06-final/S06P31A207/-/blob/docs/docs/ERD.pdf)
 
-![image-20220519184437168](README.assets\image-20220519184437168.png)
+![image-20220519184437168](README.assets/image-20220519184437168.png)
 
 [API 명세서](https://docs.google.com/spreadsheets/d/1sCmVY6OK-BQDsHUbqxuT3qJjknPGeza3/edit#gid=538015543)
 
-![image-20220519184516380](README.assets\image-20220519184516380.png)
+![image-20220519184516380](README.assets/image-20220519184516380.png)
 
 [개발 환경 세팅](ㅁㄴㅇ)
 
