@@ -117,3 +117,7 @@
 ![시연시나리오_12](README.assets/시연시나리오_12.png)
 
 ![시연시나리오_13](README.assets/시연시나리오_13.png)
+
+### 서비스 아키텍쳐
+
+![image-20220519190125773](README.assets/image-20220519190125773.png)
