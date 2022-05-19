@@ -39,15 +39,10 @@ const ChatContainer = () => {
 
   useEffect(() => {
     getToken();
-    // navigation.addListener("focus", () => {
-    //   setCurrentPage("loading");
-    //   getToken();
-    //   onLogin();
-    // });
   }, []);
 
   useEffect(() => {
-    // console.log(userId);
+    console.log(userId);
     if (userId) {
       onLogin();
     }
@@ -91,6 +86,11 @@ const ChatContainer = () => {
     return mySnapshot.val();
   };
   const navigation = useNavigation();
+  navigation.addListener("focus", () => {
+    // setCurrentPage("loading");
+    getToken();
+    onLogin();
+  });
   const onClickUser = (user) => {
     navigation.navigate("chat", {
       user: user,
