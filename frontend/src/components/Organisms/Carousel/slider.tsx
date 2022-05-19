@@ -202,11 +202,11 @@ const Slider: any = ({ data, handleClickItem }) => {
                   <Text>
                     최소 입찰호가 :{" "}
                     {item.biddingPrice
-                      ? Number(item.biddingPrice * 0.03)
+                      ? Number(item.startPrice * 0.1)
                           .toFixed()
                           .toString()
                           .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                      : Number(item.startPrice * 0.03)
+                      : Number(item.startPrice * 0.1)
                           .toFixed()
                           .toString()
                           .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
