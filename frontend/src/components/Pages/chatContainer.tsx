@@ -15,7 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { kakaoProfile } from "../../apis/auth";
 import { useNavigation } from "@react-navigation/native";
 
-const ChatContainer = () => {
+const ChatContainer = (props: any) => {
   const getToken = async () => {
     const token = await AsyncStorage.getItem(
       "accessToken",
@@ -36,9 +36,15 @@ const ChatContainer = () => {
   const [userToAdd, setUserToAdd] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [myData, setMyData] = useState<any>(null);
-
+  const navigation = useNavigation();
   useEffect(() => {
-    getToken();
+    // getToken();
+    navigation.addListener("focus", () => {
+      setCurrentPage("loading");
+      getToken().then(() => {
+        onLogin();
+      });
+    });
   }, []);
 
   useEffect(() => {
@@ -85,12 +91,7 @@ const ChatContainer = () => {
     // console.log(mySnapshot.val());
     return mySnapshot.val();
   };
-  const navigation = useNavigation();
-  navigation.addListener("focus", () => {
-    // setCurrentPage("loading");
-    getToken();
-    onLogin();
-  });
+
   const onClickUser = (user) => {
     navigation.navigate("chat", {
       user: user,
