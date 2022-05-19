@@ -124,6 +124,7 @@ const Filter = (props: Props) => {
 
   // 필터 적용 함수
   const applyFilters = async (form) => {
+    console.log(form);
     // 년-월-일-시-분 비교 변수
     const string_start = JSON.stringify(form.form.startTime).slice(0, 17);
     const string_end = JSON.stringify(form.form.endTime).slice(0, 17);
@@ -306,7 +307,7 @@ const Filter = (props: Props) => {
             <Text style={props.styles.resetText}>초기화</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => applyFilters(form)}
+            onPress={() => applyFilters(props.propForm)}
             style={props.styles.applyContainer}
           >
             <Text style={props.styles.applyText}>필터 적용</Text>
