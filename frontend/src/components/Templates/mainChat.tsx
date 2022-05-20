@@ -21,6 +21,7 @@ import {
 import {
   Bubble,
   Composer,
+  Day,
   GiftedChat,
   IMessage,
   InputToolbar,
@@ -28,6 +29,7 @@ import {
   MessageProps,
   Send,
   SystemMessage,
+  Time,
 } from "react-native-gifted-chat";
 import GeneralButtonWithoutText from "../Atoms/Buttons/generalButtonWithoutText";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
@@ -1151,6 +1153,18 @@ const MainChat = (props: any) => {
           messagesContainerStyle={{
             backgroundColor: "#719dd7",
           }}
+          renderTime={(props) => (
+            <Time {...props} timeTextStyle={{ left: { color: "black" } }} />
+          )}
+          renderDay={(props) => {
+            return (
+              <Day
+                {...props}
+                textStyle={{ color: "#444" }}
+                dateFormat={"YYYY년 MM월 DD일"}
+              />
+            );
+          }}
           renderInputToolbar={(props) => (
             <InputToolbar {...props} containerStyle={styles.textArea} />
           )}
@@ -1198,7 +1212,7 @@ const styles = StyleSheet.create({
     borderTopColor: "black",
     borderTopWidth: 1,
     borderColor: "black",
-    // borderRadius: 9999,
+    borderRadius: 9999,
     alignItems: "center",
     alignSelf: "center",
     justifyContent: "center",
@@ -1206,7 +1220,7 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
     paddingRight: 8,
     marginTop: 10,
-    // marginLeft: 5,
-    // marginRight: 5,
+    marginLeft: 5,
+    marginRight: 5,
   },
 });
