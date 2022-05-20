@@ -1,0 +1,115 @@
+// querydsl 추가
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version '2.6.6'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	// querydsl 추가
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+	id 'java'
+}
+
+group = 'ssoaks'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// jpa
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// websocket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	// lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// devtools
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	// Test에서 Slf4j 사용(compileOnly)
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	// Gradle 7+는 compile, runtime configuration 지원X -> implementation, compileOnly, runtimeOnly 사용
+	compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
+
+	// mysql connector
+	runtimeOnly 'mysql:mysql-connector-java'
+
+	// p6spy 추가
+//	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.7'
+
+	// querydsl 추가
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+	// validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// guava 추가
+	implementation("com.google.guava:guava:29.0-jre")
+	annotationProcessor("com.google.guava:guava:29.0-jre")
+
+	// org.json
+	implementation group: 'org.json', name: 'json', version: '20210307'
+	implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
+
+	// S3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation 'com.amazonaws:aws-java-sdk:1.11.692'
+
+	// firebase
+	implementation 'com.google.firebase:firebase-admin:8.1.0'
+// https://mavenlibs.com/maven/dependency/com.github.fabiomaffioletti/spring-boot-starter-data-firebase
+	implementation 'com.github.fabiomaffioletti:spring-boot-starter-data-firebase:1.0.0.RELEASE'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+// querydsl 추가 시작
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+	main.java.srcDir querydslDir
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+// querydsl 추가 끝
