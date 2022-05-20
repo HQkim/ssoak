@@ -4,6 +4,7 @@
 
 ```bash
 #install for libraries (expo initial settings & redux, react-native)
+npm install
 expo install
 ```
 
