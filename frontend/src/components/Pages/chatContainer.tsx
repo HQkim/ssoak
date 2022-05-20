@@ -38,51 +38,52 @@ const ChatContainer = (props: any) => {
   const [myData, setMyData] = useState<any>(null);
   const navigation = useNavigation();
   useEffect(() => {
-    // getToken();
-    navigation.addListener("focus", () => {
-      setCurrentPage("loading");
-      getToken().then(() => {
-        onLogin();
-      });
-    });
+    getToken();
   }, []);
-
+  navigation.addListener("focus", () => {
+    setUserId(null);
+    setCurrentPage("loading");
+    getToken();
+  });
   useEffect(() => {
-    console.log(userId);
     if (userId) {
       onLogin();
     }
   }, [userId]);
   const onLogin = async () => {
-    try {
-      const database = getDatabase();
-      const user = await findUser();
-      if (user) {
-        setMyData(user);
-      } else {
-        const newUserObj = {
-          userId: userId,
-          avatar: userAvatar,
-        };
-        set(ref(database, `users/${userId}`), newUserObj);
-        setMyData(newUserObj);
-      }
+    let mounted = true;
+    if (mounted) {
+      try {
+        const database = getDatabase();
+        const user = await findUser();
+        if (user) {
+          setMyData(user);
+        } else {
+          const newUserObj = {
+            userId: userId,
+            avatar: userAvatar,
+          };
+          set(ref(database, `users/${userId}`), newUserObj);
+          setMyData(newUserObj);
+        }
 
-      // set friends list change listener
-      const myUserRef = ref(database, `users/${userId}`);
-      onValue(myUserRef, (snapshot) => {
-        const data = snapshot.val();
-        // console.log(data);
-        setUsers(data?.friends);
-        setMyData((prevData) => ({
-          ...prevData,
-          friends: data?.friends,
-        }));
-      });
-      setCurrentPage("users");
-    } catch (error) {
-      console.error(error);
+        // set friends list change listener
+        const myUserRef = ref(database, `users/${userId}`);
+        onValue(myUserRef, (snapshot) => {
+          const data = snapshot.val();
+          // console.log(data);
+          setUsers(data?.friends);
+          setMyData((prevData) => ({
+            ...prevData,
+            friends: data?.friends,
+          }));
+        });
+        setCurrentPage("users");
+      } catch (error) {
+        console.error(error);
+      }
     }
+    mounted = false;
   };
 
   const findUser = async () => {
