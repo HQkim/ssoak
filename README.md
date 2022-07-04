@@ -40,7 +40,7 @@
   - Google presesntation
 - IDE
   - Visual Studio Code
-  - 
+  - IntelliJ
 - Front-end
   - React Native
   - Expo
