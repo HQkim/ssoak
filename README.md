@@ -40,7 +40,7 @@
   - Google presesntation
 - IDE
   - Visual Studio Code
-  - Oracle
+  - 
 - Front-end
   - React Native
   - Expo
